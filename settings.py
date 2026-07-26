@@ -1,0 +1,1 @@
+FIREBASE_SERVICE_ACCOUNT_FILE = BASE_DIR / "firebase-service-account.json"

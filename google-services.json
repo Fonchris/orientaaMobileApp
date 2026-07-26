@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "899446658243",
+    "project_id": "orientaamobileapp",
+    "storage_bucket": "orientaamobileapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899446658243:android:c6dbca2bb5af2740defe76",
+        "android_client_info": {
+          "package_name": "com.orientaa_mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899446658243-ls7v06lv0386sspmhta2toi9hvptkkpv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orientaa_mobile_app",
+            "certificate_hash": "104a12699eafa519269c1481daa416dca9bc5aff"
+          }
+        },
+        {
+          "client_id": "899446658243-1td1ujj1uror2e42uuu82qa09f26rb2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeIimwlReKWwBRIlpxBXoLq5-_GL-A3yQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899446658243-1td1ujj1uror2e42uuu82qa09f26rb2a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "899446658243-8d4gbkq05qsiq0dpibs4pp0ekjlb3krf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.orientaaMobileApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
