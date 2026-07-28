@@ -26,9 +26,11 @@ class _LoginPageState extends State<LoginPage> {
   bool _isSendingEmailLink = false;
   bool _isHandlingEmailLink = false;
   bool _isGoogleSigningIn = false;
+  bool _isResendingVerification = false;
   bool _obscurePassword = true;
   String? _errorMessage;
   String? _lastHandledEmailLink;
+  String? _unverifiedEmail;
 
   @override
   void initState() {
@@ -173,10 +175,26 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      await _authService.signIn(
+      final credential = await _authService.signIn(
         email: _emailController.text,
         password: _passwordController.text,
       );
+
+      // Check if email is verified
+      final user = credential.user;
+      if (user != null && !user.emailVerified) {
+        // Re-send verification email so user gets another copy
+        await user.sendEmailVerification();
+        await _authService.signOut();
+        if (!mounted) return;
+        setState(() {
+          _unverifiedEmail = _emailController.text.trim();
+          _errorMessage =
+              'Email not verified. A new verification email has been sent to $_unverifiedEmail. '
+              'Please check your inbox (and spam folder) and click the verification link.';
+        });
+        return;
+      }
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -195,6 +213,40 @@ class _LoginPageState extends State<LoginPage> {
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _resendVerification() async {
+    if (_unverifiedEmail == null) return;
+
+    setState(() {
+      _isResendingVerification = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Sign in briefly to send verification, then sign out
+      final credential = await _authService.signIn(
+        email: _unverifiedEmail!,
+        password: _passwordController.text,
+      );
+      await credential.user!.sendEmailVerification();
+      await _authService.signOut();
+
+      if (!mounted) return;
+      setState(() {
+        _errorMessage =
+            'Verification email re-sent to $_unverifiedEmail. Please check your inbox.';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = 'Failed to resend verification: $e';
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isResendingVerification = false);
       }
     }
   }
@@ -329,6 +381,28 @@ class _LoginPageState extends State<LoginPage> {
                             _errorMessage!,
                             style: const TextStyle(color: Colors.red),
                           ),
+                        if (_unverifiedEmail != null) ...[
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 44,
+                            child: OutlinedButton.icon(
+                              onPressed: _isResendingVerification
+                                  ? null
+                                  : _resendVerification,
+                              icon: _isResendingVerification
+                                  ? const SizedBox(
+                                      height: 18,
+                                      width: 18,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2),
+                                    )
+                                  : const Icon(Icons.refresh_outlined),
+                              label: const Text(
+                                  'Resend Verification Email'),
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 20),
                         SizedBox(
                           width: double.infinity,

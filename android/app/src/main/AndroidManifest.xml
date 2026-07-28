@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for Firebase Authentication and network communication -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="orientaa_mobile_app"
         android:name="${applicationName}"

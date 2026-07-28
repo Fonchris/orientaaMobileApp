@@ -33,6 +33,31 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Sensitive / Secret files (Firebase, API keys, backend credentials)
+google-services.json
+**/google-services.json
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+
+# Backend secrets / config
+settings.py
+**/settings.py
+authentication.py
+**/authentication.py
+firebase.py
+**/firebase.py
+views.py
+**/views.py
+*.env
+*.env.local
+*.sqlite3
+**/*.sqlite3
+# Backend generated files
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
 # Symbolication related
 app.*.symbols
 

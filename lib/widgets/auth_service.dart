@@ -18,11 +18,19 @@ class AuthService {
   Future<UserCredential> signUp({
     required String email,
     required String password,
-  }) {
-    return _auth.createUserWithEmailAndPassword(
+  }) async {
+    final credential = await _auth.createUserWithEmailAndPassword(
       email: email.trim(),
       password: password,
     );
+
+    // Send email verification
+    await credential.user!.sendEmailVerification();
+
+    // Sign out so user must verify before logging in
+    await _auth.signOut();
+
+    return credential;
   }
 
   Future<UserCredential> signIn({
@@ -134,4 +142,17 @@ class AuthService {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }
+
+  /// Sends a new verification email if the current user's email is not verified.
+  /// Returns true if the email was sent, false if already verified.
+  Future<bool> sendEmailVerification() async {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    if (user.emailVerified) return false;
+    await user.sendEmailVerification();
+    return true;
+  }
+
+  /// Checks whether the current user's email is verified.
+  bool get isEmailVerified => _auth.currentUser?.emailVerified ?? false;
 }

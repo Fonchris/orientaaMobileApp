@@ -48,7 +48,13 @@ class _SignupPageState extends State<SignupPage> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully')),
+        SnackBar(
+          content: Text(
+            'Verification email sent to ${_emailController.text.trim()}. '
+            'Please verify your email before logging in.',
+          ),
+          duration: const Duration(seconds: 6),
+        ),
       );
 
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
