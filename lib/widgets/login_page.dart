@@ -201,11 +201,20 @@ class _LoginPageState extends State<LoginPage> {
         const SnackBar(content: Text('Login successful')),
       );
 
+      // Attempt backend authentication, but don't block login if unavailable
       final token = await _authService.getIdToken();
       if (token != null) {
         final backendResponse = await _authService.sendTokenToBackend(token);
-        debugPrint('Backend response: $backendResponse');
+        if (backendResponse == null) {
+          debugPrint('Backend is not available — proceeding without backend session');
+        } else {
+          debugPrint('Backend response: $backendResponse');
+        }
       }
+
+      // Navigate to onboarding after successful login
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/onboarding');
     } catch (e) {
       setState(() {
         _errorMessage = e.toString();
@@ -263,6 +272,21 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Google sign-in successful')),
       );
+
+      // Attempt backend authentication, but don't block login if unavailable
+      final token = await _authService.getIdToken();
+      if (token != null) {
+        final backendResponse = await _authService.sendTokenToBackend(token);
+        if (backendResponse == null) {
+          debugPrint('Backend is not available — proceeding without backend session');
+        } else {
+          debugPrint('Backend response: $backendResponse');
+        }
+      }
+
+      // Navigate to onboarding after successful login
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/onboarding');
     } catch (e) {
       if (!mounted) return;
       setState(() {

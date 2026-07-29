@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'widgets/login_page.dart';
+import 'widgets/onboarding_page.dart';
 import 'widgets/signup_page.dart';
 import 'widgets/reset_password_page.dart';
 import 'widgets/theme_provider.dart';
@@ -77,6 +78,7 @@ class _OrientaaAppState extends State<OrientaaApp> {
       initialRoute: '/login',
       routes: {
         '/login': (_) => const LoginPage(),
+        '/onboarding': (_) => const OnboardingPage(),
         '/signup': (_) => const SignupPage(),
         '/reset-password': (_) => const ResetPasswordPage(),
       },
