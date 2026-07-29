@@ -28,11 +28,14 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
 
+  static const _brandBlue = Color(0xFF011F7B);
+  static const _brandGold = Color(0xFFFFBA09);
+
   @override
   void initState() {
     super.initState();
     _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
@@ -52,7 +55,6 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
     final isDark = scheme.brightness == Brightness.dark;
 
     final isStudent = widget.role == UserRole.student;
-
     final iconData = isStudent ? Icons.school_rounded : Icons.support_agent_rounded;
     final title = isStudent ? 'Student' : 'Counsellor';
     final description = isStudent
@@ -82,98 +84,106 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
             ),
           )),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: GestureDetector(
-              onTapDown: (_) {
-                _scaleController.forward();
-              },
+              onTapDown: (_) => _scaleController.forward(),
               onTapUp: (_) {
                 _scaleController.reverse();
                 widget.onTap();
               },
-              onTapCancel: () {
-                _scaleController.reverse();
-              },
+              onTapCancel: () => _scaleController.reverse(),
               child: Semantics(
                 label: 'Select $title role',
                 button: true,
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 350),
                   curve: Curves.easeOutCubic,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(26),
                     gradient: widget.isSelected
                         ? LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: isDark
                                 ? [
-                                    scheme.primary.withValues(alpha: 0.2),
-                                    scheme.primary.withValues(alpha: 0.08),
-                                    scheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                                    _brandBlue.withValues(alpha: 0.25),
+                                    _brandBlue.withValues(alpha: 0.08),
+                                    const Color(0xFF323232).withValues(alpha: 0.5),
                                   ]
                                 : [
-                                    scheme.primary.withValues(alpha: 0.12),
-                                    scheme.primary.withValues(alpha: 0.04),
-                                    scheme.surfaceContainerHighest.withValues(alpha: 0.2),
+                                    _brandBlue.withValues(alpha: 0.06),
+                                    _brandBlue.withValues(alpha: 0.02),
+                                    Colors.white,
                                   ],
                           )
                         : null,
                     color: widget.isSelected
                         ? null
                         : isDark
-                            ? scheme.surfaceContainerHighest.withValues(alpha: 0.3)
-                            : scheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                            ? const Color(0xFF323232).withValues(alpha: 0.6)
+                            : Colors.white.withValues(alpha: 0.85),
                     border: Border.all(
                       color: widget.isSelected
-                          ? scheme.primary
-                          : scheme.outlineVariant.withValues(alpha: 0.3),
+                          ? _brandBlue
+                          : isDark
+                              ? Colors.white.withValues(alpha: 0.08)
+                              : _brandBlue.withValues(alpha: 0.08),
                       width: widget.isSelected ? 2 : 1,
                     ),
                     boxShadow: widget.isSelected
                         ? [
                             BoxShadow(
-                              color: scheme.primary.withValues(alpha: isDark ? 0.2 : 0.15),
-                              blurRadius: 20,
+                              color: _brandBlue.withValues(alpha: isDark ? 0.3 : 0.12),
+                              blurRadius: 24,
                               offset: const Offset(0, 8),
+                            ),
+                            BoxShadow(
+                              color: _brandGold.withValues(alpha: isDark ? 0.08 : 0.04),
+                              blurRadius: 12,
+                              offset: const Offset(0, 2),
                             ),
                           ]
                         : [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.04),
+                              color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
                               blurRadius: 12,
                               offset: const Offset(0, 4),
                             ),
                           ],
                   ),
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(18),
                   child: Row(
                     children: [
-                      // Icon / Illustration container
+                      // Icon container with brand colors
                       AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 350),
                         curve: Curves.easeOutCubic,
-                        width: 60,
-                        height: 60,
+                        width: 58,
+                        height: 58,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
                           gradient: widget.isSelected
                               ? LinearGradient(
                                   colors: [
-                                    scheme.primary,
-                                    scheme.primary.withValues(alpha: 0.7),
+                                    _brandBlue,
+                                    _brandBlue.withValues(alpha: 0.8),
                                   ],
                                 )
                               : LinearGradient(
-                                  colors: [
-                                    scheme.primaryContainer,
-                                    scheme.primaryContainer.withValues(alpha: 0.6),
-                                  ],
+                                  colors: isDark
+                                      ? [
+                                          _brandBlue.withValues(alpha: 0.3),
+                                          _brandBlue.withValues(alpha: 0.1),
+                                        ]
+                                      : [
+                                          _brandBlue.withValues(alpha: 0.08),
+                                          _brandBlue.withValues(alpha: 0.03),
+                                        ],
                                 ),
                           boxShadow: widget.isSelected
                               ? [
                                   BoxShadow(
-                                    color: scheme.primary.withValues(alpha: 0.3),
+                                    color: _brandBlue.withValues(alpha: 0.3),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -182,18 +192,20 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                         ),
                         child: AnimatedScale(
                           scale: widget.isSelected ? 1.1 : 1.0,
-                          duration: const Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 350),
                           curve: Curves.easeOutCubic,
                           child: Icon(
                             iconData,
                             color: widget.isSelected
-                                ? scheme.onPrimary
-                                : scheme.onPrimaryContainer,
+                                ? Colors.white
+                                : isDark
+                                    ? _brandBlue.withValues(alpha: 0.7)
+                                    : _brandBlue,
                             size: 30,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      const SizedBox(width: 14),
                       // Text content
                       Expanded(
                         child: Column(
@@ -207,45 +219,36 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                                     style: GoogleFonts.plusJakartaSans(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w700,
-                                      color: scheme.onSurface,
+                                      color: isDark
+                                          ? Colors.white
+                                          : const Color(0xFF1A1A2E),
                                       height: 1.2,
                                     ),
                                   ),
                                 ),
-                                if (widget.isSelected)
-                                  AnimatedScale(
-                                    scale: widget.isSelected ? 1.0 : 0.0,
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeOutBack,
-                                    child: Container(
-                                      width: 24,
-                                      height: 24,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: scheme.primary,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: scheme.primary.withValues(alpha: 0.3),
-                                            blurRadius: 8,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Icon(
-                                        Icons.check_rounded,
-                                        color: scheme.onPrimary,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ),
+                                // Trailing chevron
+                                Icon(
+                                  widget.isSelected
+                                      ? Icons.check_circle_rounded
+                                      : Icons.chevron_right_rounded,
+                                  color: widget.isSelected
+                                      ? _brandGold
+                                      : isDark
+                                          ? Colors.white.withValues(alpha: 0.3)
+                                          : _brandBlue.withValues(alpha: 0.2),
+                                  size: 24,
+                                ),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 4),
                             Text(
                               description,
                               style: GoogleFonts.inter(
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w400,
-                                color: scheme.onSurfaceVariant,
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.6)
+                                    : const Color(0xFF1A1A2E).withValues(alpha: 0.55),
                                 height: 1.4,
                               ),
                             ),

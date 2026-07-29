@@ -28,6 +28,9 @@ class _OnboardingPageState extends State<OnboardingPage>
   UserRole? _selectedRole;
   bool _isNavigating = false;
 
+  static const _brandBlue = Color(0xFF011F7B);
+  static const _brandGold = Color(0xFFFFBA09);
+
   @override
   void initState() {
     super.initState();
@@ -47,42 +50,42 @@ class _OnboardingPageState extends State<OnboardingPage>
     _heroAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.1, 0.4, curve: Curves.easeOutCubic),
+        curve: const Interval(0.05, 0.35, curve: Curves.easeOutCubic),
       ),
     );
 
     _titleFade = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.25, 0.5, curve: Curves.easeOutCubic),
+        curve: const Interval(0.2, 0.45, curve: Curves.easeOutCubic),
       ),
     );
 
     _subtitleFade = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.35, 0.55, curve: Curves.easeOutCubic),
+        curve: const Interval(0.3, 0.5, curve: Curves.easeOutCubic),
       ),
     );
 
     _cardOneAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.4, 0.7, curve: Curves.easeOutCubic),
+        curve: const Interval(0.35, 0.65, curve: Curves.easeOutCubic),
       ),
     );
 
     _cardTwoAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.5, 0.8, curve: Curves.easeOutCubic),
+        curve: const Interval(0.45, 0.75, curve: Curves.easeOutCubic),
       ),
     );
 
     _buttonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: const Interval(0.7, 1.0, curve: Curves.easeOutCubic),
+        curve: const Interval(0.65, 0.95, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -114,12 +117,10 @@ class _OnboardingPageState extends State<OnboardingPage>
 
     if (!mounted) return;
 
-    // Animate out before navigating
     await _controller.reverse();
 
     if (!mounted) return;
 
-    // Navigate to appropriate dashboard
     final route = _selectedRole == UserRole.student
         ? '/student-dashboard'
         : '/counsellor-dashboard';
@@ -136,6 +137,7 @@ class _OnboardingPageState extends State<OnboardingPage>
     final isDark = scheme.brightness == Brightness.dark;
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width >= 600;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       body: SafeArea(
@@ -149,14 +151,14 @@ class _OnboardingPageState extends State<OnboardingPage>
                   end: Alignment.bottomCenter,
                   colors: isDark
                       ? [
-                          scheme.surface,
-                          scheme.surfaceContainerLow,
-                          scheme.surface,
+                          const Color(0xFF1A1A2E),
+                          const Color(0xFF323232),
+                          const Color(0xFF1A1A2E),
                         ]
                       : [
-                          scheme.surface,
-                          scheme.surfaceContainerLowest,
-                          scheme.surface,
+                          const Color(0xFFF8F9FF),
+                          Colors.white,
+                          const Color(0xFFF8F9FF),
                         ],
                 ),
               ),
@@ -179,13 +181,13 @@ class _OnboardingPageState extends State<OnboardingPage>
                     physics: const BouncingScrollPhysics(),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        minHeight: screenSize.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
+                        minHeight: screenSize.height - MediaQuery.of(context).padding.top - bottomPadding,
                       ),
                       child: Column(
                         children: [
                           // Theme toggle
                           Padding(
-                            padding: const EdgeInsets.only(top: 8, right: 8),
+                            padding: const EdgeInsets.only(top: 4, right: 4),
                             child: Align(
                               alignment: Alignment.topRight,
                               child: Semantics(
@@ -195,11 +197,11 @@ class _OnboardingPageState extends State<OnboardingPage>
                                     themeProvider.isDarkMode
                                         ? Icons.light_mode_outlined
                                         : Icons.dark_mode_outlined,
-                                    color: scheme.onSurfaceVariant,
+                                    color: isDark
+                                        ? Colors.white.withValues(alpha: 0.5)
+                                        : _brandBlue.withValues(alpha: 0.4),
                                   ),
-                                  onPressed: () {
-                                    themeProvider.toggleTheme();
-                                  },
+                                  onPressed: () => themeProvider.toggleTheme(),
                                 ),
                               ),
                             ),
@@ -208,21 +210,18 @@ class _OnboardingPageState extends State<OnboardingPage>
                           // Hero illustration
                           OnboardingHero(
                             animation: _heroAnimation,
-                            animationDelay: 0,
                           ),
-
-                          SizedBox(height: isTablet ? 24 : 16),
 
                           // Title
                           FadeTransition(
                             opacity: _titleFade,
                             child: SlideTransition(
                               position: Tween<Offset>(
-                                begin: const Offset(0, 0.15),
+                                begin: const Offset(0, 0.12),
                                 end: Offset.zero,
                               ).animate(CurvedAnimation(
                                 parent: _controller,
-                                curve: const Interval(0.25, 0.5, curve: Curves.easeOutCubic),
+                                curve: const Interval(0.2, 0.45, curve: Curves.easeOutCubic),
                               )),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -234,7 +233,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                                   style: GoogleFonts.plusJakartaSans(
                                     fontSize: isTablet ? 40 : 34,
                                     fontWeight: FontWeight.w800,
-                                    color: scheme.onSurface,
+                                    color: isDark ? Colors.white : const Color(0xFF1A1A2E),
                                     height: 1.15,
                                     letterSpacing: -0.5,
                                   ),
@@ -243,18 +242,18 @@ class _OnboardingPageState extends State<OnboardingPage>
                             ),
                           ),
 
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 6),
 
                           // Subtitle
                           FadeTransition(
                             opacity: _subtitleFade,
                             child: SlideTransition(
                               position: Tween<Offset>(
-                                begin: const Offset(0, 0.15),
+                                begin: const Offset(0, 0.12),
                                 end: Offset.zero,
                               ).animate(CurvedAnimation(
                                 parent: _controller,
-                                curve: const Interval(0.35, 0.55, curve: Curves.easeOutCubic),
+                                curve: const Interval(0.3, 0.5, curve: Curves.easeOutCubic),
                               )),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -265,8 +264,10 @@ class _OnboardingPageState extends State<OnboardingPage>
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: isTablet ? 18 : 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: scheme.onSurfaceVariant,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark
+                                        ? Colors.white.withValues(alpha: 0.5)
+                                        : const Color(0xFF1A1A2E).withValues(alpha: 0.5),
                                     height: 1.4,
                                   ),
                                 ),
@@ -274,7 +275,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                             ),
                           ),
 
-                          SizedBox(height: isTablet ? 32 : 24),
+                          SizedBox(height: isTablet ? 28 : 20),
 
                           // Role selection cards
                           RoleSelectionCard(
@@ -292,7 +293,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                             animationDelay: 1,
                           ),
 
-                          const SizedBox(height: 32),
+                          SizedBox(height: isTablet ? 28 : 24),
 
                           // Continue button
                           FadeTransition(
@@ -303,7 +304,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                                 end: Offset.zero,
                               ).animate(CurvedAnimation(
                                 parent: _controller,
-                                curve: const Interval(0.7, 1.0, curve: Curves.easeOutCubic),
+                                curve: const Interval(0.65, 0.95, curve: Curves.easeOutCubic),
                               )),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -318,42 +319,52 @@ class _OnboardingPageState extends State<OnboardingPage>
                                     width: double.infinity,
                                     height: 56,
                                     child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 300),
+                                      duration: const Duration(milliseconds: 350),
                                       curve: Curves.easeOutCubic,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(18),
+                                        borderRadius: BorderRadius.circular(28),
                                         gradient: _selectedRole != null
                                             ? LinearGradient(
                                                 colors: [
-                                                  scheme.primary,
-                                                  scheme.primary.withValues(alpha: 0.8),
+                                                  _brandBlue,
+                                                  _brandBlue.withValues(alpha: 0.85),
                                                 ],
                                               )
                                             : LinearGradient(
-                                                colors: [
-                                                  scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-                                                  scheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                                                ],
+                                                colors: isDark
+                                                    ? [
+                                                        Colors.white.withValues(alpha: 0.06),
+                                                        Colors.white.withValues(alpha: 0.03),
+                                                      ]
+                                                    : [
+                                                        _brandBlue.withValues(alpha: 0.04),
+                                                        _brandBlue.withValues(alpha: 0.02),
+                                                      ],
                                               ),
                                         boxShadow: _selectedRole != null
                                             ? [
                                                 BoxShadow(
-                                                  color: scheme.primary.withValues(alpha: isDark ? 0.3 : 0.25),
+                                                  color: _brandBlue.withValues(alpha: isDark ? 0.4 : 0.25),
                                                   blurRadius: 24,
                                                   offset: const Offset(0, 8),
+                                                ),
+                                                BoxShadow(
+                                                  color: _brandGold.withValues(alpha: isDark ? 0.1 : 0.05),
+                                                  blurRadius: 12,
+                                                  offset: const Offset(0, 2),
                                                 ),
                                               ]
                                             : null,
                                       ),
                                       child: Material(
                                         color: Colors.transparent,
-                                        borderRadius: BorderRadius.circular(18),
+                                        borderRadius: BorderRadius.circular(28),
                                         child: InkWell(
                                           onTap: _selectedRole != null && !_isNavigating
                                               ? _onContinue
                                               : null,
-                                          borderRadius: BorderRadius.circular(18),
-                                          splashColor: scheme.onPrimary.withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(28),
+                                          splashColor: Colors.white.withValues(alpha: 0.1),
                                           highlightColor: Colors.transparent,
                                           child: Center(
                                             child: _isNavigating
@@ -362,7 +373,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                                                     height: 24,
                                                     child: CircularProgressIndicator(
                                                       strokeWidth: 2.5,
-                                                      color: scheme.onPrimary,
+                                                      color: Colors.white,
                                                     ),
                                                   )
                                                 : Row(
@@ -374,16 +385,18 @@ class _OnboardingPageState extends State<OnboardingPage>
                                                           fontSize: 16,
                                                           fontWeight: FontWeight.w600,
                                                           color: _selectedRole != null
-                                                              ? scheme.onPrimary
-                                                              : scheme.onSurface.withValues(alpha: 0.4),
-                                                          letterSpacing: 0.2,
+                                                              ? Colors.white
+                                                              : isDark
+                                                                  ? Colors.white.withValues(alpha: 0.2)
+                                                                  : _brandBlue.withValues(alpha: 0.2),
+                                                          letterSpacing: 0.3,
                                                         ),
                                                       ),
                                                       if (_selectedRole != null) ...[
                                                         const SizedBox(width: 8),
                                                         Icon(
                                                           Icons.arrow_forward_rounded,
-                                                          color: scheme.onPrimary,
+                                                          color: Colors.white,
                                                           size: 20,
                                                         ),
                                                       ],
@@ -399,7 +412,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
+                          SizedBox(height: bottomPadding + 16),
                         ],
                       ),
                     ),

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class OnboardingHero extends StatelessWidget {
   final Animation<double> animation;
-  final int animationDelay;
 
   const OnboardingHero({
     super.key,
     required this.animation,
-    this.animationDelay = 0,
   });
 
   @override
@@ -15,170 +13,285 @@ class OnboardingHero extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final isDark = scheme.brightness == Brightness.dark;
 
+    final brandBlue = const Color(0xFF011F7B);
+    final brandGold = const Color(0xFFFFBA09);
+    final brandYellow = const Color(0xFFFFDB00);
+
     return FadeTransition(
       opacity: animation,
       child: SlideTransition(
         position: Tween<Offset>(
-          begin: const Offset(0, 0.2),
+          begin: const Offset(0, 0.15),
           end: Offset.zero,
         ).animate(CurvedAnimation(
           parent: animation,
-          curve: Interval(
-            0.1 + (animationDelay * 0.1),
-            0.4 + (animationDelay * 0.1),
-            curve: Curves.easeOutCubic,
-          ),
+          curve: const Interval(0.0, 0.4, curve: Curves.easeOutCubic),
         )),
         child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.35,
+          height: MediaQuery.of(context).size.height * 0.27,
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Decorative background circle
+              // Large decorative blue radial glow
               Positioned(
-                top: 20,
+                top: 5,
                 child: Container(
-                  width: 160,
-                  height: 160,
+                  width: 220,
+                  height: 220,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        scheme.primary.withValues(alpha: isDark ? 0.15 : 0.08),
-                        scheme.primary.withValues(alpha: 0.0),
+                        brandBlue.withValues(alpha: isDark ? 0.15 : 0.06),
+                        brandBlue.withValues(alpha: 0.0),
                       ],
                     ),
                   ),
                 ),
               ),
 
-              // Main illustration composed of Flutter widgets
+              // Golden accent glow offset right
+              Positioned(
+                right: 10,
+                top: 30,
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        brandGold.withValues(alpha: isDark ? 0.08 : 0.04),
+                        brandGold.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Main illustration
               SizedBox(
-                width: 200,
-                height: 220,
+                width: 230,
+                height: 200,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Back book stack
+                    // Back tilted book (golden accent)
                     Positioned(
-                      right: 20,
-                      top: 20,
+                      right: 35,
+                      top: 2,
                       child: Transform.rotate(
-                        angle: 0.15,
+                        angle: 0.2,
                         child: Container(
                           width: 60,
                           height: 80,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
                             gradient: LinearGradient(
-                              colors: [
-                                scheme.tertiary.withValues(alpha: 0.6),
-                                scheme.tertiary.withValues(alpha: 0.3),
-                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: isDark
+                                  ? [
+                                      brandGold.withValues(alpha: 0.3),
+                                      brandGold.withValues(alpha: 0.1),
+                                    ]
+                                  : [
+                                      brandGold.withValues(alpha: 0.2),
+                                      brandGold.withValues(alpha: 0.05),
+                                    ],
+                            ),
+                            border: Border.all(
+                              color: brandGold.withValues(alpha: isDark ? 0.2 : 0.1),
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.book_rounded,
+                              size: 28,
+                              color: brandGold.withValues(alpha: isDark ? 0.5 : 0.3),
                             ),
                           ),
                         ),
                       ),
                     ),
 
-                    // Graduation cap (central element)
+                    // Central graduation cap container (brand blue)
                     Positioned(
-                      top: 10,
+                      top: 0,
                       child: Container(
-                        width: 80,
-                        height: 80,
+                        width: 100,
+                        height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: scheme.primary.withValues(alpha: 0.1),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: isDark
+                                ? [
+                                    brandBlue.withValues(alpha: 0.25),
+                                    brandBlue.withValues(alpha: 0.08),
+                                  ]
+                                : [
+                                    brandBlue.withValues(alpha: 0.08),
+                                    brandBlue.withValues(alpha: 0.02),
+                                  ],
+                          ),
+                          border: Border.all(
+                            color: brandBlue.withValues(alpha: isDark ? 0.2 : 0.08),
+                            width: 1.5,
+                          ),
                         ),
                         child: Icon(
                           Icons.school_rounded,
-                          size: 44,
-                          color: scheme.primary,
+                          size: 52,
+                          color: isDark
+                              ? brandBlue.withValues(alpha: 0.8)
+                              : brandBlue,
                         ),
                       ),
                     ),
 
-                    // Books stack left
+                    // Books stack left (blue tones)
                     Positioned(
-                      left: 15,
-                      bottom: 20,
+                      left: 0,
+                      bottom: 12,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 50,
+                            width: 52,
                             height: 12,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: scheme.secondary.withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(6),
+                              gradient: LinearGradient(
+                                colors: isDark
+                                    ? [
+                                        brandBlue.withValues(alpha: 0.5),
+                                        brandBlue.withValues(alpha: 0.2),
+                                      ]
+                                    : [
+                                        brandBlue.withValues(alpha: 0.15),
+                                        brandBlue.withValues(alpha: 0.05),
+                                      ],
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 5),
                           Container(
-                            width: 55,
+                            width: 60,
                             height: 12,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: scheme.secondary.withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(6),
+                              gradient: LinearGradient(
+                                colors: isDark
+                                    ? [
+                                        brandGold.withValues(alpha: 0.4),
+                                        brandGold.withValues(alpha: 0.2),
+                                      ]
+                                    : [
+                                        brandGold.withValues(alpha: 0.15),
+                                        brandGold.withValues(alpha: 0.05),
+                                      ],
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 5),
                           Container(
-                            width: 48,
+                            width: 46,
                             height: 12,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: scheme.secondary.withValues(alpha: 0.4),
+                              borderRadius: BorderRadius.circular(6),
+                              gradient: LinearGradient(
+                                colors: isDark
+                                    ? [
+                                        brandBlue.withValues(alpha: 0.4),
+                                        brandBlue.withValues(alpha: 0.15),
+                                      ]
+                                    : [
+                                        brandBlue.withValues(alpha: 0.12),
+                                        brandBlue.withValues(alpha: 0.04),
+                                      ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
 
-                    // Laptop/device right
+                    // Laptop device right
                     Positioned(
-                      right: 10,
-                      bottom: 15,
+                      right: 0,
+                      bottom: 8,
                       child: Container(
-                        width: 60,
-                        height: 40,
+                        width: 70,
+                        height: 45,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(6),
-                          color: scheme.surfaceContainerHighest,
-                          border: Border.all(
-                            color: scheme.outlineVariant.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: isDark
+                                ? [
+                                    const Color(0xFF323232).withValues(alpha: 0.8),
+                                    const Color(0xFF323232).withValues(alpha: 0.4),
+                                  ]
+                                : [
+                                    Colors.white.withValues(alpha: 0.9),
+                                    Colors.white.withValues(alpha: 0.5),
+                                  ],
                           ),
+                          border: Border.all(
+                            color: brandBlue.withValues(alpha: isDark ? 0.2 : 0.1),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: brandBlue.withValues(alpha: isDark ? 0.1 : 0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Center(
                           child: Icon(
                             Icons.laptop_mac_rounded,
                             size: 24,
-                            color: scheme.primary.withValues(alpha: 0.6),
+                            color: brandBlue.withValues(alpha: isDark ? 0.6 : 0.5),
                           ),
                         ),
                       ),
                     ),
 
-                    // Floating sparkle dots
-                    ...List.generate(5, (i) {
+                    // Floating decorative dots with brand colors
+                    ...List.generate(7, (i) {
                       final positions = [
-                        const Offset(-50, -30),
-                        const Offset(60, -40),
-                        const Offset(-40, 40),
-                        const Offset(55, 30),
-                        const Offset(0, -55),
+                        const Offset(-60, -30),
+                        const Offset(70, -35),
+                        const Offset(-50, 55),
+                        const Offset(65, 45),
+                        const Offset(0, -65),
+                        const Offset(-25, 70),
+                        const Offset(30, -40),
+                      ];
+                      final colors = [
+                        brandBlue,
+                        brandGold,
+                        brandBlue,
+                        brandGold,
+                        brandYellow,
+                        brandBlue,
+                        brandGold,
                       ];
                       return Positioned(
-                        left: 100 + positions[i].dx,
-                        top: 110 + positions[i].dy,
+                        left: 115 + positions[i].dx,
+                        top: 100 + positions[i].dy,
                         child: Container(
-                          width: 6 + (i * 2).toDouble(),
-                          height: 6 + (i * 2).toDouble(),
+                          width: 4 + (i * 1.8),
+                          height: 4 + (i * 1.8),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: scheme.primary.withValues(
-                              alpha: 0.3 + (i * 0.1),
+                            color: colors[i].withValues(
+                              alpha: isDark ? 0.25 + (i * 0.04) : 0.15 + (i * 0.04),
                             ),
                           ),
                         ),
