@@ -122,7 +122,7 @@ class _OnboardingPageState extends State<OnboardingPage>
     if (!mounted) return;
 
     final route = _selectedRole == UserRole.student
-        ? '/student-dashboard'
+        ? '/student-onboarding'
         : '/counsellor-dashboard';
 
     Navigator.of(context).pushReplacementNamed(

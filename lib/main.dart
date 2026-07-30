@@ -5,6 +5,7 @@ import 'widgets/login_page.dart';
 import 'widgets/onboarding_page.dart';
 import 'widgets/signup_page.dart';
 import 'widgets/reset_password_page.dart';
+import 'widgets/student_onboarding/student_onboarding_page.dart';
 import 'widgets/theme_provider.dart';
 
 final ThemeProvider themeProvider = ThemeProvider();
@@ -79,6 +80,7 @@ class _OrientaaAppState extends State<OrientaaApp> {
       routes: {
         '/login': (_) => const LoginPage(),
         '/onboarding': (_) => const OnboardingPage(),
+        '/student-onboarding': (_) => const StudentOnboardingPage(),
         '/signup': (_) => const SignupPage(),
         '/reset-password': (_) => const ResetPasswordPage(),
       },
