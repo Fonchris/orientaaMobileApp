@@ -157,7 +157,7 @@ class Step1IdentityPage extends StatelessWidget {
                       // Target Timeline
                       _buildSection(
                         icon: FontAwesomeIcons.calendarDays,
-                        label: 'Target Start Timeline',
+                        label: 'When do you plan to start?',
                         isDark: isDark,
                         subtitleColor: subtitleColor,
                         child: _buildChipGroup(
@@ -524,7 +524,7 @@ class Step1IdentityPage extends StatelessWidget {
     if (m.educationLevel == null) return 'Select your current education level';
     if (m.desiredDegreeLevel == null) return 'Select your desired degree level';
     if (m.fieldsOfInterest.isEmpty) return 'Select at least one field of interest';
-    if (m.targetTimeline == null) return 'Select your target start timeline';
+    if (m.targetTimeline == null) return 'Select when you plan to start';
     return '';
   }
 
