@@ -38,24 +38,23 @@ class Step1IdentityPage extends StatelessWidget {
   ];
 
   static const List<String> fieldsOfInterest = [
-    'Medicine & Health Sciences',
-    'Engineering & Technology',
-    'Computer Science & IT',
-    'Business & Management',
-    'Law & Legal Studies',
-    'Education & Teaching',
-    'Arts & Humanities',
-    'Social Sciences',
-    'Natural Sciences',
-    'Agriculture & Environmental Studies',
-    'Architecture & Urban Planning',
-    'Media & Communications',
-    'Economics & Finance',
-    'Political Science & International Relations',
-    'Psychology & Counseling',
-    'Mathematics & Statistics',
+    'Arts & Design',
+    'Biology',
+    'Business',
+    'Chemistry',
+    'Computer Science',
+    'Economics',
+    'Engineering',
+    'Environmental Science',
+    'Liberal Arts & Social Sciences',
+    'Mathematics',
+    'Medicine',
+    'Physics',
+    'Psychology',
     'Other',
   ];
+
+  static const String _otherField = 'Other';
 
   static const List<String> timelines = [
     'This year',
@@ -148,6 +147,11 @@ class Step1IdentityPage extends StatelessWidget {
                           isDark: isDark,
                         ),
                       ),
+                      // Custom field input when "Other" is selected
+                      if (model.fieldsOfInterest.contains(_otherField)) ...[
+                        const SizedBox(height: 10),
+                        _buildCustomFieldInput(context, isDark),
+                      ],
                       const SizedBox(height: 22),
 
                       // Target Timeline
@@ -483,6 +487,53 @@ class Step1IdentityPage extends StatelessWidget {
           }).toList(),
           onChanged: onChanged,
         ),
+      ),
+    );
+  }
+
+  // ── Custom Field Input (for "Other") ──
+  Widget _buildCustomFieldInput(BuildContext context, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: isDark
+            ? const Color(0xFF323232).withValues(alpha: 0.8)
+            : Colors.white,
+        border: Border.all(
+          color: _brandBlue.withValues(alpha: 0.15),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        children: [
+          const FaIcon(FontAwesomeIcons.pen, size: 14, color: _brandBlue),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: TextEditingController(text: model.customField ?? '')
+                ..selection = TextSelection.fromPosition(
+                  TextPosition(offset: model.customField?.length ?? 0),
+                ),
+              onChanged: (v) => model.customField = v,
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+              ),
+              decoration: InputDecoration(
+                hintText: 'Enter your field of interest...',
+                hintStyle: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.3)
+                      : _brandBlue.withValues(alpha: 0.3),
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

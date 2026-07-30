@@ -5,11 +5,13 @@ class StudentOnboardingModel extends ChangeNotifier {
   String? _educationLevel;
   String? _desiredDegreeLevel;
   final List<String> _fieldsOfInterest = [];
+  String? _customField;
   String? _targetTimeline;
 
   String? get educationLevel => _educationLevel;
   String? get desiredDegreeLevel => _desiredDegreeLevel;
   List<String> get fieldsOfInterest => List.unmodifiable(_fieldsOfInterest);
+  String? get customField => _customField;
   String? get targetTimeline => _targetTimeline;
 
   set educationLevel(String? v) {
@@ -28,6 +30,11 @@ class StudentOnboardingModel extends ChangeNotifier {
     } else {
       _fieldsOfInterest.add(field);
     }
+    notifyListeners();
+  }
+
+  set customField(String? v) {
+    _customField = v;
     notifyListeners();
   }
 
@@ -253,6 +260,7 @@ class StudentOnboardingModel extends ChangeNotifier {
         'educationLevel': _educationLevel,
         'desiredDegreeLevel': _desiredDegreeLevel,
         'fieldsOfInterest': _fieldsOfInterest,
+        'customField': _customField,
         'targetTimeline': _targetTimeline,
         // Step 2
         'homeCountry': _homeCountry,
