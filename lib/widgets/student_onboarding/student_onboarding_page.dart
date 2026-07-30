@@ -21,7 +21,6 @@ class StudentOnboardingPage extends StatefulWidget {
 
 class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   final _model = StudentOnboardingModel();
-  late final PageController _pageController;
   int _currentStep = 0;
   bool _isSubmitting = false;
 
@@ -32,14 +31,12 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
     // Critical: listen to model changes so stateless step pages rebuild
     _model.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
     _model.removeListener(() => setState(() {}));
     _model.dispose();
     super.dispose();
@@ -47,11 +44,6 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
 
   void _goToStep(int step) {
     if (step < 0 || step >= _totalSteps) return;
-    _pageController.animateToPage(
-      step,
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeOutCubic,
-    );
     setState(() => _currentStep = step);
   }
 
@@ -161,45 +153,17 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
               currentStep: _currentStep,
             ),
 
-            // Page content
+            // Page content - using IndexedStack to avoid PageView scroll conflicts
             Expanded(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (index) {
-                  setState(() => _currentStep = index);
-                },
+              child: IndexedStack(
+                index: _currentStep,
                 children: [
-                  Step1IdentityPage(
-                    model: _model,
-                    onNext: _nextStep,
-                  ),
-                  Step2LocationPage(
-                    model: _model,
-                    onNext: _nextStep,
-                    onBack: _previousStep,
-                  ),
-                  Step3FinancialPage(
-                    model: _model,
-                    onNext: _nextStep,
-                    onBack: _previousStep,
-                  ),
-                  Step4SelfAssessmentPage(
-                    model: _model,
-                    onNext: _nextStep,
-                    onBack: _previousStep,
-                  ),
-                  Step5BigFivePage(
-                    model: _model,
-                    onNext: _nextStep,
-                    onBack: _previousStep,
-                  ),
-                  Step5OptionalPage(
-                    model: _model,
-                    onNext: _submit,
-                    onBack: _previousStep,
-                    onSkip: _submit,
-                  ),
+                  Step1IdentityPage(model: _model, onNext: _nextStep),
+                  Step2LocationPage(model: _model, onNext: _nextStep, onBack: _previousStep),
+                  Step3FinancialPage(model: _model, onNext: _nextStep, onBack: _previousStep),
+                  Step4SelfAssessmentPage(model: _model, onNext: _nextStep, onBack: _previousStep),
+                  Step5BigFivePage(model: _model, onNext: _nextStep, onBack: _previousStep),
+                  Step5OptionalPage(model: _model, onNext: _submit, onBack: _previousStep, onSkip: _submit),
                 ],
               ),
             ),
