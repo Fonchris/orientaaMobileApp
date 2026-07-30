@@ -173,7 +173,7 @@ class Step1IdentityPage extends StatelessWidget {
                   ),
                 ),
               ),
-              // Pinned bottom button
+              // Pinned bottom button with validation hint
               Container(
                 padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).padding.bottom + 12),
                 decoration: BoxDecoration(
@@ -186,48 +186,73 @@ class Step1IdentityPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: model.step1Valid ? onNext : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _brandBlue,
-                      disabledBackgroundColor: isDark
-                          ? Colors.white.withValues(alpha: 0.06)
-                          : _brandBlue.withValues(alpha: 0.04),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: model.step1Valid ? 6 : 0,
-                      shadowColor: _brandBlue.withValues(alpha: 0.4),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Continue',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: model.step1Valid ? Colors.white : subtitleColor,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                        if (model.step1Valid) ...[
-                          const SizedBox(width: 10),
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: _brandGold.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Validation hint
+                    if (!model.step1Valid)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const FaIcon(FontAwesomeIcons.circleInfo, size: 12, color: _brandGold),
+                            const SizedBox(width: 6),
+                            Text(
+                              _validationHint(model),
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: _brandGold,
+                              ),
                             ),
-                            child: const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 14),
+                          ],
+                        ),
+                      ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: model.step1Valid ? onNext : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _brandBlue,
+                          disabledBackgroundColor: isDark
+                              ? Colors.white.withValues(alpha: 0.06)
+                              : _brandBlue.withValues(alpha: 0.04),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                        ],
-                      ],
+                          elevation: model.step1Valid ? 6 : 0,
+                          shadowColor: _brandBlue.withValues(alpha: 0.4),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              model.step1Valid ? 'Continue' : 'Complete all fields',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: model.step1Valid ? Colors.white : subtitleColor,
+                                letterSpacing: 0.3,
+                              ),
+                            ),
+                            if (model.step1Valid) ...[
+                              const SizedBox(width: 10),
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: _brandGold.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 14),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
@@ -489,6 +514,18 @@ class Step1IdentityPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // ── Validation Hint ──
+  String _validationHint(StudentOnboardingModel m) {
+    if (m.educationLevel == null && m.desiredDegreeLevel == null) {
+      return 'Select your education level and desired degree';
+    }
+    if (m.educationLevel == null) return 'Select your current education level';
+    if (m.desiredDegreeLevel == null) return 'Select your desired degree level';
+    if (m.fieldsOfInterest.isEmpty) return 'Select at least one field of interest';
+    if (m.targetTimeline == null) return 'Select your target start timeline';
+    return '';
   }
 
   // ── Custom Field Input (for "Other") ──
