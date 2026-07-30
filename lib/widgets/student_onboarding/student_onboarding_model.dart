@@ -44,11 +44,13 @@ class StudentOnboardingModel extends ChangeNotifier {
 
   // ── Step 2: Location & Logistics ──
   String? _homeCountry;
+  String? _homeCountryCode;
   String? _homeCity;
   final List<String> _preferredDestinations = [];
   String? _preferredLanguage;
 
   String? get homeCountry => _homeCountry;
+  String? get homeCountryCode => _homeCountryCode;
   String? get homeCity => _homeCity;
   List<String> get preferredDestinations =>
       List.unmodifiable(_preferredDestinations);
@@ -56,7 +58,12 @@ class StudentOnboardingModel extends ChangeNotifier {
 
   set homeCountry(String? v) {
     _homeCountry = v;
-    // Auto-set currency based on home country
+    notifyListeners();
+  }
+
+  set homeCountryCode(String? v) {
+    _homeCountryCode = v;
+    // Auto-set currency based on home country code
     _currency = _currencyForCountry(v);
     notifyListeners();
   }
@@ -111,45 +118,34 @@ class StudentOnboardingModel extends ChangeNotifier {
 
   bool get step3Valid => _budgetPerYear != null;
 
-  /// Returns a currency code based on the selected home country.
-  String _currencyForCountry(String? country) {
-    if (country == null) return 'USD';
+  /// Returns a currency code based on the selected home country code.
+  String _currencyForCountry(String? countryCode) {
+    if (countryCode == null) return 'USD';
     // West Africa
-    if (['Nigeria'].contains(country)) return 'NGN';
-    if (['Ghana', 'Sierra Leone', 'Liberia', 'Gambia'].contains(country)) {
-      return 'GHS'; // approximate; Ghana uses GHS, others use their own
-    }
-    if (['Senegal', 'Benin', 'Togo', 'Niger', 'Mali', 'Burkina Faso',
-             'Guinea', 'Guinea-Bissau', 'Ivory Coast', 'Cape Verde',
-             'Mauritania']
-        .contains(country)) {
-      return 'XOF'; // West African CFA franc
+    if (countryCode == 'NG') return 'NGN';
+    if (['GH', 'SL', 'LR', 'GM'].contains(countryCode)) return 'GHS';
+    if (['SN', 'BJ', 'TG', 'NE', 'ML', 'BF', 'GN', 'GW', 'CI', 'CV', 'MR']
+        .contains(countryCode)) {
+      return 'XOF';
     }
     // East Africa
-    if (['Kenya', 'Uganda', 'Tanzania', 'Rwanda', 'Burundi', 'South Sudan',
-             'Ethiopia', 'Eritrea', 'Djibouti', 'Somalia', 'Sudan',
-             'Comoros', 'Seychelles', 'Mauritius', 'Madagascar', 'Malawi',
-             'Zambia', 'Zimbabwe']
-        .contains(country)) {
-      return 'KES'; // approximate; many different currencies
+    if (['KE', 'UG', 'TZ', 'RW', 'BI', 'SS', 'ET', 'ER', 'DJ', 'SO', 'SD',
+             'KM', 'SC', 'MU', 'MG', 'MW', 'ZM', 'ZW']
+        .contains(countryCode)) {
+      return 'KES';
     }
     // Central Africa
-    if (['Cameroon', 'Chad', 'Central African Republic', 'Congo',
-             'Gabon', 'Equatorial Guinea', 'São Tomé and Príncipe',
-             'Angola', 'DR Congo']
-        .contains(country)) {
-      return 'XAF'; // Central African CFA franc
+    if (['CM', 'TD', 'CF', 'CG', 'GA', 'GQ', 'ST', 'AO', 'CD']
+        .contains(countryCode)) {
+      return 'XAF';
     }
     // Southern Africa
-    if (['South Africa', 'Botswana', 'Namibia', 'Mozambique', 'Lesotho',
-             'Eswatini']
-        .contains(country)) {
-      return 'ZAR'; // South African rand (used by multiple countries)
+    if (['ZA', 'BW', 'NA', 'MZ', 'LS', 'SZ'].contains(countryCode)) {
+      return 'ZAR';
     }
     // North Africa
-    if (['Egypt', 'Morocco', 'Algeria', 'Tunisia', 'Libya', 'Western Sahara']
-        .contains(country)) {
-      return 'EGP'; // approximate
+    if (['EG', 'MA', 'DZ', 'TN', 'LY', 'EH'].contains(countryCode)) {
+      return 'EGP';
     }
     return 'USD';
   }
@@ -204,7 +200,20 @@ class StudentOnboardingModel extends ChangeNotifier {
       _careerGoals != null &&
       _careerGoals!.trim().isNotEmpty;
 
-  // ── Step 5: Optional Extras ──
+  // ── Step 5: Big Five Personality Assessment ──
+  final Map<String, int> _personalityResponses = {};
+
+  Map<String, int> get personalityResponses =>
+      Map.unmodifiable(_personalityResponses);
+
+  void setPersonalityResponse(String questionId, int score) {
+    _personalityResponses[questionId] = score;
+    notifyListeners();
+  }
+
+  bool get step5Valid => _personalityResponses.isNotEmpty;
+
+  // ── Step 6: Optional Extras ──
   String? _gpa;
   final List<TestScore> _testScores = [];
   String? _accessibilityNeeds;
@@ -233,8 +242,7 @@ class StudentOnboardingModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Always valid — step 5 is optional
-  bool get step5Valid => true;
+  bool get step6Valid => true;
 
   /// Converts the model to a Map for Firestore.
   Map<String, dynamic> toFirestoreMap() {
@@ -248,6 +256,7 @@ class StudentOnboardingModel extends ChangeNotifier {
         'targetTimeline': _targetTimeline,
         // Step 2
         'homeCountry': _homeCountry,
+        'homeCountryCode': _homeCountryCode,
         'homeCity': _homeCity,
         'preferredDestinations': _preferredDestinations,
         'preferredLanguage': _preferredLanguage,
@@ -262,6 +271,8 @@ class StudentOnboardingModel extends ChangeNotifier {
         'interests': _interests,
         'careerGoals': _careerGoals,
         // Step 5
+        'personalityResponses': _personalityResponses,
+        // Step 6
         'gpa': _gpa,
         'testScores': _testScores.map((ts) => ts.toMap()).toList(),
         'accessibilityNeeds': _accessibilityNeeds,

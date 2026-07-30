@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:country_picker_flutter_plus/country_picker_flutter_plus.dart' as cpf;
+import '../../data/african_regions.dart';
 import 'student_onboarding_model.dart';
 
 class Step2LocationPage extends StatelessWidget {
@@ -15,86 +18,6 @@ class Step2LocationPage extends StatelessWidget {
   });
 
   static const _brandBlue = Color(0xFF011F7B);
-  static const _brandGold = Color(0xFFFFBA09);
-
-  /// African countries grouped by region, plus a diaspora option.
-  static const Map<String, List<String>> africanCountriesByRegion = {
-    'West Africa': [
-      'Nigeria',
-      'Ghana',
-      'Ivory Coast',
-      'Senegal',
-      'Benin',
-      'Togo',
-      'Niger',
-      'Mali',
-      'Burkina Faso',
-      'Guinea',
-      'Guinea-Bissau',
-      'Liberia',
-      'Sierra Leone',
-      'Gambia',
-      'Cape Verde',
-      'Mauritania',
-    ],
-    'East Africa': [
-      'Kenya',
-      'Tanzania',
-      'Uganda',
-      'Ethiopia',
-      'Rwanda',
-      'Somalia',
-      'South Sudan',
-      'Sudan',
-      'Djibouti',
-      'Eritrea',
-      'Burundi',
-      'Comoros',
-      'Seychelles',
-      'Mauritius',
-      'Madagascar',
-      'Malawi',
-      'Zambia',
-      'Zimbabwe',
-    ],
-    'Central Africa': [
-      'DR Congo',
-      'Cameroon',
-      'Angola',
-      'Chad',
-      'Central African Republic',
-      'Congo',
-      'Gabon',
-      'Equatorial Guinea',
-      'São Tomé and Príncipe',
-    ],
-    'Southern Africa': [
-      'South Africa',
-      'Botswana',
-      'Namibia',
-      'Mozambique',
-      'Lesotho',
-      'Eswatini',
-    ],
-    'North Africa': [
-      'Egypt',
-      'Morocco',
-      'Algeria',
-      'Tunisia',
-      'Libya',
-      'Western Sahara',
-    ],
-  };
-
-  /// All African countries as a flat list for search.
-  static List<String> get _allAfricanCountries {
-    return africanCountriesByRegion.values.expand((x) => x).toList();
-  }
-
-  /// Full list of country options including diaspora.
-  static List<String> get _allCountryOptions {
-    return ['Outside Africa / Diaspora', ..._allAfricanCountries];
-  }
 
   static const List<String> languagesOfInstruction = [
     'English',
@@ -112,50 +35,70 @@ class Step2LocationPage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
     final subtitleColor = isDark
-        ? Colors.white.withValues(alpha: 0.5)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.5);
+        ? Colors.white.withValues(alpha: 0.6)
+        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Text(
-            'Location & Logistics',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              color: textColor,
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Where are you from and where do you want to study?',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: subtitleColor,
-            ),
+          // Header with icon
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: _brandBlue.withValues(alpha: 0.1),
+                ),
+                child: const FaIcon(FontAwesomeIcons.globe, color: _brandBlue, size: 24),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Location & Logistics',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: textColor,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    Text(
+                      'Where are you from and where do you want to study?',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: subtitleColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 24),
 
           // ── Home Country ──
-          _sectionLabel('Home Country', isDark),
+          _sectionLabel(FontAwesomeIcons.flag, 'Home Country', isDark),
           const SizedBox(height: 8),
-          _buildSearchableCountryDropdown(context),
+          _buildCountryPicker(context),
           const SizedBox(height: 20),
 
           // ── Home City ──
-          _sectionLabel('City', isDark),
+          _sectionLabel(FontAwesomeIcons.city, 'City', isDark),
           const SizedBox(height: 8),
           _buildCityField(context),
           const SizedBox(height: 20),
 
           // ── Preferred Study Destinations ──
-          _sectionLabel('Preferred Study Destination(s)', isDark),
+          _sectionLabel(FontAwesomeIcons.plane, 'Preferred Study Destination(s)', isDark),
           const SizedBox(height: 4),
           Text(
             'Select all that apply (can differ from your home country)',
@@ -170,7 +113,7 @@ class Step2LocationPage extends StatelessWidget {
           const SizedBox(height: 20),
 
           // ── Preferred Language of Instruction ──
-          _sectionLabel('Preferred Language of Instruction', isDark),
+          _sectionLabel(FontAwesomeIcons.language, 'Preferred Language of Instruction', isDark),
           const SizedBox(height: 8),
           _buildDropdown<String>(
             context,
@@ -231,13 +174,22 @@ class Step2LocationPage extends StatelessWidget {
                       elevation: model.step2Valid ? 4 : 0,
                       shadowColor: _brandBlue.withValues(alpha: 0.3),
                     ),
-                    child: Text(
-                      'Continue',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: model.step2Valid ? Colors.white : subtitleColor,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Continue',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: model.step2Valid ? Colors.white : subtitleColor,
+                          ),
+                        ),
+                        if (model.step2Valid) ...[
+                          const SizedBox(width: 8),
+                          const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 16),
+                        ],
+                      ],
                     ),
                   ),
                 ),
@@ -249,23 +201,29 @@ class Step2LocationPage extends StatelessWidget {
     );
   }
 
-  Widget _sectionLabel(String label, bool isDark) {
-    return Text(
-      label,
-      style: GoogleFonts.plusJakartaSans(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: isDark ? Colors.white.withValues(alpha: 0.8) : _brandBlue,
-        letterSpacing: 0.2,
-      ),
+  Widget _sectionLabel(FaIconData icon, String label, bool isDark) {
+    return Row(
+      children: [
+        FaIcon(icon, size: 14, color: _brandBlue),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white.withValues(alpha: 0.8) : _brandBlue,
+            letterSpacing: 0.2,
+          ),
+        ),
+      ],
     );
   }
 
-  // ── Searchable Country Dropdown ──
-  Widget _buildSearchableCountryDropdown(BuildContext context) {
+  // ── Country Picker (using country_picker_flutter_plus) ──
+  Widget _buildCountryPicker(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
-      onTap: () => _showCountrySearchDialog(context),
+      onTap: () => _showCountryPicker(context),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -273,7 +231,7 @@ class Step2LocationPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           color: isDark
               ? const Color(0xFF323232).withValues(alpha: 0.6)
-              : Colors.white.withValues(alpha: 0.85),
+              : Colors.white.withValues(alpha: 0.9),
           border: Border.all(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.08)
@@ -282,9 +240,13 @@ class Step2LocationPage extends StatelessWidget {
         ),
         child: Row(
           children: [
+            const FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16, color: _brandBlue),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
-                model.homeCountry ?? 'Select your home country',
+                model.homeCountry != null
+                    ? model.homeCountry!
+                    : 'Select your home country',
                 style: GoogleFonts.inter(
                   fontSize: 15,
                   color: model.homeCountry != null
@@ -295,163 +257,72 @@ class Step2LocationPage extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.search_rounded,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.5)
-                  : _brandBlue.withValues(alpha: 0.5),
-            ),
+            if (model.homeCountry != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: _getRegionColor(model.homeCountryCode ?? ''),
+                ),
+                child: Text(
+                  _getRegionLabel(model.homeCountryCode ?? ''),
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Future<void> _showCountrySearchDialog(BuildContext context) async {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final searchController = TextEditingController();
-    final searchResult = ValueNotifier<List<_CountryGroup>>(_buildCountryGroups(''));
+  Future<void> _showCountryPicker(BuildContext context) async {
+    final countryInfo = await showCountryPickerDialog(context);
 
-    void onSearchChanged(String query) {
-      searchResult.value = _buildCountryGroups(query);
-    }
+    if (countryInfo != null) {
+      final countryName = countryInfo.name;
+      final countryCode = countryInfo.code;
 
-    final selected = await showDialog<String>(
-      context: context,
-      builder: (ctx) {
-        return Dialog(
-          backgroundColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: TextField(
-                    controller: searchController,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      hintText: 'Search countries...',
-                      prefixIcon: const Icon(Icons.search_rounded),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      filled: true,
-                      fillColor: isDark
-                          ? const Color(0xFF323232).withValues(alpha: 0.6)
-                          : Colors.grey.withValues(alpha: 0.06),
-                    ),
-                    onChanged: onSearchChanged,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ValueListenableBuilder<List<_CountryGroup>>(
-                  valueListenable: searchResult,
-                  builder: (context, groups, _) {
-                    if (groups.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(24),
-                        child: Text('No countries found'),
-                      );
-                    }
-                    return Flexible(
-                      child: ListView(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        children: groups.expand((group) {
-                          return [
-                            if (group.name.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                                child: Text(
-                                  group.name,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: _brandBlue,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                              ),
-                            ...group.countries.map((country) {
-                              final isSelected = model.homeCountry == country;
-                              return ListTile(
-                                dense: true,
-                                title: Text(
-                                  country,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 14,
-                                    fontWeight:
-                                        isSelected ? FontWeight.w600 : FontWeight.w400,
-                                    color: isSelected
-                                        ? _brandBlue
-                                        : (isDark
-                                            ? Colors.white
-                                            : const Color(0xFF1A1A2E)),
-                                  ),
-                                ),
-                                trailing: isSelected
-                                    ? const Icon(Icons.check,
-                                        color: _brandBlue, size: 20)
-                                    : null,
-                                onTap: () => Navigator.pop(ctx, country),
-                              );
-                            }),
-                          ];
-                        }).toList(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+      // Determine region for African countries
+      final region = AfricanRegions.getRegion(countryCode);
+      final displayName = region != null ? '$countryName ($region)' : countryName;
 
-    if (selected != null) {
-      model.homeCountry = selected;
+      model.homeCountry = displayName;
+      model.homeCountryCode = countryCode;
     }
   }
 
-  List<_CountryGroup> _buildCountryGroups(String query) {
-    final lowerQuery = query.toLowerCase();
-    if (query.isEmpty) {
-      return [
-        _CountryGroup('', ['Outside Africa / Diaspora']),
-        ...africanCountriesByRegion.entries.map((e) =>
-            _CountryGroup(e.key, e.value)),
-      ];
+  String _getRegionLabel(String countryCode) {
+    final region = AfricanRegions.getRegion(countryCode);
+    if (region == null) return 'Diaspora';
+    // Abbreviate
+    if (region == 'West Africa') return 'West';
+    if (region == 'East Africa') return 'East';
+    if (region == 'Central Africa') return 'Central';
+    if (region == 'Southern Africa') return 'South';
+    if (region == 'North Africa') return 'North';
+    return 'Other';
+  }
+
+  Color _getRegionColor(String countryCode) {
+    final region = AfricanRegions.getRegion(countryCode);
+    switch (region) {
+      case 'West Africa':
+        return const Color(0xFF4CAF50);
+      case 'East Africa':
+        return const Color(0xFF2196F3);
+      case 'Central Africa':
+        return const Color(0xFFFF9800);
+      case 'Southern Africa':
+        return const Color(0xFFE91E63);
+      case 'North Africa':
+        return const Color(0xFF9C27B0);
+      default:
+        return _brandBlue;
     }
-
-    // Filter by query
-    final allMatching = _allCountryOptions
-        .where((c) => c.toLowerCase().contains(lowerQuery))
-        .toList();
-
-    if (allMatching.isEmpty) return [];
-
-    // Group matching results
-    final groups = <_CountryGroup>[];
-    final diasporaMatch = 'Outside Africa / Diaspora'.toLowerCase().contains(lowerQuery);
-    if (diasporaMatch && 'Outside Africa / Diaspora'.toLowerCase().contains(lowerQuery)) {
-      groups.add(_CountryGroup('', ['Outside Africa / Diaspora']));
-    }
-
-    for (final entry in africanCountriesByRegion.entries) {
-      final matching = entry.value
-          .where((c) => c.toLowerCase().contains(lowerQuery))
-          .toList();
-      if (matching.isNotEmpty) {
-        groups.add(_CountryGroup(entry.key, matching));
-      }
-    }
-    return groups;
   }
 
   // ── City Text Field ──
@@ -478,7 +349,7 @@ class Step2LocationPage extends StatelessWidget {
         filled: true,
         fillColor: isDark
             ? const Color(0xFF323232).withValues(alpha: 0.6)
-            : Colors.white.withValues(alpha: 0.85),
+            : Colors.white.withValues(alpha: 0.9),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
@@ -503,57 +374,87 @@ class Step2LocationPage extends StatelessWidget {
   // ── Destinations Multi-Select ──
   Widget _buildDestinationsMultiSelect(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final options = _allCountryOptions;
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: options.map((option) {
-        final isSelected = model.preferredDestinations.contains(option);
-        return GestureDetector(
-          onTap: () => model.toggleDestination(option),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
+    // Show a button to add destinations and display existing ones
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Existing destinations
+        ...List.generate(model.preferredDestinations.length, (index) {
+          final dest = model.preferredDestinations[index];
+          return Container(
+            margin: const EdgeInsets.only(bottom: 6),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: isSelected
-                  ? _brandBlue
-                  : isDark
-                      ? const Color(0xFF323232).withValues(alpha: 0.6)
-                      : Colors.white.withValues(alpha: 0.85),
+              borderRadius: BorderRadius.circular(12),
+              color: _brandBlue.withValues(alpha: 0.1),
+              border: Border.all(color: _brandBlue.withValues(alpha: 0.2)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FaIcon(FontAwesomeIcons.check, size: 12, color: _brandBlue),
+                const SizedBox(width: 8),
+                Text(
+                  dest,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: _brandBlue,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () => model.toggleDestination(dest),
+                  child: FaIcon(FontAwesomeIcons.xmark, size: 12, color: _brandBlue.withValues(alpha: 0.5)),
+                ),
+              ],
+            ),
+          );
+        }),
+        const SizedBox(height: 4),
+        GestureDetector(
+          onTap: () => _showAddDestinationDialog(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: isSelected
-                    ? _brandBlue
-                    : isDark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : _brandBlue.withValues(alpha: 0.08),
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.15)
+                    : _brandBlue.withValues(alpha: 0.15),
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const FaIcon(FontAwesomeIcons.plus, size: 14, color: _brandBlue),
+                const SizedBox(width: 8),
                 Text(
-                  option,
+                  'Add destination',
                   style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected
-                        ? Colors.white
-                        : isDark
-                            ? Colors.white.withValues(alpha: 0.7)
-                            : const Color(0xFF1A1A2E).withValues(alpha: 0.7),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: _brandBlue,
                   ),
                 ),
-                if (isSelected) ...[
-                  const SizedBox(width: 4),
-                  Icon(Icons.check, size: 14, color: _brandGold),
-                ],
               ],
             ),
           ),
-        );
-      }).toList(),
+        ),
+      ],
     );
+  }
+
+  Future<void> _showAddDestinationDialog(BuildContext context) async {
+    final countryInfo = await showCountryPickerDialog(context);
+
+    if (countryInfo != null) {
+      final countryName = countryInfo.name;
+      final countryCode = countryInfo.code;
+      final region = AfricanRegions.getRegion(countryCode);
+      final displayName = region != null ? '$countryName ($region)' : countryName;
+      model.toggleDestination(displayName);
+    }
   }
 
   // ── Generic Dropdown ──
@@ -570,7 +471,7 @@ class Step2LocationPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
         color: isDark
             ? const Color(0xFF323232).withValues(alpha: 0.6)
-            : Colors.white.withValues(alpha: 0.85),
+            : Colors.white.withValues(alpha: 0.9),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
@@ -596,12 +497,7 @@ class Step2LocationPage extends StatelessWidget {
             color: isDark ? Colors.white : const Color(0xFF1A1A2E),
           ),
           dropdownColor: isDark ? const Color(0xFF323232) : Colors.white,
-          icon: Icon(
-            Icons.keyboard_arrow_down_rounded,
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.5)
-                : _brandBlue.withValues(alpha: 0.5),
-          ),
+          icon: const FaIcon(FontAwesomeIcons.chevronDown, size: 14),
           borderRadius: BorderRadius.circular(14),
           items: items.map((item) {
             return DropdownMenuItem<T>(
@@ -616,9 +512,121 @@ class Step2LocationPage extends StatelessWidget {
   }
 }
 
-/// Helper class for grouping countries in the search dialog.
-class _CountryGroup {
-  final String name;
-  final List<String> countries;
-  _CountryGroup(this.name, this.countries);
+/// Helper to show a country picker dialog using EnhancedCountrySelector.
+Future<cpf.CountryInfo?> showCountryPickerDialog(BuildContext context) async {
+  final dataManager = cpf.CountryDataManager();
+  final countries = await dataManager.getCountries();
+  if (!context.mounted) return null;
+
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
+  return showModalBottomSheet<cpf.CountryInfo>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (ctx) {
+      return SizedBox(
+        height: MediaQuery.of(ctx).size.height * 0.8,
+        child: Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Select a country',
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: _buildCountryList(ctx, countries, isDark),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+Widget _buildCountryList(BuildContext context, List<cpf.CountryInfo> countries, bool isDark) {
+  final searchController = TextEditingController();
+  final searchResults = ValueNotifier<List<cpf.CountryInfo>>(countries);
+
+  void onSearch(String query) {
+    if (query.isEmpty) {
+      searchResults.value = countries;
+    } else {
+      final lower = query.toLowerCase();
+      searchResults.value = countries.where((c) =>
+        c.name.toLowerCase().contains(lower) ||
+        (c.nativeName?.toLowerCase().contains(lower) == true) ||
+        c.code.toLowerCase().contains(lower)
+      ).toList();
+    }
+  }
+
+  return Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextField(
+          controller: searchController,
+          autofocus: true,
+          decoration: InputDecoration(
+            hintText: 'Search countries...',
+            prefixIcon: const Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            filled: true,
+            fillColor: isDark
+                ? const Color(0xFF323232).withValues(alpha: 0.6)
+                : Colors.grey.withValues(alpha: 0.06),
+          ),
+          onChanged: onSearch,
+        ),
+      ),
+      const SizedBox(height: 12),
+      Expanded(
+        child: ValueListenableBuilder<List<cpf.CountryInfo>>(
+          valueListenable: searchResults,
+          builder: (context, filtered, _) {
+            return ListView.builder(
+              itemCount: filtered.length,
+              itemBuilder: (context, index) {
+                final country = filtered[index];
+                return ListTile(
+                  leading: Text(country.flagEmoji, style: const TextStyle(fontSize: 24)),
+                  title: Text(
+                    country.name,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                    ),
+                  ),
+                  subtitle: country.capital != null
+                      ? Text(country.capital!, style: GoogleFonts.inter(fontSize: 12))
+                      : null,
+                  onTap: () => Navigator.pop(context, country),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    ],
+  );
 }

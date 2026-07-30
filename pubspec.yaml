@@ -42,6 +42,8 @@ dependencies:
   http: ^1.2.2
   google_fonts: ^8.2.0
   cloud_firestore: ^5.6.12
+  font_awesome_flutter: ^11.0.0
+  country_picker_flutter_plus: ^1.0.0
 
 dev_dependencies:
   flutter_test:

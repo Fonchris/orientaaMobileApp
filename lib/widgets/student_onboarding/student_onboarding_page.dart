@@ -9,6 +9,7 @@ import 'step1_identity_page.dart';
 import 'step2_location_page.dart';
 import 'step3_financial_page.dart';
 import 'step4_self_assessment_page.dart';
+import 'step5_big_five_page.dart';
 import 'step5_optional_page.dart';
 
 class StudentOnboardingPage extends StatefulWidget {
@@ -24,18 +25,22 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   int _currentStep = 0;
   bool _isSubmitting = false;
 
-  static const _totalSteps = 5;
+  static const _totalSteps = 6;
   static const _brandBlue = Color(0xFF011F7B);
+  static const _brandGold = Color(0xFFFFBA09);
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    // Critical: listen to model changes so stateless step pages rebuild
+    _model.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _model.removeListener(() => setState(() {}));
     _model.dispose();
     super.dispose();
   }
@@ -100,7 +105,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top bar with back arrow and step title
+            // Top bar with back arrow, step title, and step counter
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
@@ -131,7 +136,21 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(width: 48), // Balance the back button
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: _brandGold.withValues(alpha: 0.15),
+                    ),
+                    child: Text(
+                      '${_currentStep + 1}/$_totalSteps',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: _brandGold,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -166,6 +185,11 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                     onBack: _previousStep,
                   ),
                   Step4SelfAssessmentPage(
+                    model: _model,
+                    onNext: _nextStep,
+                    onBack: _previousStep,
+                  ),
+                  Step5BigFivePage(
                     model: _model,
                     onNext: _nextStep,
                     onBack: _previousStep,
@@ -215,6 +239,8 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       case 3:
         return 'Self-Assessment';
       case 4:
+        return 'Personality';
+      case 5:
         return 'Optional Extras';
       default:
         return '';
