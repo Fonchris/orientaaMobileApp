@@ -153,17 +153,17 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
               currentStep: _currentStep,
             ),
 
-            // Page content - using IndexedStack to avoid PageView scroll conflicts
+            // Page content - using IndexedStack with SizedBox.expand to ensure proper constraints
             Expanded(
               child: IndexedStack(
                 index: _currentStep,
                 children: [
-                  Step1IdentityPage(model: _model, onNext: _nextStep),
-                  Step2LocationPage(model: _model, onNext: _nextStep, onBack: _previousStep),
-                  Step3FinancialPage(model: _model, onNext: _nextStep, onBack: _previousStep),
-                  Step4SelfAssessmentPage(model: _model, onNext: _nextStep, onBack: _previousStep),
-                  Step5BigFivePage(model: _model, onNext: _nextStep, onBack: _previousStep),
-                  Step5OptionalPage(model: _model, onNext: _submit, onBack: _previousStep, onSkip: _submit),
+                  SizedBox.expand(child: Step1IdentityPage(model: _model, onNext: _nextStep)),
+                  SizedBox.expand(child: Step2LocationPage(model: _model, onNext: _nextStep, onBack: _previousStep)),
+                  SizedBox.expand(child: Step3FinancialPage(model: _model, onNext: _nextStep, onBack: _previousStep)),
+                  SizedBox.expand(child: Step4SelfAssessmentPage(model: _model, onNext: _nextStep, onBack: _previousStep)),
+                  SizedBox.expand(child: Step5BigFivePage(model: _model, onNext: _nextStep, onBack: _previousStep)),
+                  SizedBox.expand(child: Step5OptionalPage(model: _model, onNext: _submit, onBack: _previousStep, onSkip: _submit)),
                 ],
               ),
             ),
