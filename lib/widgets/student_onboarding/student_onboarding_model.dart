@@ -6,13 +6,17 @@ class StudentOnboardingModel extends ChangeNotifier {
   String? _desiredDegreeLevel;
   final List<String> _fieldsOfInterest = [];
   String? _customField;
-  String? _targetTimeline;
+  int? _startMonth; // 1-12
+  int? _startYear; // e.g., 2026, 2027
+  String? _startLabel; // display value like "September 2026"
 
   String? get educationLevel => _educationLevel;
   String? get desiredDegreeLevel => _desiredDegreeLevel;
   List<String> get fieldsOfInterest => List.unmodifiable(_fieldsOfInterest);
   String? get customField => _customField;
-  String? get targetTimeline => _targetTimeline;
+  int? get startMonth => _startMonth;
+  int? get startYear => _startYear;
+  String? get startLabel => _startLabel;
 
   set educationLevel(String? v) {
     _educationLevel = v;
@@ -38,16 +42,24 @@ class StudentOnboardingModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  set targetTimeline(String? v) {
-    _targetTimeline = v;
+  void setStartDate(int month, int year) {
+    _startMonth = month;
+    _startYear = year;
+    _startLabel = '${_monthNames[month - 1]} $year';
     notifyListeners();
   }
+
+  static const List<String> _monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
 
   bool get step1Valid =>
       _educationLevel != null &&
       _desiredDegreeLevel != null &&
       _fieldsOfInterest.isNotEmpty &&
-      _targetTimeline != null;
+      _startMonth != null &&
+      _startYear != null;
 
   // ── Step 2: Location & Logistics ──
   String? _homeCountry;
@@ -261,7 +273,9 @@ class StudentOnboardingModel extends ChangeNotifier {
         'desiredDegreeLevel': _desiredDegreeLevel,
         'fieldsOfInterest': _fieldsOfInterest,
         'customField': _customField,
-        'targetTimeline': _targetTimeline,
+        'startMonth': _startMonth,
+        'startYear': _startYear,
+        'startLabel': _startLabel,
         // Step 2
         'homeCountry': _homeCountry,
         'homeCountryCode': _homeCountryCode,

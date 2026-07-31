@@ -17,7 +17,6 @@ class Step1IdentityPage extends StatelessWidget {
 
   static const _brandBlue = Color(0xFF011F7B);
   static const _brandGold = Color(0xFFFFBA09);
-  static const _brandYellow = Color(0xFFFFDB00);
 
   static const List<String> educationLevels = [
     'Secondary school student',
@@ -56,10 +55,9 @@ class Step1IdentityPage extends StatelessWidget {
 
   static const String _otherField = 'Other';
 
-  static const List<String> timelines = [
-    'This year',
-    'Next year',
-    'Just exploring',
+  static const List<String> _months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
   @override
@@ -70,256 +68,173 @@ class Step1IdentityPage extends StatelessWidget {
         ? Colors.white.withValues(alpha: 0.6)
         : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0xFF1A1A2E), const Color(0xFF0F1115)]
-              : [const Color(0xFFF8F9FF), Colors.white],
+    // Simple Column layout - no Stack wrapper to avoid scroll conflicts
+    return Column(
+      children: [
+        // Scrollable form content
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Premium header with icon
+                _buildPremiumHeader(isDark, textColor, subtitleColor),
+                const SizedBox(height: 28),
+
+                // Education Level
+                _buildSection(
+                  icon: FontAwesomeIcons.school,
+                  label: 'Current Education Level',
+                  isDark: isDark,
+                  subtitleColor: subtitleColor,
+                  child: _buildDropdown<String>(
+                    context,
+                    value: model.educationLevel,
+                    items: educationLevels,
+                    hint: 'Select your current level',
+                    onChanged: (v) => model.educationLevel = v,
+                    isDark: isDark,
+                  ),
+                ),
+                const SizedBox(height: 22),
+
+                // Desired Degree Level
+                _buildSection(
+                  icon: FontAwesomeIcons.award,
+                  label: 'Desired Degree Level',
+                  isDark: isDark,
+                  subtitleColor: subtitleColor,
+                  child: _buildDropdown<String>(
+                    context,
+                    value: model.desiredDegreeLevel,
+                    items: degreeLevels,
+                    hint: 'Select desired degree',
+                    onChanged: (v) => model.desiredDegreeLevel = v,
+                    isDark: isDark,
+                  ),
+                ),
+                const SizedBox(height: 22),
+
+                // Fields of Interest
+                _buildSection(
+                  icon: FontAwesomeIcons.bookOpen,
+                  label: 'Field(s) of Interest',
+                  isDark: isDark,
+                  subtitleColor: subtitleColor,
+                  child: _buildMultiSelectChips(
+                    context,
+                    options: fieldsOfInterest,
+                    selected: model.fieldsOfInterest,
+                    onToggle: (v) => model.toggleFieldOfInterest(v),
+                    isDark: isDark,
+                  ),
+                ),
+                // Custom field input when "Other" is selected
+                if (model.fieldsOfInterest.contains(_otherField)) ...[
+                  const SizedBox(height: 10),
+                  _buildCustomFieldInput(context, isDark),
+                ],
+                const SizedBox(height: 22),
+
+                // Start Date (Month/Year Picker)
+                _buildSection(
+                  icon: FontAwesomeIcons.calendarDays,
+                  label: 'When do you plan to start?',
+                  isDark: isDark,
+                  subtitleColor: subtitleColor,
+                  child: _buildDatePickerButton(context, isDark),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          // Decorative background elements
-          ..._buildBackgroundDecorations(isDark),
-          // Main content with pinned button
-          Column(
+        // Pinned bottom button with validation hint
+        Container(
+          padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).padding.bottom + 12),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Scrollable form content
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              // Validation hint
+              if (!model.step1Valid)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Premium header with icon
-                      _buildPremiumHeader(isDark, textColor, subtitleColor),
-                      const SizedBox(height: 28),
-
-                      // Education Level
-                      _buildSection(
-                        icon: FontAwesomeIcons.school,
-                        label: 'Current Education Level',
-                        isDark: isDark,
-                        subtitleColor: subtitleColor,
-                        child: _buildDropdown<String>(
-                          context,
-                          value: model.educationLevel,
-                          items: educationLevels,
-                          hint: 'Select your current level',
-                          onChanged: (v) => model.educationLevel = v,
-                          isDark: isDark,
+                      const FaIcon(FontAwesomeIcons.circleInfo, size: 12, color: _brandGold),
+                      const SizedBox(width: 6),
+                      Text(
+                        _validationHint(model),
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: _brandGold,
                         ),
                       ),
-                      const SizedBox(height: 22),
-
-                      // Desired Degree Level
-                      _buildSection(
-                        icon: FontAwesomeIcons.award,
-                        label: 'Desired Degree Level',
-                        isDark: isDark,
-                        subtitleColor: subtitleColor,
-                        child: _buildDropdown<String>(
-                          context,
-                          value: model.desiredDegreeLevel,
-                          items: degreeLevels,
-                          hint: 'Select desired degree',
-                          onChanged: (v) => model.desiredDegreeLevel = v,
-                          isDark: isDark,
+                    ],
+                  ),
+                ),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: model.step1Valid ? onNext : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _brandBlue,
+                    disabledBackgroundColor: isDark
+                        ? Colors.white.withValues(alpha: 0.06)
+                        : _brandBlue.withValues(alpha: 0.04),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: model.step1Valid ? 6 : 0,
+                    shadowColor: _brandBlue.withValues(alpha: 0.4),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        model.step1Valid ? 'Continue' : 'Complete all fields',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: model.step1Valid ? Colors.white : subtitleColor,
+                          letterSpacing: 0.3,
                         ),
                       ),
-                      const SizedBox(height: 22),
-
-                      // Fields of Interest
-                      _buildSection(
-                        icon: FontAwesomeIcons.bookOpen,
-                        label: 'Field(s) of Interest',
-                        isDark: isDark,
-                        subtitleColor: subtitleColor,
-                        child: _buildMultiSelectChips(
-                          context,
-                          options: fieldsOfInterest,
-                          selected: model.fieldsOfInterest,
-                          onToggle: (v) => model.toggleFieldOfInterest(v),
-                          isDark: isDark,
+                      if (model.step1Valid) ...[
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: _brandGold.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 14),
                         ),
-                      ),
-                      // Custom field input when "Other" is selected
-                      if (model.fieldsOfInterest.contains(_otherField)) ...[
-                        const SizedBox(height: 10),
-                        _buildCustomFieldInput(context, isDark),
                       ],
-                      const SizedBox(height: 22),
-
-                      // Target Timeline
-                      _buildSection(
-                        icon: FontAwesomeIcons.calendarDays,
-                        label: 'When do you plan to start?',
-                        isDark: isDark,
-                        subtitleColor: subtitleColor,
-                        child: _buildChipGroup(
-                          context,
-                          options: timelines,
-                          selected: model.targetTimeline,
-                          onSelected: (v) => model.targetTimeline = v,
-                          isDark: isDark,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
               ),
-              // Pinned bottom button with validation hint
-              Container(
-                padding: EdgeInsets.fromLTRB(20, 12, 20, MediaQuery.of(context).padding.bottom + 12),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDark ? Colors.black.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.08),
-                      blurRadius: 16,
-                      offset: const Offset(0, -4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Validation hint
-                    if (!model.step1Valid)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const FaIcon(FontAwesomeIcons.circleInfo, size: 12, color: _brandGold),
-                            const SizedBox(width: 6),
-                            Text(
-                              _validationHint(model),
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: _brandGold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        onPressed: model.step1Valid ? onNext : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _brandBlue,
-                          disabledBackgroundColor: isDark
-                              ? Colors.white.withValues(alpha: 0.06)
-                              : _brandBlue.withValues(alpha: 0.04),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          elevation: model.step1Valid ? 6 : 0,
-                          shadowColor: _brandBlue.withValues(alpha: 0.4),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              model.step1Valid ? 'Continue' : 'Complete all fields',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: model.step1Valid ? Colors.white : subtitleColor,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                            if (model.step1Valid) ...[
-                              const SizedBox(width: 10),
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: _brandGold.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 14),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
-  }
-
-  // ── Decorative Background Elements ──
-  List<Widget> _buildBackgroundDecorations(bool isDark) {
-    return [
-      // Top-right gradient blob
-      Positioned(
-        top: -60,
-        right: -40,
-        child: Container(
-          width: 200,
-          height: 200,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                _brandBlue.withValues(alpha: isDark ? 0.08 : 0.04),
-                _brandBlue.withValues(alpha: 0),
-              ],
-            ),
-          ),
-        ),
-      ),
-      // Bottom-left floating circle
-      Positioned(
-        bottom: 80,
-        left: -30,
-        child: Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(
-              colors: [
-                _brandGold.withValues(alpha: isDark ? 0.06 : 0.03),
-                _brandGold.withValues(alpha: 0),
-              ],
-            ),
-          ),
-        ),
-      ),
-      // Mid-right abstract shape
-      Positioned(
-        top: 250,
-        right: -20,
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: RadialGradient(
-              colors: [
-                _brandYellow.withValues(alpha: isDark ? 0.05 : 0.03),
-                _brandYellow.withValues(alpha: 0),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ];
   }
 
   // ── Premium Header ──
@@ -348,7 +263,6 @@ class Step1IdentityPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Icon with gradient background
           Container(
             width: 56,
             height: 56,
@@ -458,13 +372,9 @@ class Step1IdentityPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: isDark
-            ? const Color(0xFF323232).withValues(alpha: 0.8)
-            : Colors.white,
+        color: isDark ? const Color(0xFF323232).withValues(alpha: 0.8) : Colors.white,
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : _brandBlue.withValues(alpha: 0.08),
+          color: isDark ? Colors.white.withValues(alpha: 0.08) : _brandBlue.withValues(alpha: 0.08),
           width: 1.5,
         ),
         boxShadow: [
@@ -484,9 +394,7 @@ class Step1IdentityPage extends StatelessWidget {
             hint,
             style: GoogleFonts.inter(
               fontSize: 15,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.3)
-                  : _brandBlue.withValues(alpha: 0.35),
+              color: isDark ? Colors.white.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.35),
             ),
           ),
           style: GoogleFonts.inter(
@@ -505,14 +413,252 @@ class Step1IdentityPage extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(16),
           items: items.map((item) {
-            return DropdownMenuItem<T>(
-              value: item,
-              child: Text(item.toString()),
-            );
+            return DropdownMenuItem<T>(value: item, child: Text(item.toString()));
           }).toList(),
           onChanged: onChanged,
         ),
       ),
+    );
+  }
+
+  // ── Month/Year Picker Button ──
+  Widget _buildDatePickerButton(BuildContext context, bool isDark) {
+    return GestureDetector(
+      onTap: () => _showMonthYearPicker(context, isDark),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: isDark ? const Color(0xFF323232).withValues(alpha: 0.8) : Colors.white,
+          border: Border.all(
+            color: model.startLabel != null
+                ? _brandBlue
+                : isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : _brandBlue.withValues(alpha: 0.08),
+            width: model.startLabel != null ? 2 : 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black.withValues(alpha: 0.15) : _brandBlue.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: _brandBlue.withValues(alpha: isDark ? 0.15 : 0.08),
+              ),
+              child: const FaIcon(FontAwesomeIcons.calendar, size: 14, color: _brandBlue),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                model.startLabel ?? 'Tap to select month & year',
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: model.startLabel != null ? FontWeight.w600 : FontWeight.w400,
+                  color: model.startLabel != null
+                      ? (isDark ? Colors.white : const Color(0xFF1A1A2E))
+                      : (isDark ? Colors.white.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.35)),
+                ),
+              ),
+            ),
+            if (model.startLabel != null)
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  color: _brandGold.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const FaIcon(FontAwesomeIcons.check, color: _brandGold, size: 12),
+              )
+            else
+              const FaIcon(FontAwesomeIcons.chevronDown, size: 14, color: _brandBlue),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Month/Year Picker Dialog ──
+  void _showMonthYearPicker(BuildContext context, bool isDark) {
+    int selectedMonth = model.startMonth ?? DateTime.now().month;
+    int selectedYear = model.startYear ?? DateTime.now().year;
+    final currentYear = DateTime.now().year;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: SizedBox(
+                height: 420,
+                child: Column(
+                  children: [
+                    // Handle bar
+                    const SizedBox(height: 12),
+                    Container(
+                      width: 40, height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Title
+                    Text(
+                      'Select intake period',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'When do you plan to begin your studies?',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: isDark ? Colors.white.withValues(alpha: 0.5) : const Color(0xFF1A1A2E).withValues(alpha: 0.5),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Month selector
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Month', style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: _brandBlue)),
+                          const SizedBox(height: 8),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: List.generate(12, (i) {
+                              final month = i + 1;
+                              final isSelected = selectedMonth == month;
+                              return GestureDetector(
+                                onTap: () => setDialogState(() => selectedMonth = month),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: isSelected ? _brandBlue : isDark ? const Color(0xFF323232).withValues(alpha: 0.6) : Colors.grey.withValues(alpha: 0.06),
+                                    border: Border.all(
+                                      color: isSelected ? _brandBlue : isDark ? Colors.white.withValues(alpha: 0.08) : _brandBlue.withValues(alpha: 0.08),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    _months[i],
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                                      color: isSelected ? Colors.white : isDark ? Colors.white.withValues(alpha: 0.7) : const Color(0xFF1A1A2E).withValues(alpha: 0.7),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Year selector
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Text('Year', style: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w600, color: _brandBlue)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SizedBox(
+                              height: 44,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: List.generate(10, (i) {
+                                  final year = currentYear + i;
+                                  final isSelected = selectedYear == year;
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: GestureDetector(
+                                      onTap: () => setDialogState(() => selectedYear = year),
+                                      child: AnimatedContainer(
+                                        duration: const Duration(milliseconds: 200),
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12),
+                                          color: isSelected ? _brandBlue : isDark ? const Color(0xFF323232).withValues(alpha: 0.6) : Colors.grey.withValues(alpha: 0.06),
+                                          border: Border.all(
+                                            color: isSelected ? _brandBlue : isDark ? Colors.white.withValues(alpha: 0.08) : _brandBlue.withValues(alpha: 0.08),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          '$year',
+                                          style: GoogleFonts.plusJakartaSans(
+                                            fontSize: 14,
+                                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                            color: isSelected ? Colors.white : isDark ? Colors.white.withValues(alpha: 0.7) : const Color(0xFF1A1A2E).withValues(alpha: 0.7),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+
+                    // Confirm button
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            model.setStartDate(selectedMonth, selectedYear);
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _brandBlue,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          ),
+                          child: Text(
+                            'Select ${_months[selectedMonth - 1]} $selectedYear',
+                            style: GoogleFonts.plusJakartaSans(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -524,7 +670,7 @@ class Step1IdentityPage extends StatelessWidget {
     if (m.educationLevel == null) return 'Select your current education level';
     if (m.desiredDegreeLevel == null) return 'Select your desired degree level';
     if (m.fieldsOfInterest.isEmpty) return 'Select at least one field of interest';
-    if (m.targetTimeline == null) return 'Select when you plan to start';
+    if (m.startMonth == null) return 'Select when you plan to start';
     return '';
   }
 
@@ -534,13 +680,8 @@ class Step1IdentityPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: isDark
-            ? const Color(0xFF323232).withValues(alpha: 0.8)
-            : Colors.white,
-        border: Border.all(
-          color: _brandBlue.withValues(alpha: 0.15),
-          width: 1.5,
-        ),
+        color: isDark ? const Color(0xFF323232).withValues(alpha: 0.8) : Colors.white,
+        border: Border.all(color: _brandBlue.withValues(alpha: 0.15), width: 1.5),
       ),
       child: Row(
         children: [
@@ -549,22 +690,12 @@ class Step1IdentityPage extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: TextEditingController(text: model.customField ?? '')
-                ..selection = TextSelection.fromPosition(
-                  TextPosition(offset: model.customField?.length ?? 0),
-                ),
+                ..selection = TextSelection.fromPosition(TextPosition(offset: model.customField?.length ?? 0)),
               onChanged: (v) => model.customField = v,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: isDark ? Colors.white : const Color(0xFF1A1A2E),
-              ),
+              style: GoogleFonts.inter(fontSize: 14, color: isDark ? Colors.white : const Color(0xFF1A1A2E)),
               decoration: InputDecoration(
                 hintText: 'Enter your field of interest...',
-                hintStyle: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.3)
-                      : _brandBlue.withValues(alpha: 0.3),
-                ),
+                hintStyle: GoogleFonts.inter(fontSize: 14, color: isDark ? Colors.white.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.3)),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
@@ -596,143 +727,25 @@ class Step1IdentityPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              color: isSelected
-                  ? _brandBlue
-                  : isDark
-                      ? const Color(0xFF323232).withValues(alpha: 0.8)
-                      : Colors.white,
+              color: isSelected ? _brandBlue : isDark ? const Color(0xFF323232).withValues(alpha: 0.8) : Colors.white,
               border: Border.all(
-                color: isSelected
-                    ? _brandBlue
-                    : isDark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : _brandBlue.withValues(alpha: 0.08),
+                color: isSelected ? _brandBlue : isDark ? Colors.white.withValues(alpha: 0.08) : _brandBlue.withValues(alpha: 0.08),
                 width: isSelected ? 2 : 1.5,
               ),
               boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: _brandBlue.withValues(alpha: 0.35),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: isDark ? Colors.black.withValues(alpha: 0.1) : _brandBlue.withValues(alpha: 0.03),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                  ? [BoxShadow(color: _brandBlue.withValues(alpha: 0.35), blurRadius: 12, offset: const Offset(0, 4))]
+                  : [BoxShadow(color: isDark ? Colors.black.withValues(alpha: 0.1) : _brandBlue.withValues(alpha: 0.03), blurRadius: 6, offset: const Offset(0, 2))],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  option,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected
-                        ? Colors.white
-                        : isDark
-                            ? Colors.white.withValues(alpha: 0.7)
-                            : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
-                  ),
-                ),
+                Text(option, style: GoogleFonts.inter(fontSize: 13, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, color: isSelected ? Colors.white : isDark ? Colors.white.withValues(alpha: 0.7) : const Color(0xFF1A1A2E).withValues(alpha: 0.75))),
                 if (isSelected) ...[
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      color: _brandGold.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
+                    decoration: BoxDecoration(color: _brandGold.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
                     child: const FaIcon(FontAwesomeIcons.check, color: _brandGold, size: 10),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  // ── Premium Chip Group (Single Select) ──
-  Widget _buildChipGroup(
-    BuildContext context, {
-    required List<String> options,
-    required String? selected,
-    required ValueChanged<String> onSelected,
-    required bool isDark,
-  }) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: options.map((option) {
-        final isSel = selected == option;
-        return GestureDetector(
-          onTap: () => onSelected(option),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOutCubic,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: isSel
-                  ? _brandBlue
-                  : isDark
-                      ? const Color(0xFF323232).withValues(alpha: 0.8)
-                      : Colors.white,
-              border: Border.all(
-                color: isSel
-                    ? _brandBlue
-                    : isDark
-                        ? Colors.white.withValues(alpha: 0.08)
-                        : _brandBlue.withValues(alpha: 0.08),
-                width: isSel ? 2 : 1.5,
-              ),
-              boxShadow: isSel
-                  ? [
-                      BoxShadow(
-                        color: _brandBlue.withValues(alpha: 0.35),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ]
-                  : [
-                      BoxShadow(
-                        color: isDark ? Colors.black.withValues(alpha: 0.1) : _brandBlue.withValues(alpha: 0.03),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  option,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14,
-                    fontWeight: isSel ? FontWeight.w700 : FontWeight.w500,
-                    color: isSel
-                        ? Colors.white
-                        : isDark
-                            ? Colors.white.withValues(alpha: 0.7)
-                            : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
-                  ),
-                ),
-                if (isSel) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      color: _brandGold.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const FaIcon(FontAwesomeIcons.circleCheck, color: _brandGold, size: 14),
                   ),
                 ],
               ],
