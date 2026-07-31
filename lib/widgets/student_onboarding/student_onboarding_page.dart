@@ -31,7 +31,6 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   @override
   void initState() {
     super.initState();
-    // Critical: listen to model changes so stateless step pages rebuild
     _model.addListener(() => setState(() {}));
   }
 
@@ -97,7 +96,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top bar with back arrow, step title, and step counter
+            // Top bar
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
               child: Row(
@@ -105,9 +104,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                   IconButton(
                     icon: Icon(
                       Icons.arrow_back_rounded,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.7)
-                          : _brandBlue.withValues(alpha: 0.7),
+                      color: isDark ? Colors.white.withValues(alpha: 0.7) : _brandBlue.withValues(alpha: 0.7),
                     ),
                     onPressed: () {
                       if (_currentStep > 0) {
@@ -121,8 +118,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                     child: Text(
                       _stepTitle(_currentStep),
                       style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 16, fontWeight: FontWeight.w700,
                         color: isDark ? Colors.white : const Color(0xFF1A1A2E),
                       ),
                       textAlign: TextAlign.center,
@@ -137,37 +133,19 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                     child: Text(
                       '${_currentStep + 1}/$_totalSteps',
                       style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: _brandGold,
+                        fontSize: 13, fontWeight: FontWeight.w700, color: _brandGold,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-
             // Step progress bar
-            StepProgressBar(
-              totalSteps: _totalSteps,
-              currentStep: _currentStep,
-            ),
-
-            // Page content - using IndexedStack with SizedBox.expand to ensure proper constraints
+            StepProgressBar(totalSteps: _totalSteps, currentStep: _currentStep),
+            // Page content - build only the current step to avoid constraint issues
             Expanded(
-              child: IndexedStack(
-                index: _currentStep,
-                children: [
-                  SizedBox.expand(child: Step1IdentityPage(model: _model, onNext: _nextStep)),
-                  SizedBox.expand(child: Step2LocationPage(model: _model, onNext: _nextStep, onBack: _previousStep)),
-                  SizedBox.expand(child: Step3FinancialPage(model: _model, onNext: _nextStep, onBack: _previousStep)),
-                  SizedBox.expand(child: Step4SelfAssessmentPage(model: _model, onNext: _nextStep, onBack: _previousStep)),
-                  SizedBox.expand(child: Step5BigFivePage(model: _model, onNext: _nextStep, onBack: _previousStep)),
-                  SizedBox.expand(child: Step5OptionalPage(model: _model, onNext: _submit, onBack: _previousStep, onSkip: _submit)),
-                ],
-              ),
+              child: _buildCurrentStep(),
             ),
-
             // Loading overlay
             if (_isSubmitting)
               Container(
@@ -178,10 +156,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                     children: [
                       CircularProgressIndicator(color: Colors.white),
                       SizedBox(height: 16),
-                      Text(
-                        'Saving your information...',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
+                      Text('Saving your information...', style: TextStyle(color: Colors.white, fontSize: 16)),
                     ],
                   ),
                 ),
@@ -192,22 +167,34 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
     );
   }
 
+  Widget _buildCurrentStep() {
+    switch (_currentStep) {
+      case 0:
+        return Step1IdentityPage(model: _model, onNext: _nextStep);
+      case 1:
+        return Step2LocationPage(model: _model, onNext: _nextStep, onBack: _previousStep);
+      case 2:
+        return Step3FinancialPage(model: _model, onNext: _nextStep, onBack: _previousStep);
+      case 3:
+        return Step4SelfAssessmentPage(model: _model, onNext: _nextStep, onBack: _previousStep);
+      case 4:
+        return Step5BigFivePage(model: _model, onNext: _nextStep, onBack: _previousStep);
+      case 5:
+        return Step5OptionalPage(model: _model, onNext: _submit, onBack: _previousStep, onSkip: _submit);
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
   String _stepTitle(int step) {
     switch (step) {
-      case 0:
-        return 'Identity & Academic';
-      case 1:
-        return 'Location & Logistics';
-      case 2:
-        return 'Financial';
-      case 3:
-        return 'Self-Assessment';
-      case 4:
-        return 'Personality';
-      case 5:
-        return 'Optional Extras';
-      default:
-        return '';
+      case 0: return 'Identity & Academic';
+      case 1: return 'Location & Logistics';
+      case 2: return 'Financial';
+      case 3: return 'Self-Assessment';
+      case 4: return 'Personality';
+      case 5: return 'Optional Extras';
+      default: return '';
     }
   }
 }

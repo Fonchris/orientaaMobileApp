@@ -69,166 +69,145 @@ class Step1IdentityPage extends StatelessWidget {
         : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    // Use LayoutBuilder to get exact available height, then Stack with fixed height
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          height: constraints.maxHeight,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [const Color(0xFF1A1A2E), const Color(0xFF0F1115)]
-                  : [const Color(0xFFF8F9FF), Colors.white],
+    // Simple Column: scrollable content + pinned bottom button
+    return Column(
+      children: [
+        // Scrollable content
+        Expanded(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(20, 8, 20, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPremiumHeader(isDark, textColor, subtitleColor),
+                const SizedBox(height: 28),
+                _buildSection(
+                  icon: FontAwesomeIcons.school,
+                  label: 'Current Education Level',
+                  isDark: isDark,
+                  child: _buildDropdown<String>(
+                    context,
+                    value: model.educationLevel,
+                    items: educationLevels,
+                    hint: 'Select your current level',
+                    onChanged: (v) => model.educationLevel = v,
+                    isDark: isDark,
+                  ),
+                ),
+                const SizedBox(height: 22),
+                _buildSection(
+                  icon: FontAwesomeIcons.award,
+                  label: 'Desired Degree Level',
+                  isDark: isDark,
+                  child: _buildDropdown<String>(
+                    context,
+                    value: model.desiredDegreeLevel,
+                    items: degreeLevels,
+                    hint: 'Select desired degree',
+                    onChanged: (v) => model.desiredDegreeLevel = v,
+                    isDark: isDark,
+                  ),
+                ),
+                const SizedBox(height: 22),
+                _buildSection(
+                  icon: FontAwesomeIcons.bookOpen,
+                  label: 'Field(s) of Interest',
+                  isDark: isDark,
+                  child: _buildMultiSelectChips(
+                    context,
+                    options: fieldsOfInterest,
+                    selected: model.fieldsOfInterest,
+                    onToggle: (v) => model.toggleFieldOfInterest(v),
+                    isDark: isDark,
+                  ),
+                ),
+                if (model.fieldsOfInterest.contains(_otherField)) ...[
+                  const SizedBox(height: 10),
+                  _buildCustomFieldInput(context, isDark),
+                ],
+                const SizedBox(height: 22),
+                _buildSection(
+                  icon: FontAwesomeIcons.calendarDays,
+                  label: 'When do you plan to start?',
+                  isDark: isDark,
+                  child: _buildDatePickerButton(context, isDark),
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
           ),
-          child: Stack(
+        ),
+        // Pinned bottom button
+        Container(
+          padding: EdgeInsets.fromLTRB(20, 12, 20, bottomPadding + 12),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              // Scrollable content - Positioned.fill ensures it gets proper constraints
-              Positioned.fill(
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(20, 8, 20, 100 + bottomPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              if (!model.step1Valid)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildPremiumHeader(isDark, textColor, subtitleColor),
-                      const SizedBox(height: 28),
-                      _buildSection(
-                        icon: FontAwesomeIcons.school,
-                        label: 'Current Education Level',
-                        isDark: isDark,
-                        child: _buildDropdown<String>(
-                          context,
-                          value: model.educationLevel,
-                          items: educationLevels,
-                          hint: 'Select your current level',
-                          onChanged: (v) => model.educationLevel = v,
-                          isDark: isDark,
-                        ),
+                      const FaIcon(FontAwesomeIcons.circleInfo, size: 12, color: _brandGold),
+                      const SizedBox(width: 6),
+                      Text(
+                        _validationHint(model),
+                        style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500, color: _brandGold),
                       ),
-                      const SizedBox(height: 22),
-                      _buildSection(
-                        icon: FontAwesomeIcons.award,
-                        label: 'Desired Degree Level',
-                        isDark: isDark,
-                        child: _buildDropdown<String>(
-                          context,
-                          value: model.desiredDegreeLevel,
-                          items: degreeLevels,
-                          hint: 'Select desired degree',
-                          onChanged: (v) => model.desiredDegreeLevel = v,
-                          isDark: isDark,
-                        ),
-                      ),
-                      const SizedBox(height: 22),
-                      _buildSection(
-                        icon: FontAwesomeIcons.bookOpen,
-                        label: 'Field(s) of Interest',
-                        isDark: isDark,
-                        child: _buildMultiSelectChips(
-                          context,
-                          options: fieldsOfInterest,
-                          selected: model.fieldsOfInterest,
-                          onToggle: (v) => model.toggleFieldOfInterest(v),
-                          isDark: isDark,
-                        ),
-                      ),
-                      if (model.fieldsOfInterest.contains(_otherField)) ...[
-                        const SizedBox(height: 10),
-                        _buildCustomFieldInput(context, isDark),
-                      ],
-                      const SizedBox(height: 22),
-                      _buildSection(
-                        icon: FontAwesomeIcons.calendarDays,
-                        label: 'When do you plan to start?',
-                        isDark: isDark,
-                        child: _buildDatePickerButton(context, isDark),
-                      ),
-                      const SizedBox(height: 16),
                     ],
                   ),
                 ),
-              ),
-              // Pinned bottom button
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(20, 12, 20, bottomPadding + 12),
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDark ? Colors.black.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.08),
-                        blurRadius: 16,
-                        offset: const Offset(0, -4),
-                      ),
-                    ],
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: model.step1Valid ? onNext : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _brandBlue,
+                    disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.06) : _brandBlue.withValues(alpha: 0.04),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    elevation: model.step1Valid ? 6 : 0,
+                    shadowColor: _brandBlue.withValues(alpha: 0.4),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (!model.step1Valid)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const FaIcon(FontAwesomeIcons.circleInfo, size: 12, color: _brandGold),
-                              const SizedBox(width: 6),
-                              Text(
-                                _validationHint(model),
-                                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w500, color: _brandGold),
-                              ),
-                            ],
-                          ),
-                        ),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: model.step1Valid ? onNext : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _brandBlue,
-                            disabledBackgroundColor: isDark ? Colors.white.withValues(alpha: 0.06) : _brandBlue.withValues(alpha: 0.04),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                            elevation: model.step1Valid ? 6 : 0,
-                            shadowColor: _brandBlue.withValues(alpha: 0.4),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                model.step1Valid ? 'Continue' : 'Complete all fields',
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 16, fontWeight: FontWeight.w700,
-                                  color: model.step1Valid ? Colors.white : subtitleColor,
-                                  letterSpacing: 0.3,
-                                ),
-                              ),
-                              if (model.step1Valid) ...[
-                                const SizedBox(width: 10),
-                                Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(color: _brandGold.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
-                                  child: const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 14),
-                                ),
-                              ],
-                            ],
-                          ),
+                      Text(
+                        model.step1Valid ? 'Continue' : 'Complete all fields',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 16, fontWeight: FontWeight.w700,
+                          color: model.step1Valid ? Colors.white : subtitleColor,
+                          letterSpacing: 0.3,
                         ),
                       ),
+                      if (model.step1Valid) ...[
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(color: _brandGold.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+                          child: const FaIcon(FontAwesomeIcons.arrowRight, color: Colors.white, size: 14),
+                        ),
+                      ],
                     ],
                   ),
                 ),
               ),
             ],
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 
@@ -313,7 +292,6 @@ class Step1IdentityPage extends StatelessWidget {
     );
   }
 
-  // ── Month/Year Picker Button ──
   Widget _buildDatePickerButton(BuildContext context, bool isDark) {
     return GestureDetector(
       onTap: () {
@@ -344,7 +322,6 @@ class Step1IdentityPage extends StatelessWidget {
                   color: model.startLabel != null ? (isDark ? Colors.white : const Color(0xFF1A1A2E)) : (isDark ? Colors.white.withValues(alpha: 0.3) : _brandBlue.withValues(alpha: 0.35))),
               ),
             ),
-            // Fixed 22x22 space for checkmark or chevron - same width for both states
             SizedBox(
               width: 22, height: 22,
               child: model.startLabel != null
@@ -361,7 +338,6 @@ class Step1IdentityPage extends StatelessWidget {
     );
   }
 
-  // ── Month/Year Picker Dialog ──
   void _showMonthYearPicker(BuildContext context, bool isDark) {
     debugPrint('_showMonthYearPicker called');
     int selectedMonth = model.startMonth ?? DateTime.now().month;
@@ -482,7 +458,6 @@ class Step1IdentityPage extends StatelessWidget {
     );
   }
 
-  // ── Validation Hint ──
   String _validationHint(StudentOnboardingModel m) {
     if (m.educationLevel == null && m.desiredDegreeLevel == null) return 'Select your education level and desired degree';
     if (m.educationLevel == null) return 'Select your current education level';
@@ -492,7 +467,6 @@ class Step1IdentityPage extends StatelessWidget {
     return '';
   }
 
-  // ── Custom Field Input ──
   Widget _buildCustomFieldInput(BuildContext context, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -523,7 +497,6 @@ class Step1IdentityPage extends StatelessWidget {
     );
   }
 
-  // ── Multi-Select Chips (fixed-width checkmark to prevent layout shift) ──
   Widget _buildMultiSelectChips(BuildContext context, {required List<String> options, required List<String> selected, required ValueChanged<String> onToggle, required bool isDark}) {
     return Wrap(
       spacing: 8, runSpacing: 8,
@@ -548,8 +521,7 @@ class Step1IdentityPage extends StatelessWidget {
               children: [
                 Text(option, style: GoogleFonts.inter(fontSize: 13, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, color: isSelected ? Colors.white : isDark ? Colors.white.withValues(alpha: 0.7) : const Color(0xFF1A1A2E).withValues(alpha: 0.75))),
                 const SizedBox(width: 8),
-                // Fixed 16x16 space for checkmark - ALWAYS present, same width for both states
-                // This prevents layout shift when a chip is selected
+                // Fixed 16x16 space for checkmark - prevents layout shift
                 SizedBox(
                   width: 16, height: 16,
                   child: isSelected
