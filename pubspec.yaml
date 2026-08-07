@@ -74,6 +74,7 @@ flutter:
   assets:
     - assets/images/orientaaLogoLight.png
     - assets/images/orientaaLogoDark.png
+    - assets/flags/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

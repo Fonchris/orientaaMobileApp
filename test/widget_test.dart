@@ -11,8 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:orientaa_mobile_app/main.dart';
 
 void main() {
-  testWidgets('App shell renders', (WidgetTester tester) async {
-    await tester.pumpWidget(const OrientaaApp());
+  // The welcome route is the Firebase-free entry point, so it renders in tests
+  // without requiring Firebase initialization.
+  testWidgets('App shell renders on the welcome screen', (WidgetTester tester) async {
+    await tester.pumpWidget(const OrientaaApp(initialRoute: '/welcome'));
+    await tester.pumpAndSettle();
     expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.text('Welcome to Orientaa'), findsOneWidget);
   });
 }

@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'widgets/app_theme.dart';
 import 'widgets/login_page.dart';
 import 'widgets/onboarding_page.dart';
 import 'widgets/signup_page.dart';
 import 'widgets/reset_password_page.dart';
 import 'widgets/student_onboarding/student_onboarding_page.dart';
 import 'widgets/theme_provider.dart';
+import 'widgets/welcome_page.dart';
 
 final ThemeProvider themeProvider = ThemeProvider();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const OrientaaApp());
+  final prefs = await SharedPreferences.getInstance();
+  final hasSeenWelcome = prefs.getBool('hasSeenWelcome') ?? false;
+  runApp(
+    OrientaaApp(initialRoute: hasSeenWelcome ? '/login' : '/welcome'),
+  );
 }
 
 class OrientaaApp extends StatefulWidget {
-  const OrientaaApp({super.key});
+  final String initialRoute;
+
+  const OrientaaApp({super.key, required this.initialRoute});
 
   @override
   State<OrientaaApp> createState() => _OrientaaAppState();
@@ -42,42 +51,15 @@ class _OrientaaAppState extends State<OrientaaApp> {
 
   @override
   Widget build(BuildContext context) {
-    final lightColorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF1F6FEB),
-      brightness: Brightness.light,
-    );
-
-    final darkColorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF1F6FEB),
-      brightness: Brightness.dark,
-    );
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Orientaa',
       themeMode: themeProvider.themeMode,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: lightColorScheme,
-        scaffoldBackgroundColor: const Color(0xFFF7F9FC),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: darkColorScheme,
-        scaffoldBackgroundColor: const Color(0xFF0F1115),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      ),
-      initialRoute: '/login',
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      initialRoute: widget.initialRoute,
       routes: {
+        '/welcome': (_) => const WelcomePage(),
         '/login': (_) => const LoginPage(),
         '/onboarding': (_) => const OnboardingPage(),
         '/student-onboarding': (_) => const StudentOnboardingPage(),

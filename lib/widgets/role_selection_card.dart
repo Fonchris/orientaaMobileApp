@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import 'google_fonts.dart';
 
 enum UserRole { student, counsellor }
 

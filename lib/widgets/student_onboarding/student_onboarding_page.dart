@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../app_theme.dart';
+import '../google_fonts.dart';
 import 'student_onboarding_model.dart';
 import 'step_progress_bar.dart';
 import 'step1_identity_page.dart';
@@ -23,20 +24,24 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   final _model = StudentOnboardingModel();
   int _currentStep = 0;
   bool _isSubmitting = false;
+  late final VoidCallback _modelListener;
 
   static const _totalSteps = 6;
-  static const _brandBlue = Color(0xFF011F7B);
-  static const _brandGold = Color(0xFFFFBA09);
 
   @override
   void initState() {
     super.initState();
-    _model.addListener(() => setState(() {}));
+    _modelListener = () {
+      if (mounted) {
+        setState(() {});
+      }
+    };
+    _model.addListener(_modelListener);
   }
 
   @override
   void dispose() {
-    _model.removeListener(() => setState(() {}));
+    _model.removeListener(_modelListener);
     _model.dispose();
     super.dispose();
   }
@@ -91,77 +96,130 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // Top bar
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
-              child: Row(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: isDark
+                  ? [
+                      const Color(0xFF0F1115),
+                      AppTheme.brandNavySurface,
+                      const Color(0xFF151A26),
+                    ]
+                  : [
+                      const Color(0xFFF7F9FC),
+                      Colors.white,
+                      const Color(0xFFF3F6FF),
+                    ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                top: -70,
+                right: -40,
+                child: _GlowBlob(color: AppTheme.brandGold.withValues(alpha: isDark ? 0.12 : 0.1), size: 180),
+              ),
+              Positioned(
+                bottom: 120,
+                left: -60,
+                child: _GlowBlob(color: AppTheme.brandBlue.withValues(alpha: isDark ? 0.14 : 0.08), size: 220),
+              ),
+              Column(
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: isDark ? Colors.white.withValues(alpha: 0.7) : _brandBlue.withValues(alpha: 0.7),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_rounded,
+                            color: isDark ? Colors.white.withValues(alpha: 0.75) : AppTheme.brandBlue.withValues(alpha: 0.75),
+                          ),
+                          onPressed: () {
+                            if (_currentStep > 0) {
+                              _previousStep();
+                            } else if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.pushReplacementNamed(context, '/login');
+                            }
+                          },
+                        ),
+                        Expanded(
+                          child: Text(
+                            _stepTitle(_currentStep),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: scheme.onSurface,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: AppTheme.brandGold.withValues(alpha: 0.15),
+                          ),
+                          child: Text(
+                            '${_currentStep + 1}/$_totalSteps',
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.brandGold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    onPressed: () {
-                      if (_currentStep > 0) {
-                        _previousStep();
-                      } else {
-                        Navigator.pop(context);
-                      }
-                    },
                   ),
+                  StepProgressBar(totalSteps: _totalSteps, currentStep: _currentStep),
                   Expanded(
-                    child: Text(
-                      _stepTitle(_currentStep),
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16, fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : const Color(0xFF1A1A2E),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: _brandGold.withValues(alpha: 0.15),
-                    ),
-                    child: Text(
-                      '${_currentStep + 1}/$_totalSteps',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13, fontWeight: FontWeight.w700, color: _brandGold,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 320),
+                      switchInCurve: Curves.easeOutCubic,
+                      switchOutCurve: Curves.easeInCubic,
+                      transitionBuilder: (child, animation) {
+                        final slide = Tween<Offset>(
+                          begin: const Offset(0.08, 0),
+                          end: Offset.zero,
+                        ).animate(animation);
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SlideTransition(position: slide, child: child),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey(_currentStep),
+                        child: _buildCurrentStep(),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            // Step progress bar
-            StepProgressBar(totalSteps: _totalSteps, currentStep: _currentStep),
-            // Page content - build only the current step to avoid constraint issues
-            Expanded(
-              child: _buildCurrentStep(),
-            ),
-            // Loading overlay
-            if (_isSubmitting)
-              Container(
-                color: Colors.black.withValues(alpha: 0.4),
-                child: const Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(color: Colors.white),
-                      SizedBox(height: 16),
-                      Text('Saving your information...', style: TextStyle(color: Colors.white, fontSize: 16)),
-                    ],
+              if (_isSubmitting)
+                Container(
+                  color: Colors.black.withValues(alpha: 0.4),
+                  child: const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(color: Colors.white),
+                        SizedBox(height: 16),
+                        Text('Saving your information...', style: TextStyle(color: Colors.white, fontSize: 16)),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -196,5 +254,32 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       case 5: return 'Optional Extras';
       default: return '';
     }
+  }
+}
+
+class _GlowBlob extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _GlowBlob({
+    required this.color,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(
+          colors: [
+            color,
+            color.withValues(alpha: 0.0),
+          ],
+        ),
+      ),
+    );
   }
 }

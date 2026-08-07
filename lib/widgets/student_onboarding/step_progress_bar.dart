@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import '../google_fonts.dart';
 
 class StepProgressBar extends StatelessWidget {
   final int totalSteps;
@@ -38,9 +39,14 @@ class StepProgressBar extends StatelessWidget {
             final stepIndex = index ~/ 2;
             final isDone = stepIndex < currentStep;
             return Expanded(
-              child: Container(
-                height: 2,
-                color: isDone ? doneColor : inactiveColor,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.easeOutCubic,
+                height: 3,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(999),
+                  color: isDone ? doneColor : inactiveColor,
+                ),
               ),
             );
           }
@@ -53,9 +59,11 @@ class StepProgressBar extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: isCurrent ? 14 : 10,
-                height: isCurrent ? 14 : 10,
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.easeOutCubic,
+                width: isCurrent ? 16 : 10,
+                height: isCurrent ? 16 : 10,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: isDone
