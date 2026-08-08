@@ -14,6 +14,8 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
+from django.conf import settings  # noqa: E402
+
 QUESTIONS = [
     # Openness (4 questions)
     {"text": "I have a vivid imagination.", "trait": "openness", "reverseScored": False, "order": 1},
@@ -49,9 +51,17 @@ def seed():
     try:
         firebase_admin.get_app()
     except ValueError:
-        cred = credentials.ApplicationDefault()
+        service_account = getattr(settings, 'FIREBASE_SERVICE_ACCOUNT_FILE', None)
+        if service_account is None or not os.path.exists(str(service_account)):
+            raise FileNotFoundError(
+                f"Firebase service account file not found at: {service_account}\n"
+                "Download it from Firebase Console > Project Settings > Service accounts "
+                "> Generate new private key, and save it as 'firebase-service-account.json' "
+                "inside the backend/ directory."
+            )
+        cred = credentials.Certificate(str(service_account))
         firebase_admin.initialize_app(cred)
-    
+
     db = firestore.client()
     collection = db.collection('personalityQuestions')
     

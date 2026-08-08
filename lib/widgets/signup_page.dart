@@ -206,11 +206,11 @@ class _SignupPageState extends State<SignupPage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24),
                             color: isDark
-                                ? const Color(0xFF1A1A2E).withValues(alpha: 0.7)
+                                ? const Color(0xFF232C3F).withValues(alpha: 0.95)
                                 : Colors.white.withValues(alpha: 0.92),
                             border: Border.all(
                               color: isDark
-                                  ? Colors.white.withValues(alpha: 0.08)
+                                  ? Colors.white.withValues(alpha: 0.12)
                                   : AppTheme.brandBlue.withValues(alpha: 0.08),
                             ),
                             boxShadow: [

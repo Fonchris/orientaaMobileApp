@@ -50,8 +50,18 @@ class StudentOnboardingModel extends ChangeNotifier {
   }
 
   static const List<String> _monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   bool get step1Valid =>
@@ -113,11 +123,13 @@ class StudentOnboardingModel extends ChangeNotifier {
   double? _budgetPerYear;
   String? _currency;
   double? _annualIncome;
+  String? _annualIncomeLabel; // the bracket string shown in the dropdown
   bool _seekingScholarship = false;
 
   double? get budgetPerYear => _budgetPerYear;
   String? get currency => _currency;
   double? get annualIncome => _annualIncome;
+  String? get annualIncomeLabel => _annualIncomeLabel;
   bool get seekingScholarship => _seekingScholarship;
 
   set budgetPerYear(double? v) {
@@ -127,6 +139,11 @@ class StudentOnboardingModel extends ChangeNotifier {
 
   set annualIncome(double? v) {
     _annualIncome = v;
+    notifyListeners();
+  }
+
+  set annualIncomeLabel(String? v) {
+    _annualIncomeLabel = v;
     notifyListeners();
   }
 
@@ -143,19 +160,56 @@ class StudentOnboardingModel extends ChangeNotifier {
     // West Africa
     if (countryCode == 'NG') return 'NGN';
     if (['GH', 'SL', 'LR', 'GM'].contains(countryCode)) return 'GHS';
-    if (['SN', 'BJ', 'TG', 'NE', 'ML', 'BF', 'GN', 'GW', 'CI', 'CV', 'MR']
-        .contains(countryCode)) {
+    if ([
+      'SN',
+      'BJ',
+      'TG',
+      'NE',
+      'ML',
+      'BF',
+      'GN',
+      'GW',
+      'CI',
+      'CV',
+      'MR',
+    ].contains(countryCode)) {
       return 'XOF';
     }
     // East Africa
-    if (['KE', 'UG', 'TZ', 'RW', 'BI', 'SS', 'ET', 'ER', 'DJ', 'SO', 'SD',
-             'KM', 'SC', 'MU', 'MG', 'MW', 'ZM', 'ZW']
-        .contains(countryCode)) {
+    if ([
+      'KE',
+      'UG',
+      'TZ',
+      'RW',
+      'BI',
+      'SS',
+      'ET',
+      'ER',
+      'DJ',
+      'SO',
+      'SD',
+      'KM',
+      'SC',
+      'MU',
+      'MG',
+      'MW',
+      'ZM',
+      'ZW',
+    ].contains(countryCode)) {
       return 'KES';
     }
     // Central Africa
-    if (['CM', 'TD', 'CF', 'CG', 'GA', 'GQ', 'ST', 'AO', 'CD']
-        .contains(countryCode)) {
+    if ([
+      'CM',
+      'TD',
+      'CF',
+      'CG',
+      'GA',
+      'GQ',
+      'ST',
+      'AO',
+      'CD',
+    ].contains(countryCode)) {
       return 'XAF';
     }
     // Southern Africa
@@ -286,6 +340,7 @@ class StudentOnboardingModel extends ChangeNotifier {
         'budgetPerYear': _budgetPerYear,
         'currency': _currency,
         'annualIncome': _annualIncome,
+        'annualIncomeLabel': _annualIncomeLabel,
         'seekingScholarship': _seekingScholarship,
         // Step 4
         'strengths': _strengths,
@@ -310,8 +365,5 @@ class TestScore {
 
   TestScore({required this.testName, required this.score});
 
-  Map<String, dynamic> toMap() => {
-        'testName': testName,
-        'score': score,
-      };
+  Map<String, dynamic> toMap() => {'testName': testName, 'score': score};
 }

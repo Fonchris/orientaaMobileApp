@@ -157,10 +157,13 @@ class Step3FinancialPage extends StatelessWidget {
                       const SizedBox(height: 10),
                       _buildDropdown<String>(
                         context,
-                        value: model.annualIncome?.toStringAsFixed(0),
+                        value: model.annualIncomeLabel,
                         items: incomeBrackets,
                         hint: 'Select income bracket',
                         onChanged: (v) {
+                          // Always keep the displayed label in sync so the
+                          // DropdownButton value always matches one of its items.
+                          model.annualIncomeLabel = v;
                           if (v != null) {
                             double? parsedValue;
                             if (v.startsWith('Less than')) {

@@ -27,7 +27,132 @@ class Step5BigFivePage extends StatefulWidget {
 class _Step5BigFivePageState extends State<Step5BigFivePage> {
   List<PersonalityQuestion> _questions = [];
   bool _isLoading = true;
-  String? _error;
+  bool _usingBundled = false;
+
+  /// Built-in Big Five questions used when the Firestore collection is empty,
+  /// unreachable, or the app is offline. Firestore remains the source of truth
+  /// when it is available (seed via `personalityQuestions` collection).
+  static const List<PersonalityQuestion> _bundledQuestions = [
+    // Openness
+    PersonalityQuestion(
+      id: 'bundled-openness-1',
+      text: 'I have a vivid imagination.',
+      trait: 'openness',
+      reverseScored: false,
+      order: 1,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-openness-2',
+      text: 'I enjoy abstract ideas and philosophical discussions.',
+      trait: 'openness',
+      reverseScored: false,
+      order: 2,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-openness-3',
+      text: 'I appreciate art, beauty, and creative expression.',
+      trait: 'openness',
+      reverseScored: false,
+      order: 3,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-openness-4',
+      text: 'I prefer routine and familiar experiences over novelty.',
+      trait: 'openness',
+      reverseScored: true,
+      order: 4,
+    ),
+    // Conscientiousness
+    PersonalityQuestion(
+      id: 'bundled-conscientiousness-1',
+      text: 'I complete tasks thoroughly and on time.',
+      trait: 'conscientiousness',
+      reverseScored: false,
+      order: 5,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-conscientiousness-2',
+      text: 'I like order, regularity, and keeping things organized.',
+      trait: 'conscientiousness',
+      reverseScored: false,
+      order: 6,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-conscientiousness-3',
+      text: 'I often forget to put things back in their place.',
+      trait: 'conscientiousness',
+      reverseScored: true,
+      order: 7,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-conscientiousness-4',
+      text: 'I work hard to achieve my goals and meet deadlines.',
+      trait: 'conscientiousness',
+      reverseScored: false,
+      order: 8,
+    ),
+    // Extraversion
+    PersonalityQuestion(
+      id: 'bundled-extraversion-1',
+      text: 'I am the life of the party and enjoy social gatherings.',
+      trait: 'extraversion',
+      reverseScored: false,
+      order: 9,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-extraversion-2',
+      text:
+          'I enjoy being around people and feel energized by social interaction.',
+      trait: 'extraversion',
+      reverseScored: false,
+      order: 10,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-extraversion-3',
+      text:
+          'I prefer solitude and quiet environments over busy social settings.',
+      trait: 'extraversion',
+      reverseScored: true,
+      order: 11,
+    ),
+    // Agreeableness
+    PersonalityQuestion(
+      id: 'bundled-agreeableness-1',
+      text: "I sympathize with others' feelings and show compassion.",
+      trait: 'agreeableness',
+      reverseScored: false,
+      order: 12,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-agreeableness-2',
+      text: "I take time to help others even when I'm busy.",
+      trait: 'agreeableness',
+      reverseScored: false,
+      order: 13,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-agreeableness-3',
+      text: "I am not particularly interested in other people's problems.",
+      trait: 'agreeableness',
+      reverseScored: true,
+      order: 14,
+    ),
+    // Neuroticism
+    PersonalityQuestion(
+      id: 'bundled-neuroticism-1',
+      text: 'I often feel stressed and overwhelmed by daily demands.',
+      trait: 'neuroticism',
+      reverseScored: false,
+      order: 15,
+    ),
+    PersonalityQuestion(
+      id: 'bundled-neuroticism-2',
+      text: 'I worry about things and tend to be anxious.',
+      trait: 'neuroticism',
+      reverseScored: false,
+      order: 16,
+    ),
+  ];
 
   static const _brandBlue = Color(0xFF011F7B);
   static const _brandGold = Color(0xFFFFBA09);
@@ -84,14 +209,28 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
       }).toList();
 
       if (!mounted) return;
+      if (questions.isEmpty) {
+        // Collection exists but has not been seeded yet — use bundled questions.
+        setState(() {
+          _questions = _bundledQuestions;
+          _usingBundled = true;
+          _isLoading = false;
+        });
+        return;
+      }
       setState(() {
         _questions = questions;
+        _usingBundled = false;
         _isLoading = false;
       });
     } catch (e) {
       if (!mounted) return;
+      // Firestore unreachable (offline, rules, or not configured) — fall back
+      // to the bundled set so the assessment always works.
+      debugPrint('Personality questions fallback (Firestore unavailable): $e');
       setState(() {
-        _error = e.toString();
+        _questions = _bundledQuestions;
+        _usingBundled = true;
         _isLoading = false;
       });
     }
@@ -133,66 +272,6 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
               style: GoogleFonts.inter(fontSize: 14, color: subtitleColor),
             ),
           ],
-        ),
-      );
-    }
-
-    if (_error != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FaIcon(
-                FontAwesomeIcons.triangleExclamation,
-                size: 48,
-                color: _brandGold,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Could not load questions',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: textColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Please check your connection and try again.',
-                style: GoogleFonts.inter(fontSize: 14, color: subtitleColor),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _isLoading = true;
-                    _error = null;
-                  });
-                  _fetchQuestions();
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: _brandBlue),
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: widget.onNext,
-                child: Text(
-                  'Skip this step',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: subtitleColor,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       );
     }
@@ -307,6 +386,43 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
                   ],
                 ),
                 const SizedBox(height: 20),
+
+                if (_usingBundled) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppTheme.brandGold.withValues(alpha: 0.12),
+                      border: Border.all(
+                        color: AppTheme.brandGold.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const FaIcon(
+                          FontAwesomeIcons.cloudArrowDown,
+                          size: 12,
+                          color: AppTheme.brandGold,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Using built-in questions — seed Firestore to load the full set.',
+                            style: GoogleFonts.inter(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w500,
+                              color: AppTheme.brandGold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                ],
 
                 // Questions grouped by trait
                 ...grouped.entries.map((entry) {
@@ -493,6 +609,22 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
           hint: _allAnswered
               ? null
               : 'Answer every question to unlock the next step',
+          extra: SizedBox(
+            width: double.infinity,
+            height: 40,
+            child: TextButton(
+              onPressed: widget.onNext,
+              child: Text(
+                "Skip this step — I'll answer later",
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: subtitleColor,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

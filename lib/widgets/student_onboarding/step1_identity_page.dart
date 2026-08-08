@@ -159,9 +159,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               ),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
-                sliver: SliverToBoxAdapter(
-                  child: _buildPageControls(isDark),
-                ),
+                sliver: SliverToBoxAdapter(child: _buildPageControls(isDark)),
               ),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 18, 16, 0),
@@ -172,7 +170,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                     switchOutCurve: Curves.easeInCubic,
                     child: _currentPage == 0
                         ? _buildInfoPage(context, isDark)
-                        : _buildDatePage(context, isDark, textColor, subtitleColor),
+                        : _buildDatePage(
+                            context,
+                            isDark,
+                            textColor,
+                            subtitleColor,
+                          ),
                   ),
                 ),
               ),
@@ -190,9 +193,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.white,
+            color: isDark ? Colors.white.withValues(alpha: 0.08) : Colors.white,
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.08)
@@ -374,7 +375,9 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      model.step1Valid ? 'Ready to continue' : 'Complete all fields',
+                      model.step1Valid
+                          ? 'Ready to continue'
+                          : 'Complete all fields',
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
@@ -821,226 +824,236 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: SizedBox(
-                height: 420,
-                child: Column(
-                  children: [
-                    const SizedBox(height: 12),
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 420),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Select intake period',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Select intake period',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF1A1A2E),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'When do you plan to begin your studies?',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.5)
-                            : const Color(0xFF1A1A2E).withValues(alpha: 0.5),
+                      const SizedBox(height: 4),
+                      Text(
+                        'When do you plan to begin your studies?',
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.5)
+                              : const Color(0xFF1A1A2E).withValues(alpha: 0.5),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Month',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: _brandBlue,
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Month',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: _brandBlue,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: List.generate(12, (i) {
-                              final month = i + 1;
-                              final isSelected = selectedMonth == month;
-                              return GestureDetector(
-                                onTap: () =>
-                                    setDialogState(() => selectedMonth = month),
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 8,
+                            const SizedBox(height: 8),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: List.generate(12, (i) {
+                                final month = i + 1;
+                                final isSelected = selectedMonth == month;
+                                return GestureDetector(
+                                  onTap: () => setDialogState(
+                                    () => selectedMonth = month,
                                   ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: isSelected
-                                        ? _brandBlue
-                                        : isDark
-                                        ? const Color(
-                                            0xFF323232,
-                                          ).withValues(alpha: 0.6)
-                                        : Colors.grey.withValues(alpha: 0.06),
-                                    border: Border.all(
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 200),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
                                       color: isSelected
                                           ? _brandBlue
                                           : isDark
-                                          ? Colors.white.withValues(alpha: 0.08)
-                                          : _brandBlue.withValues(alpha: 0.08),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    _months[i],
-                                    style: GoogleFonts.inter(
-                                      fontSize: 13,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.w400,
-                                      color: isSelected
-                                          ? Colors.white
-                                          : isDark
-                                          ? Colors.white.withValues(alpha: 0.7)
-                                          : const Color(
-                                              0xFF1A1A2E,
-                                            ).withValues(alpha: 0.7),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Text(
-                            'Year',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: _brandBlue,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: SizedBox(
-                              height: 44,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: List.generate(10, (i) {
-                                  final year = currentYear + i;
-                                  final isSelected = selectedYear == year;
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: GestureDetector(
-                                      onTap: () => setDialogState(
-                                        () => selectedYear = year,
+                                          ? const Color(
+                                              0xFF323232,
+                                            ).withValues(alpha: 0.6)
+                                          : Colors.grey.withValues(alpha: 0.06),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? _brandBlue
+                                            : isDark
+                                            ? Colors.white.withValues(
+                                                alpha: 0.08,
+                                              )
+                                            : _brandBlue.withValues(
+                                                alpha: 0.08,
+                                              ),
                                       ),
-                                      child: AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 200,
+                                    ),
+                                    child: Text(
+                                      _months[i],
+                                      style: GoogleFonts.inter(
+                                        fontSize: 13,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.w400,
+                                        color: isSelected
+                                            ? Colors.white
+                                            : isDark
+                                            ? Colors.white.withValues(
+                                                alpha: 0.7,
+                                              )
+                                            : const Color(
+                                                0xFF1A1A2E,
+                                              ).withValues(alpha: 0.7),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Year',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: _brandBlue,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: SizedBox(
+                                height: 44,
+                                child: ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: List.generate(10, (i) {
+                                    final year = currentYear + i;
+                                    final isSelected = selectedYear == year;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8),
+                                      child: GestureDetector(
+                                        onTap: () => setDialogState(
+                                          () => selectedYear = year,
                                         ),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: 12,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
+                                        child: AnimatedContainer(
+                                          duration: const Duration(
+                                            milliseconds: 200,
                                           ),
-                                          color: isSelected
-                                              ? _brandBlue
-                                              : isDark
-                                              ? const Color(
-                                                  0xFF323232,
-                                                ).withValues(alpha: 0.6)
-                                              : Colors.grey.withValues(
-                                                  alpha: 0.06,
-                                                ),
-                                          border: Border.all(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 12,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
                                             color: isSelected
                                                 ? _brandBlue
                                                 : isDark
-                                                ? Colors.white.withValues(
-                                                    alpha: 0.08,
-                                                  )
-                                                : _brandBlue.withValues(
-                                                    alpha: 0.08,
+                                                ? const Color(
+                                                    0xFF323232,
+                                                  ).withValues(alpha: 0.6)
+                                                : Colors.grey.withValues(
+                                                    alpha: 0.06,
                                                   ),
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? _brandBlue
+                                                  : isDark
+                                                  ? Colors.white.withValues(
+                                                      alpha: 0.08,
+                                                    )
+                                                  : _brandBlue.withValues(
+                                                      alpha: 0.08,
+                                                    ),
+                                            ),
                                           ),
-                                        ),
-                                        child: Text(
-                                          '$year',
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 14,
-                                            fontWeight: isSelected
-                                                ? FontWeight.w700
-                                                : FontWeight.w500,
-                                            color: isSelected
-                                                ? Colors.white
-                                                : isDark
-                                                ? Colors.white.withValues(
-                                                    alpha: 0.7,
-                                                  )
-                                                : const Color(
-                                                    0xFF1A1A2E,
-                                                  ).withValues(alpha: 0.7),
+                                          child: Text(
+                                            '$year',
+                                            style: GoogleFonts.plusJakartaSans(
+                                              fontSize: 14,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
+                                              color: isSelected
+                                                  ? Colors.white
+                                                  : isDark
+                                                  ? Colors.white.withValues(
+                                                      alpha: 0.7,
+                                                    )
+                                                  : const Color(
+                                                      0xFF1A1A2E,
+                                                    ).withValues(alpha: 0.7),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                }),
+                                    );
+                                  }),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            model.setStartDate(selectedMonth, selectedYear);
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _brandBlue,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              model.setStartDate(selectedMonth, selectedYear);
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _brandBlue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
                             ),
-                          ),
-                          child: Text(
-                            'Select ${_months[selectedMonth - 1]} $selectedYear',
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                            child: Text(
+                              'Select ${_months[selectedMonth - 1]} $selectedYear',
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );

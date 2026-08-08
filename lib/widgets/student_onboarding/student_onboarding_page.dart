@@ -71,24 +71,29 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       if (user == null) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('You must be logged in to complete onboarding.')),
+          const SnackBar(
+            content: Text('You must be logged in to complete onboarding.'),
+          ),
         );
         setState(() => _isSubmitting = false);
         return;
       }
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set(_model.toFirestoreMap(), SetOptions(merge: true));
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        ..._model.toFirestoreMap(),
+        'completedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
       if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/student-dashboard');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save onboarding data: $e')),
-      );
+      final message = e.toString().contains('permission-denied')
+          ? 'Firestore is denying access. Update your Firestore security rules to allow authenticated users to write their own profile.'
+          : 'Failed to save onboarding data: $e';
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
       setState(() => _isSubmitting = false);
     }
   }
@@ -123,12 +128,22 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
               Positioned(
                 top: -70,
                 right: -40,
-                child: _GlowBlob(color: AppTheme.brandGold.withValues(alpha: isDark ? 0.12 : 0.1), size: 180),
+                child: _GlowBlob(
+                  color: AppTheme.brandGold.withValues(
+                    alpha: isDark ? 0.12 : 0.1,
+                  ),
+                  size: 180,
+                ),
               ),
               Positioned(
                 bottom: 120,
                 left: -60,
-                child: _GlowBlob(color: AppTheme.brandBlue.withValues(alpha: isDark ? 0.14 : 0.08), size: 220),
+                child: _GlowBlob(
+                  color: AppTheme.brandBlue.withValues(
+                    alpha: isDark ? 0.14 : 0.08,
+                  ),
+                  size: 220,
+                ),
               ),
               Column(
                 children: [
@@ -139,7 +154,9 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                         IconButton(
                           icon: Icon(
                             Icons.arrow_back_rounded,
-                            color: isDark ? Colors.white.withValues(alpha: 0.75) : AppTheme.brandBlue.withValues(alpha: 0.75),
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.75)
+                                : AppTheme.brandBlue.withValues(alpha: 0.75),
                           ),
                           onPressed: () {
                             if (_currentStep > 0) {
@@ -163,7 +180,10 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: AppTheme.brandGold.withValues(alpha: 0.15),
@@ -180,7 +200,10 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                       ],
                     ),
                   ),
-                  StepProgressBar(totalSteps: _totalSteps, currentStep: _currentStep),
+                  StepProgressBar(
+                    totalSteps: _totalSteps,
+                    currentStep: _currentStep,
+                  ),
                   Expanded(
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 320),
@@ -213,7 +236,10 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                       children: [
                         CircularProgressIndicator(color: Colors.white),
                         SizedBox(height: 16),
-                        Text('Saving your information...', style: TextStyle(color: Colors.white, fontSize: 16)),
+                        Text(
+                          'Saving your information...',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ],
                     ),
                   ),
@@ -230,15 +256,36 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       case 0:
         return Step1IdentityPage(model: _model, onNext: _nextStep);
       case 1:
-        return Step2LocationPage(model: _model, onNext: _nextStep, onBack: _previousStep);
+        return Step2LocationPage(
+          model: _model,
+          onNext: _nextStep,
+          onBack: _previousStep,
+        );
       case 2:
-        return Step3FinancialPage(model: _model, onNext: _nextStep, onBack: _previousStep);
+        return Step3FinancialPage(
+          model: _model,
+          onNext: _nextStep,
+          onBack: _previousStep,
+        );
       case 3:
-        return Step4SelfAssessmentPage(model: _model, onNext: _nextStep, onBack: _previousStep);
+        return Step4SelfAssessmentPage(
+          model: _model,
+          onNext: _nextStep,
+          onBack: _previousStep,
+        );
       case 4:
-        return Step5BigFivePage(model: _model, onNext: _nextStep, onBack: _previousStep);
+        return Step5BigFivePage(
+          model: _model,
+          onNext: _nextStep,
+          onBack: _previousStep,
+        );
       case 5:
-        return Step5OptionalPage(model: _model, onNext: _submit, onBack: _previousStep, onSkip: _submit);
+        return Step5OptionalPage(
+          model: _model,
+          onNext: _submit,
+          onBack: _previousStep,
+          onSkip: _submit,
+        );
       default:
         return const SizedBox.shrink();
     }
@@ -246,13 +293,20 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
 
   String _stepTitle(int step) {
     switch (step) {
-      case 0: return 'Identity & Academic';
-      case 1: return 'Location & Logistics';
-      case 2: return 'Financial';
-      case 3: return 'Self-Assessment';
-      case 4: return 'Personality';
-      case 5: return 'Optional Extras';
-      default: return '';
+      case 0:
+        return 'Identity & Academic';
+      case 1:
+        return 'Location & Logistics';
+      case 2:
+        return 'Financial';
+      case 3:
+        return 'Self-Assessment';
+      case 4:
+        return 'Personality';
+      case 5:
+        return 'Optional Extras';
+      default:
+        return '';
     }
   }
 }
@@ -261,10 +315,7 @@ class _GlowBlob extends StatelessWidget {
   final Color color;
   final double size;
 
-  const _GlowBlob({
-    required this.color,
-    required this.size,
-  });
+  const _GlowBlob({required this.color, required this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -273,12 +324,7 @@ class _GlowBlob extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            color,
-            color.withValues(alpha: 0.0),
-          ],
-        ),
+        gradient: RadialGradient(colors: [color, color.withValues(alpha: 0.0)]),
       ),
     );
   }

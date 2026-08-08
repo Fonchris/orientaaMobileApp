@@ -51,8 +51,14 @@ class AppTheme {
       outline: const Color(0xFF344054),
     );
 
-    return _buildTheme(scheme).copyWith(
+    final base = _buildTheme(scheme);
+    return base.copyWith(
       scaffoldBackgroundColor: const Color(0xFF0F1115),
+      // Slightly lighter than the card (0xFF232C3F) so input fields read as
+      // visible inset wells instead of blending into a black slab.
+      inputDecorationTheme: base.inputDecorationTheme.copyWith(
+        fillColor: const Color(0xFF151B29),
+      ),
     );
   }
 
