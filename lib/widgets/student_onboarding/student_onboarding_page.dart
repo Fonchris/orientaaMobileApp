@@ -22,6 +22,7 @@ class StudentOnboardingPage extends StatefulWidget {
 
 class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
   final _model = StudentOnboardingModel();
+  final _step4Key = GlobalKey<Step4SelfAssessmentPageState>();
   int _currentStep = 0;
   bool _isSubmitting = false;
   late final VoidCallback _modelListener;
@@ -159,6 +160,14 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                                 : AppTheme.brandBlue.withValues(alpha: 0.75),
                           ),
                           onPressed: () {
+                            // On the split Self-Assessment step, the header
+                            // arrow first steps back one internal part before
+                            // leaving the step.
+                            if (_currentStep == 3 &&
+                                _step4Key.currentState?.handleHeaderBack() ==
+                                    true) {
+                              return;
+                            }
                             if (_currentStep > 0) {
                               _previousStep();
                             } else if (Navigator.canPop(context)) {
@@ -269,6 +278,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
         );
       case 3:
         return Step4SelfAssessmentPage(
+          key: _step4Key,
           model: _model,
           onNext: _nextStep,
           onBack: _previousStep,
