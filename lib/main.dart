@@ -3,12 +3,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widgets/app_theme.dart';
-import 'widgets/counsellor_dashboard_page.dart';
+import 'widgets/app_shell.dart';
 import 'widgets/login_page.dart';
 import 'widgets/onboarding_page.dart';
 import 'widgets/signup_page.dart';
 import 'widgets/reset_password_page.dart';
-import 'widgets/student_dashboard_page.dart';
 import 'widgets/student_onboarding/student_onboarding_page.dart';
 import 'widgets/theme_provider.dart';
 import 'widgets/welcome_page.dart';
@@ -63,8 +62,8 @@ class _OrientaaAppState extends State<OrientaaApp> {
         '/login': (_) => const LoginPage(),
         '/onboarding': (_) => const OnboardingPage(),
         '/student-onboarding': (_) => const StudentOnboardingPage(),
-        '/student-dashboard': (_) => const StudentDashboardPage(),
-        '/counsellor-dashboard': (_) => const CounsellorDashboardPage(),
+        '/student-dashboard': (_) => const AppShell(),
+        '/counsellor-dashboard': (_) => const AppShell(),
         '/signup': (_) => const SignupPage(),
         '/reset-password': (_) => const ResetPasswordPage(),
       },
