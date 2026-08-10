@@ -81,7 +81,7 @@ class ProfileStats extends StatelessWidget {
         height: 34,
         color: isDark
             ? Colors.white.withValues(alpha: 0.1)
-            : AppTheme.brandBlue.withValues(alpha: 0.1),
+            : AppTheme.brandInk.withValues(alpha: 0.12),
       );
 }
 
@@ -148,7 +148,7 @@ class _StatItemState extends State<_StatItem>
                 size: 14,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.45)
-                    : AppTheme.brandBlue.withValues(alpha: 0.55),
+                    : AppTheme.brandInk.withValues(alpha: 0.55),
               ),
               const SizedBox(height: 6),
               Text(

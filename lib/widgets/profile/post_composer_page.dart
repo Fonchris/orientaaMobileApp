@@ -151,7 +151,7 @@ class _PostComposerPageState extends State<PostComposerPage> {
                     border: Border.all(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.08)
-                          : AppTheme.brandBlue.withValues(alpha: 0.08),
+                          : AppTheme.brandYellow.withValues(alpha: 0.15),
                     ),
                   ),
                   child: Column(
@@ -237,9 +237,9 @@ class _PostComposerPageState extends State<PostComposerPage> {
                     OutlinedButton.icon(
                       onPressed: _busy ? null : _pickImage,
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.brandBlue,
+                        foregroundColor: AppTheme.brandAmber,
                         side: BorderSide(
-                          color: AppTheme.brandBlue.withValues(alpha: 0.3),
+                          color: AppTheme.brandAmber.withValues(alpha: 0.3),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
@@ -265,12 +265,12 @@ class _PostComposerPageState extends State<PostComposerPage> {
           Container(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF10131D) : Colors.white,
+              color: isDark ? AppTheme.brandDark : Colors.white,
               border: Border(
                 top: BorderSide(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.08)
-                      : AppTheme.brandBlue.withValues(alpha: 0.08),
+                      : AppTheme.brandYellow.withValues(alpha: 0.15),
                 ),
               ),
             ),

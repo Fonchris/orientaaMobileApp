@@ -59,7 +59,9 @@ class _MessagesPageState extends State<MessagesPage> {
                     icon: FaIcon(
                       FontAwesomeIcons.penToSquare,
                       size: 16,
-                      color: AppTheme.brandBlue,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.7)
+                          : AppTheme.brandInk.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -118,7 +120,7 @@ class _MessagesPageState extends State<MessagesPage> {
               ? AppTheme.brandBlue.withValues(alpha: 0.14)
               : Colors.white.withValues(alpha: 0.05))
           : (unread > 0
-              ? const Color(0xFFEAF1FF)
+              ? AppTheme.brandYellow.withValues(alpha: 0.12)
               : Colors.white),
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
@@ -260,16 +262,12 @@ class _MessagesPageState extends State<MessagesPage> {
               height: 84,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppTheme.brandGold, AppTheme.brandBlue],
-                ),
+                color: AppTheme.brandYellow,
               ),
               child: const Center(
                 child: FaIcon(
                   FontAwesomeIcons.comments,
-                  color: Colors.white,
+                  color: AppTheme.brandInk,
                   size: 32,
                 ),
               ),
@@ -317,7 +315,7 @@ class _MessagesPageState extends State<MessagesPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).brightness == Brightness.dark
-          ? const Color(0xFF10131D)
+          ? AppTheme.brandDark
           : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -457,10 +455,12 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                 onChanged: _onChanged,
                 decoration: InputDecoration(
                   hintText: l10n.searchUsersHint,
-                  prefixIcon: const FaIcon(
+                  prefixIcon: FaIcon(
                     FontAwesomeIcons.magnifyingGlass,
                     size: 15,
-                    color: AppTheme.brandBlue,
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.5)
+                        : AppTheme.brandInk.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -513,10 +513,12 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              trailing: const FaIcon(
+                              trailing: FaIcon(
                                 FontAwesomeIcons.solidMessage,
                                 size: 14,
-                                color: AppTheme.brandBlue,
+                                color: isDark
+                                    ? AppTheme.brandGold
+                                    : AppTheme.brandAmber,
                               ),
                               onTap: () => Navigator.pop(context, {
                                 'uid': u.uid,
@@ -548,7 +550,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
               size: 30,
               color: isDark
                   ? AppTheme.brandGold
-                  : AppTheme.brandBlue.withValues(alpha: 0.5),
+                  : AppTheme.brandInk.withValues(alpha: 0.45),
             ),
             const SizedBox(height: 10),
             Text(

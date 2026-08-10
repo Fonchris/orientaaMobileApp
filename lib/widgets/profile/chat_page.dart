@@ -113,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(999),
-                      color: AppTheme.brandBlue.withValues(alpha: 0.12),
+                      color: AppTheme.brandYellow.withValues(alpha: 0.14),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -121,7 +121,7 @@ class _ChatPageState extends State<ChatPage> {
                         const FaIcon(
                           FontAwesomeIcons.userTie,
                           size: 8,
-                          color: AppTheme.brandBlue,
+                          color: AppTheme.brandAmber,
                         ),
                         const SizedBox(width: 4),
                         Text(
@@ -129,7 +129,7 @@ class _ChatPageState extends State<ChatPage> {
                           style: GoogleFonts.inter(
                             fontSize: 9.5,
                             fontWeight: FontWeight.w700,
-                            color: AppTheme.brandBlue,
+                            color: AppTheme.brandAmber,
                           ),
                         ),
                       ],
@@ -191,7 +191,7 @@ class _ChatPageState extends State<ChatPage> {
               size: 40,
               color: isDark
                   ? AppTheme.brandGold
-                  : AppTheme.brandBlue.withValues(alpha: 0.5),
+                  : AppTheme.brandInk.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 12),
             Text(
@@ -239,10 +239,10 @@ class _ChatPageState extends State<ChatPage> {
             bottomRight: Radius.circular(mine ? 4 : 18),
           ),
           color: mine
-              ? AppTheme.brandBlue
+              ? AppTheme.brandYellow
               : isDark
-                  ? const Color(0xFF1B2333)
-                  : const Color(0xFFEFF3FA),
+                  ? AppTheme.brandSurface
+                  : const Color(0xFFF1F1EE),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -252,7 +252,9 @@ class _ChatPageState extends State<ChatPage> {
               style: GoogleFonts.inter(
                 fontSize: 14,
                 height: 1.35,
-                color: mine ? Colors.white : (isDark ? Colors.white : AppTheme.brandInk),
+                color: mine
+                    ? AppTheme.brandInk
+                    : (isDark ? Colors.white : AppTheme.brandInk),
               ),
             ),
             const SizedBox(height: 4),
@@ -261,7 +263,7 @@ class _ChatPageState extends State<ChatPage> {
               style: GoogleFonts.inter(
                 fontSize: 10,
                 color: mine
-                    ? Colors.white.withValues(alpha: 0.6)
+                    ? AppTheme.brandInk.withValues(alpha: 0.6)
                     : isDark
                         ? Colors.white.withValues(alpha: 0.35)
                         : AppTheme.brandInk.withValues(alpha: 0.35),
@@ -283,12 +285,12 @@ class _ChatPageState extends State<ChatPage> {
         8 + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF10131D) : Colors.white,
+        color: isDark ? AppTheme.brandDark : Colors.white,
         border: Border(
           top: BorderSide(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.08)
-                : AppTheme.brandBlue.withValues(alpha: 0.08),
+                : AppTheme.brandInk.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -307,7 +309,7 @@ class _ChatPageState extends State<ChatPage> {
                 filled: true,
                 fillColor: isDark
                     ? Colors.white.withValues(alpha: 0.05)
-                    : const Color(0xFFF1F5FB),
+                    : const Color(0xFFF2F2EF),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide.none,
@@ -333,7 +335,7 @@ class _ChatPageState extends State<ChatPage> {
                   ),
                 )
               : Material(
-                  color: AppTheme.brandBlue,
+                  color: AppTheme.brandYellow,
                   borderRadius: BorderRadius.circular(24),
                   child: InkWell(
                     onTap: _send,
@@ -343,7 +345,7 @@ class _ChatPageState extends State<ChatPage> {
                       child: FaIcon(
                         FontAwesomeIcons.paperPlane,
                         size: 15,
-                        color: Colors.white,
+                        color: AppTheme.brandInk,
                       ),
                     ),
                   ),

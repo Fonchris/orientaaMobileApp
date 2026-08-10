@@ -50,12 +50,12 @@ class ProfilePostsSection extends StatelessWidget {
                   height: 28,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: AppTheme.brandBlue.withValues(alpha: 0.08),
+                    color: AppTheme.brandYellow.withValues(alpha: 0.14),
                   ),
                   child: const FaIcon(
                     FontAwesomeIcons.newspaper,
                     size: 13,
-                    color: AppTheme.brandBlue,
+                    color: AppTheme.brandAmber,
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -66,7 +66,7 @@ class ProfilePostsSection extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.white.withValues(alpha: 0.9)
-                        : AppTheme.brandBlue,
+                        : AppTheme.brandInk,
                   ),
                 ),
               ],
@@ -110,7 +110,7 @@ class _EmptyPosts extends StatelessWidget {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandYellow.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -120,7 +120,7 @@ class _EmptyPosts extends StatelessWidget {
             size: 30,
             color: isDark
                 ? AppTheme.brandGold
-                : AppTheme.brandBlue.withValues(alpha: 0.6),
+                : AppTheme.brandInk.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 10),
           Text(

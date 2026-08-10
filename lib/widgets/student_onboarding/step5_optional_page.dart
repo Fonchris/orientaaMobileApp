@@ -38,7 +38,7 @@ class Step5OptionalPage extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return Column(
       children: [
@@ -185,7 +185,7 @@ class Step5OptionalPage extends StatelessWidget {
                 border: Border.all(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.1)
-                      : AppTheme.brandBlue.withValues(alpha: 0.1),
+                      : AppTheme.brandYellow.withValues(alpha: 0.2),
                 ),
               ),
               child: Row(
@@ -195,12 +195,12 @@ class Step5OptionalPage extends StatelessWidget {
                     height: 34,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: AppTheme.brandBlue.withValues(alpha: 0.1),
+                      color: AppTheme.brandYellow.withValues(alpha: 0.14),
                     ),
                     child: const FaIcon(
                       FontAwesomeIcons.fileLines,
                       size: 14,
-                      color: AppTheme.brandBlue,
+                      color: AppTheme.brandAmber,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -210,7 +210,7 @@ class Step5OptionalPage extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                        color: isDark ? Colors.white : AppTheme.brandInk,
                       ),
                     ),
                   ),
@@ -221,7 +221,7 @@ class Step5OptionalPage extends StatelessWidget {
                       size: 16,
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.5)
-                          : AppTheme.brandBlue.withValues(alpha: 0.5),
+                          : AppTheme.brandInk.withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -239,7 +239,7 @@ class Step5OptionalPage extends StatelessWidget {
               border: Border.all(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.15)
-                    : AppTheme.brandBlue.withValues(alpha: 0.15),
+                    : AppTheme.brandYellow.withValues(alpha: 0.3),
               ),
               color: isDark
                   ? Colors.white.withValues(alpha: 0.03)
@@ -251,7 +251,7 @@ class Step5OptionalPage extends StatelessWidget {
                 FaIcon(
                   FontAwesomeIcons.plus,
                   size: 13,
-                  color: isDark ? AppTheme.brandGold : AppTheme.brandBlue,
+                  color: isDark ? AppTheme.brandGold : AppTheme.brandInk,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -259,7 +259,7 @@ class Step5OptionalPage extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppTheme.brandGold : AppTheme.brandBlue,
+                    color: isDark ? AppTheme.brandGold : AppTheme.brandInk,
                   ),
                 ),
               ],
@@ -281,7 +281,7 @@ class Step5OptionalPage extends StatelessWidget {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              backgroundColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+              backgroundColor: isDark ? AppTheme.brandInk : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -289,7 +289,7 @@ class Step5OptionalPage extends StatelessWidget {
                 'Add Test Score',
                 style: GoogleFonts.plusJakartaSans(
                   fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                  color: isDark ? Colors.white : AppTheme.brandInk,
                 ),
               ),
               content: Column(

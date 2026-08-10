@@ -31,15 +31,16 @@ class RoleBadge extends StatelessWidget {
     final Color fg;
     final Color bg;
     if (isCounsellor && isVerified) {
-      fg = isDark ? const Color(0xFF9BD0FF) : const Color(0xFF075985);
+      // Verified counsellor: gold/amber identity with the check icon.
+      fg = isDark ? const Color(0xFFFFD667) : const Color(0xFF92400E);
       bg = isDark
-          ? const Color(0xFF0E3A5C).withValues(alpha: 0.55)
-          : const Color(0xFFE0F2FE);
+          ? AppTheme.brandGold.withValues(alpha: 0.16)
+          : AppTheme.brandGold.withValues(alpha: 0.22);
     } else if (isCounsellor) {
-      fg = isDark ? const Color(0xFFB4C6FF) : AppTheme.brandBlue;
+      fg = isDark ? const Color(0xFFFFD667) : AppTheme.brandAmber;
       bg = isDark
-          ? AppTheme.brandBlue.withValues(alpha: 0.28)
-          : AppTheme.brandBlue.withValues(alpha: 0.1);
+          ? AppTheme.brandYellow.withValues(alpha: 0.14)
+          : AppTheme.brandYellow.withValues(alpha: 0.12);
     } else {
       fg = isDark ? const Color(0xFFFFD667) : const Color(0xFF92400E);
       bg = isDark

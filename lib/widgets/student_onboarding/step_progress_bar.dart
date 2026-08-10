@@ -24,11 +24,11 @@ class StepProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeColor = const Color(0xFF011F7B);
+    final activeColor = const Color(0xFFFFC700);
     final inactiveColor = isDark
         ? Colors.white.withValues(alpha: 0.15)
-        : activeColor.withValues(alpha: 0.12);
-    final doneColor = const Color(0xFFFFBA09);
+        : const Color(0xFF141414).withValues(alpha: 0.12);
+    final doneColor = const Color(0xFFF5B800);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -82,7 +82,7 @@ class StepProgressBar extends StatelessWidget {
                       : null,
                 ),
                 child: isDone
-                    ? const Icon(Icons.check, size: 8, color: Colors.white)
+                    ? const Icon(Icons.check, size: 8, color: Color(0xFF141414))
                     : null,
               ),
               const SizedBox(height: 2),

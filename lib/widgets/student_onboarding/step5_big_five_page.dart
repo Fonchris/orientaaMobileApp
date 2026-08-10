@@ -154,7 +154,7 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
     ),
   ];
 
-  static const _brandBlue = Color(0xFF011F7B);
+  static const _brandBlue = AppTheme.brandYellow;
   static const _brandGold = Color(0xFFFFBA09);
 
   static const List<String> likertLabels = [
@@ -255,10 +255,10 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     if (_isLoading) {
       return Center(
@@ -306,11 +306,11 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: widget.onNext,
-                style: ElevatedButton.styleFrom(backgroundColor: _brandBlue),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(color: Colors.white),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _brandBlue,
+                  foregroundColor: AppTheme.brandInk,
                 ),
+                child: const Text('Continue'),
               ),
             ],
           ),
@@ -481,7 +481,7 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
                             border: Border.all(
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.08)
-                                  : _brandBlue.withValues(alpha: 0.08),
+                                  : AppTheme.brandInk.withValues(alpha: 0.1),
                             ),
                           ),
                           child: Column(
@@ -525,7 +525,7 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
                                               ? Colors.white.withValues(
                                                   alpha: 0.06,
                                                 )
-                                              : _brandBlue.withValues(
+                                              : AppTheme.brandInk.withValues(
                                                   alpha: 0.04,
                                                 ),
                                           border: Border.all(
@@ -535,7 +535,7 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
                                                 ? Colors.white.withValues(
                                                     alpha: 0.1,
                                                   )
-                                                : _brandBlue.withValues(
+                                                : AppTheme.brandInk.withValues(
                                                     alpha: 0.1,
                                                   ),
                                             width: isSelected ? 2 : 1,
@@ -558,9 +558,10 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
                                                               .withValues(
                                                                 alpha: 0.5,
                                                               )
-                                                        : _brandBlue.withValues(
-                                                            alpha: 0.5,
-                                                          ),
+                                                        : AppTheme.brandInk
+                                                              .withValues(
+                                                                alpha: 0.5,
+                                                              ),
                                                   ),
                                             ),
                                             Text(
@@ -576,9 +577,10 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
                                                     ? Colors.white.withValues(
                                                         alpha: 0.3,
                                                       )
-                                                    : _brandBlue.withValues(
-                                                        alpha: 0.3,
-                                                      ),
+                                                    : AppTheme.brandInk
+                                                          .withValues(
+                                                            alpha: 0.35,
+                                                          ),
                                               ),
                                               textAlign: TextAlign.center,
                                             ),

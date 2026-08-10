@@ -196,7 +196,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 size: 16,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.75)
-                    : AppTheme.brandBlue,
+                    : AppTheme.brandInk.withValues(alpha: 0.75),
               ),
             ),
             if (unread > 0)
@@ -212,7 +212,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     color: const Color(0xFFE0245E),
                     borderRadius: BorderRadius.circular(999),
                     border: Border.all(
-                      color: isDark ? const Color(0xFF0F1115) : Colors.white,
+                      color: isDark ? AppTheme.brandDark : Colors.white,
                       width: 1.5,
                     ),
                   ),
@@ -238,7 +238,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: isDark ? const Color(0xFF10131D) : Colors.white,
+      backgroundColor: isDark ? AppTheme.brandSurface : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -276,7 +276,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       size: 28,
                       color: isDark
                           ? AppTheme.brandGold
-                          : AppTheme.brandBlue.withValues(alpha: 0.5),
+                          : AppTheme.brandInk.withValues(alpha: 0.45),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -448,17 +448,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [const Color(0xFF1A1A2E), const Color(0xFF243B7A)]
-              : [Colors.white, const Color(0xFFEAF1FF)],
-        ),
+        color: isDark ? AppTheme.brandSurface : Colors.white,
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.06)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandLightOutline,
         ),
       ),
       child: Row(
@@ -468,17 +462,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
             height: 44,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AppTheme.brandGold, AppTheme.brandBlue],
-              ),
+              color: AppTheme.brandYellow,
             ),
             child: const Center(
               child: FaIcon(
                 FontAwesomeIcons.school,
                 size: 17,
-                color: Colors.white,
+                color: AppTheme.brandInk,
               ),
             ),
           ),
@@ -558,16 +548,12 @@ class _HomeDashboardState extends State<HomeDashboard> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppTheme.brandBlue, Color(0xFF3B5BDB)],
-                ),
+                color: AppTheme.brandYellow,
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.brandBlue.withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
+                    color: Colors.black.withValues(alpha: 0.2),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
@@ -578,13 +564,13 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     height: 44,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.15),
+                      color: Colors.black.withValues(alpha: 0.12),
                     ),
                     child: const Center(
                       child: FaIcon(
                         FontAwesomeIcons.video,
                         size: 17,
-                        color: Colors.white,
+                        color: AppTheme.brandInk,
                       ),
                     ),
                   ),
@@ -598,7 +584,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 14.5,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: AppTheme.brandInk,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -606,7 +592,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                           '${data['dateLabel'] ?? l10n.upcoming} · ${data['status'] ?? l10n.booked}',
                           style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.75),
+                            color: AppTheme.brandInk.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -615,7 +601,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                   const FaIcon(
                     FontAwesomeIcons.chevronRight,
                     size: 13,
-                    color: Colors.white,
+                    color: AppTheme.brandInk,
                   ),
                 ],
               ),
@@ -678,26 +664,25 @@ class _HomeDashboardState extends State<HomeDashboard> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white,
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
-        ),
-      ),
-      child: Row(
+        border: Border.all(              color: isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : AppTheme.brandYellow.withValues(alpha: 0.15),
+            ),
+          ),
+          child: Row(
         children: [
           Container(
             width: 42,
             height: 42,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(13),
-              color: AppTheme.brandBlue.withValues(alpha: 0.08),
+              color: AppTheme.brandYellow.withValues(alpha: 0.14),
             ),
             child: const Center(
               child: FaIcon(
                 FontAwesomeIcons.chalkboardUser,
                 size: 16,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandAmber,
               ),
             ),
           ),
@@ -751,7 +736,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 border: Border.all(
                   color: Theme.of(context).brightness == Brightness.dark
                       ? Colors.white.withValues(alpha: 0.08)
-                      : AppTheme.brandBlue.withValues(alpha: 0.08),
+                      : AppTheme.brandYellow.withValues(alpha: 0.15),
                 ),
               ),
               child: Column(
@@ -807,18 +792,12 @@ class _HomeDashboardState extends State<HomeDashboard> {
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [const Color(0xFF1A1A2E), const Color(0xFF243B7A)]
-                : [Colors.white, const Color(0xFFEAF1FF)],
-          ),
+          borderRadius: BorderRadius.circular(20),
+          color: isDark ? AppTheme.brandSurface : Colors.white,
           border: Border.all(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.06)
-                : AppTheme.brandBlue.withValues(alpha: 0.08),
+                : AppTheme.brandLightOutline,
           ),
         ),
         child: Row(
@@ -828,16 +807,12 @@ class _HomeDashboardState extends State<HomeDashboard> {
               height: 52,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppTheme.brandGold, AppTheme.brandBlue],
-                ),
+                color: AppTheme.brandYellow,
               ),
               child: const Center(
                 child: FaIcon(
                   FontAwesomeIcons.userTie,
-                  color: Colors.white,
+                  color: AppTheme.brandInk,
                   size: 20,
                 ),
               ),
@@ -902,7 +877,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
             size: 18,
             color: isDark
                 ? AppTheme.brandGold
-                : AppTheme.brandBlue.withValues(alpha: 0.5),
+                : AppTheme.brandInk.withValues(alpha: 0.45),
           ),
           const SizedBox(width: 12),
           Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import 'app_theme.dart';
 import 'google_fonts.dart';
 
 enum UserRole { student, counsellor }
@@ -30,8 +31,8 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
 
-  static const _brandBlue = Color(0xFF011F7B);
-  static const _brandGold = Color(0xFFFFBA09);
+  static const _brandYellow = Color(0xFFFFC700);
+  static const _brandInk = Color(0xFF141414);
 
   @override
   void initState() {
@@ -102,48 +103,28 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                   duration: const Duration(milliseconds: 350),
                   curve: Curves.easeOutCubic,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
-                    gradient: widget.isSelected
-                        ? LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: isDark
-                                ? [
-                                    _brandBlue.withValues(alpha: 0.25),
-                                    _brandBlue.withValues(alpha: 0.08),
-                                    const Color(0xFF323232).withValues(alpha: 0.5),
-                                  ]
-                                : [
-                                    _brandBlue.withValues(alpha: 0.06),
-                                    _brandBlue.withValues(alpha: 0.02),
-                                    Colors.white,
-                                  ],
-                          )
-                        : null,
+                    borderRadius: BorderRadius.circular(20),
                     color: widget.isSelected
-                        ? null
+                        ? (isDark
+                            ? _brandYellow.withValues(alpha: 0.18)
+                            : _brandYellow.withValues(alpha: 0.14))
                         : isDark
-                            ? const Color(0xFF323232).withValues(alpha: 0.6)
-                            : Colors.white.withValues(alpha: 0.85),
+                            ? const Color(0xFF232323).withValues(alpha: 0.8)
+                            : Colors.white.withValues(alpha: 0.9),
                     border: Border.all(
                       color: widget.isSelected
-                          ? _brandBlue
+                          ? _brandYellow
                           : isDark
                               ? Colors.white.withValues(alpha: 0.08)
-                              : _brandBlue.withValues(alpha: 0.08),
+                              : const Color(0xFFE3E3DE),
                       width: widget.isSelected ? 2 : 1,
                     ),
                     boxShadow: widget.isSelected
                         ? [
                             BoxShadow(
-                              color: _brandBlue.withValues(alpha: isDark ? 0.3 : 0.12),
-                              blurRadius: 24,
-                              offset: const Offset(0, 8),
-                            ),
-                            BoxShadow(
-                              color: _brandGold.withValues(alpha: isDark ? 0.08 : 0.04),
-                              blurRadius: 12,
-                              offset: const Offset(0, 2),
+                              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
                             ),
                           ]
                         : [
@@ -165,28 +146,15 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                         height: 58,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
-                          gradient: widget.isSelected
-                              ? LinearGradient(
-                                  colors: [
-                                    _brandBlue,
-                                    _brandBlue.withValues(alpha: 0.8),
-                                  ],
-                                )
-                              : LinearGradient(
-                                  colors: isDark
-                                      ? [
-                                          _brandBlue.withValues(alpha: 0.3),
-                                          _brandBlue.withValues(alpha: 0.1),
-                                        ]
-                                      : [
-                                          _brandBlue.withValues(alpha: 0.08),
-                                          _brandBlue.withValues(alpha: 0.03),
-                                        ],
-                                ),
+                          color: widget.isSelected
+                              ? _brandYellow
+                              : isDark
+                                  ? const Color(0xFF2E2E2E)
+                                  : const Color(0xFFF0F0EC),
                           boxShadow: widget.isSelected
                               ? [
                                   BoxShadow(
-                                    color: _brandBlue.withValues(alpha: 0.3),
+                                    color: Colors.black.withValues(alpha: 0.25),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -200,10 +168,10 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                           child: Icon(
                             iconData,
                             color: widget.isSelected
-                                ? Colors.white
+                                ? _brandInk
                                 : isDark
-                                    ? _brandBlue.withValues(alpha: 0.7)
-                                    : _brandBlue,
+                                    ? Colors.white.withValues(alpha: 0.85)
+                                    : _brandInk.withValues(alpha: 0.7),
                             size: 30,
                           ),
                         ),
@@ -224,7 +192,7 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                                       fontWeight: FontWeight.w700,
                                       color: isDark
                                           ? Colors.white
-                                          : const Color(0xFF1A1A2E),
+                                          : AppTheme.brandInk,
                                       height: 1.2,
                                     ),
                                   ),
@@ -235,10 +203,10 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                                       ? Icons.check_circle_rounded
                                       : Icons.chevron_right_rounded,
                                   color: widget.isSelected
-                                      ? _brandGold
+                                      ? _brandYellow
                                       : isDark
                                           ? Colors.white.withValues(alpha: 0.3)
-                                          : _brandBlue.withValues(alpha: 0.2),
+                                          : _brandInk.withValues(alpha: 0.2),
                                   size: 24,
                                 ),
                               ],
@@ -251,7 +219,7 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
                                 fontWeight: FontWeight.w400,
                                 color: isDark
                                     ? Colors.white.withValues(alpha: 0.6)
-                                    : const Color(0xFF1A1A2E).withValues(alpha: 0.55),
+                                    : AppTheme.brandInk.withValues(alpha: 0.55),
                                 height: 1.4,
                               ),
                             ),

@@ -160,7 +160,7 @@ class _ConnectionsPageState extends State<ConnectionsPage> {
               size: 42,
               color: isDark
                   ? AppTheme.brandGold
-                  : AppTheme.brandBlue.withValues(alpha: 0.5),
+                  : AppTheme.brandInk.withValues(alpha: 0.45),
             ),
             const SizedBox(height: 14),
             Text(

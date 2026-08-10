@@ -166,7 +166,7 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandYellow.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -273,7 +273,7 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
                   height: 120,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : const Color(0xFFEFF3FA),
+                      : AppTheme.brandLightOutline,
                   child: Center(
                     child: FaIcon(
                       FontAwesomeIcons.image,

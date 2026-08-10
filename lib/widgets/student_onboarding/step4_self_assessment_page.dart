@@ -350,24 +350,17 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            gradient: active
-                ? const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppTheme.brandBlue, Color(0xFF1F4ED8)],
-                  )
-                : null,
             color: active
-                ? null
+                ? AppTheme.brandYellow
                 : isDark
                 ? Colors.white.withValues(alpha: 0.05)
-                : AppTheme.brandBlue.withValues(alpha: 0.05),
+                : AppTheme.brandYellow.withValues(alpha: 0.1),
             border: Border.all(
               color: active
-                  ? AppTheme.brandBlue
+                  ? AppTheme.brandYellow
                   : isDark
                   ? Colors.white.withValues(alpha: 0.08)
-                  : AppTheme.brandBlue.withValues(alpha: 0.12),
+                  : AppTheme.brandYellow.withValues(alpha: 0.2),
             ),
           ),
           child: Row(
@@ -380,8 +373,8 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: active
-                      ? Colors.white.withValues(alpha: 0.2)
-                      : AppTheme.brandBlue.withValues(alpha: 0.08),
+                      ? Colors.black.withValues(alpha: 0.15)
+                      : AppTheme.brandYellow.withValues(alpha: 0.15),
                 ),
                 child: Text(
                   number,
@@ -389,10 +382,10 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                     fontSize: 10,
                     fontWeight: FontWeight.w800,
                     color: active
-                        ? Colors.white
+                        ? AppTheme.brandInk
                         : isDark
                         ? Colors.white.withValues(alpha: 0.6)
-                        : AppTheme.brandBlue.withValues(alpha: 0.7),
+                        : AppTheme.brandInk.withValues(alpha: 0.6),
                   ),
                 ),
               ),
@@ -406,10 +399,10 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: active
-                        ? Colors.white
+                        ? AppTheme.brandInk
                         : isDark
                         ? Colors.white.withValues(alpha: 0.55)
-                        : AppTheme.brandBlue.withValues(alpha: 0.6),
+                        : AppTheme.brandInk.withValues(alpha: 0.55),
                   ),
                 ),
               ),
@@ -425,7 +418,7 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
         borderRadius: BorderRadius.circular(16),
         color: isDark
             ? Colors.white.withValues(alpha: 0.04)
-            : AppTheme.brandBlue.withValues(alpha: 0.04),
+            : AppTheme.brandYellow.withValues(alpha: 0.06),
       ),
       child: Row(
         children: [
@@ -458,16 +451,16 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: isSelected
-                  ? AppTheme.brandBlue
+                  ? AppTheme.brandYellow
                   : isDark
                   ? Colors.white.withValues(alpha: 0.05)
                   : Colors.white.withValues(alpha: 0.9),
               border: Border.all(
                 color: isSelected
-                    ? AppTheme.brandBlue
+                    ? AppTheme.brandYellow
                     : isDark
                     ? Colors.white.withValues(alpha: 0.1)
-                    : AppTheme.brandBlue.withValues(alpha: 0.1),
+                    : AppTheme.brandYellow.withValues(alpha: 0.25),
               ),
             ),
             child: Row(
@@ -481,10 +474,10 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                     // never reflow inside the Wrap on selection.
                     fontWeight: FontWeight.w600,
                     color: isSelected
-                        ? Colors.white
+                        ? AppTheme.brandInk
                         : isDark
                         ? Colors.white.withValues(alpha: 0.75)
-                        : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
+                        : AppTheme.brandInk.withValues(alpha: 0.75),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -499,7 +492,7 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                     opacity: isSelected ? 1 : 0,
                     child: const FaIcon(
                       FontAwesomeIcons.check,
-                      color: AppTheme.brandGold,
+                      color: AppTheme.brandAmber,
                       size: 12,
                     ),
                   ),
@@ -526,32 +519,25 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
             curve: Curves.easeOutCubic,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              gradient: isSelected
-                  ? const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppTheme.brandBlue, Color(0xFF1F4ED8)],
-                    )
-                  : null,
+              borderRadius: BorderRadius.circular(999),
               color: isSelected
-                  ? null
+                  ? AppTheme.brandYellow
                   : isDark
                   ? Colors.white.withValues(alpha: 0.05)
                   : Colors.white.withValues(alpha: 0.9),
               border: Border.all(
                 color: isSelected
-                    ? AppTheme.brandBlue
+                    ? AppTheme.brandYellow
                     : isDark
                     ? Colors.white.withValues(alpha: 0.1)
-                    : AppTheme.brandBlue.withValues(alpha: 0.1),
+                    : AppTheme.brandYellow.withValues(alpha: 0.25),
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: AppTheme.brandBlue.withValues(alpha: 0.3),
-                        blurRadius: 14,
-                        offset: const Offset(0, 5),
+                        color: Colors.black.withValues(alpha: 0.25),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ]
                   : null,
@@ -566,10 +552,10 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                     // Constant weight — see note in _buildTagPicker.
                     fontWeight: FontWeight.w600,
                     color: isSelected
-                        ? Colors.white
+                        ? AppTheme.brandInk
                         : isDark
                         ? Colors.white.withValues(alpha: 0.75)
-                        : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
+                        : AppTheme.brandInk.withValues(alpha: 0.75),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -581,7 +567,7 @@ class Step4SelfAssessmentPageState extends State<Step4SelfAssessmentPage> {
                     opacity: isSelected ? 1 : 0,
                     child: const FaIcon(
                       FontAwesomeIcons.circleCheck,
-                      color: AppTheme.brandGold,
+                      color: AppTheme.brandAmber,
                       size: 16,
                     ),
                   ),

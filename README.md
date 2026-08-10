@@ -44,9 +44,14 @@ Bottom navigation with 4 tabs:
 - Live language switching in Settings, persisted in SharedPreferences
 - **Arabic (RTL)** supported end-to-end, including the bundled **Cairo** variable font (`assets/fonts/Cairo-Variable.ttf`) which covers Arabic + Latin glyphs — the font family switches automatically when the locale is Arabic
 
-### Theme
-- Blue/gold brand theme (`AppTheme`) with intentionally designed **light and dark** modes (no naive color inversion)
-- System / Light / Dark mode picker in Settings, persisted via `ThemeProvider`
+### Theme — Black/Charcoal + Yellow-Amber Design System
+- Brand identity built on **near-black charcoal + warm yellow-amber** (`#FFC700` accent) — a deliberate departure from generic blue/purple gradients
+- **Flat, solid fills only**: zero linear/radial/sweep gradients and no glow effects anywhere in either theme
+- **Dark mode** surface hierarchy: `#121212` background → `#1E1E1E` cards → `#2A2A2A` elevated rows, with `#F5F5F5` text
+- **Light mode** uses the same black+yellow identity: soft off-white (`#F5F5F2`) surfaces, white cards, ink text
+- Pill-shaped CTAs (solid yellow fill + dark text), 16–20px rounded cards, yellow active states, flat color icon chips
+- Semantic flat colors retained for data (region badges, Big-Five traits) — never gradients or blue-purple blends
+- Intentionally designed **light and dark** modes (no naive color inversion); System / Light / Dark mode picker in Settings, persisted via `ThemeProvider`
 
 ### Media (Firebase Storage)
 - Profile photos → `profile_photos/{uid}.jpg` (deterministic path = automatic overwrite)
@@ -108,7 +113,7 @@ orientaa_mobile_app/
 │   │   ├── app_fr.arb / app_ar.arb / app_pt.arb
 │   │   └── app_localizations*.dart      # Generated (flutter gen-l10n)
 │   └── widgets/
-│       ├── app_theme.dart               # Light/dark ThemeData (blue/gold brand)
+│       ├── app_theme.dart               # Light/dark ThemeData (black/charcoal + yellow)
 │       ├── theme_provider.dart          # System/Light/Dark + persistence
 │       ├── locale_provider.dart         # Active locale + persistence
 │       ├── google_fonts.dart            # Locale-aware font family wrapper

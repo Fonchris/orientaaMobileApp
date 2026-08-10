@@ -46,7 +46,7 @@ class AcademicSummaryCard extends StatelessWidget {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandYellow.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -59,12 +59,12 @@ class AcademicSummaryCard extends StatelessWidget {
                 height: 28,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: AppTheme.brandBlue.withValues(alpha: 0.08),
+                  color: AppTheme.brandYellow.withValues(alpha: 0.14),
                 ),
                 child: const FaIcon(
                   FontAwesomeIcons.bookOpen,
                   size: 13,
-                  color: AppTheme.brandBlue,
+                  color: AppTheme.brandAmber,
                 ),
               ),
               const SizedBox(width: 10),
@@ -75,7 +75,7 @@ class AcademicSummaryCard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.9)
-                      : AppTheme.brandBlue,
+                      : AppTheme.brandInk,
                   letterSpacing: 0.2,
                 ),
               ),
@@ -153,9 +153,9 @@ class AcademicSummaryCard extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: onEditProfile,
               style: OutlinedButton.styleFrom(
-                foregroundColor: AppTheme.brandBlue,
+                foregroundColor: AppTheme.brandAmber,
                 side: BorderSide(
-                  color: AppTheme.brandBlue.withValues(alpha: 0.3),
+                  color: AppTheme.brandAmber.withValues(alpha: 0.35),
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),

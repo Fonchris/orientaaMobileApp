@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
             return const Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandAmber,
               ),
             );
           }
@@ -114,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const FaIcon(
                         FontAwesomeIcons.palette,
                         size: 14,
-                        color: AppTheme.brandBlue,
+                        color: AppTheme.brandAmber,
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -239,7 +239,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const FaIcon(
                         FontAwesomeIcons.message,
                         size: 14,
-                        color: AppTheme.brandBlue,
+                        color: AppTheme.brandAmber,
                       ),
                       const SizedBox(width: 12),
                       Text(
@@ -500,9 +500,9 @@ class _SettingsPageState extends State<SettingsPage> {
             height: 26,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: AppTheme.brandBlue.withValues(alpha: 0.08),
+              color: AppTheme.brandAmber.withValues(alpha: 0.08),
             ),
-            child: FaIcon(icon, size: 12, color: AppTheme.brandBlue),
+            child: FaIcon(icon, size: 12, color: AppTheme.brandAmber),
           ),
           const SizedBox(width: 8),
           Text(
@@ -512,7 +512,7 @@ class _SettingsPageState extends State<SettingsPage> {
               fontWeight: FontWeight.w700,
               color: Theme.of(context).brightness == Brightness.dark
                   ? Colors.white.withValues(alpha: 0.9)
-                  : AppTheme.brandBlue,
+                  : AppTheme.brandInk,
             ),
           ),
         ],
@@ -529,7 +529,7 @@ class _SettingsPageState extends State<SettingsPage> {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandAmber.withValues(alpha: 0.08),
         ),
       ),
       child: Column(children: children),
@@ -543,7 +543,7 @@ class _SettingsPageState extends State<SettingsPage> {
       indent: 52,
       color: isDark
           ? Colors.white.withValues(alpha: 0.06)
-          : AppTheme.brandBlue.withValues(alpha: 0.06),
+          : AppTheme.brandAmber.withValues(alpha: 0.06),
     );
   }
 
@@ -555,7 +555,7 @@ class _SettingsPageState extends State<SettingsPage> {
     VoidCallback? onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final color = iconColor ?? (isDark ? Colors.white.withValues(alpha: 0.6) : AppTheme.brandBlue);
+    final color = iconColor ?? (isDark ? Colors.white.withValues(alpha: 0.6) : AppTheme.brandAmber);
     return ListTile(
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
@@ -613,14 +613,14 @@ class _SettingsPageState extends State<SettingsPage> {
         height: 34,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: AppTheme.brandBlue.withValues(alpha: 0.08),
+          color: AppTheme.brandAmber.withValues(alpha: 0.08),
         ),
         child: FaIcon(
           icon,
           size: 14,
           color: isDark
               ? Colors.white.withValues(alpha: 0.6)
-              : AppTheme.brandBlue,
+              : AppTheme.brandAmber,
         ),
       ),
       title: Text(
@@ -651,14 +651,14 @@ class _SettingsPageState extends State<SettingsPage> {
         height: 34,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: AppTheme.brandBlue.withValues(alpha: 0.08),
+          color: AppTheme.brandAmber.withValues(alpha: 0.08),
         ),
         child: FaIcon(
           icon,
           size: 14,
           color: isDark
               ? Colors.white.withValues(alpha: 0.6)
-              : AppTheme.brandBlue,
+              : AppTheme.brandAmber,
         ),
       ),
       title: Text(
@@ -677,7 +677,7 @@ class _SettingsPageState extends State<SettingsPage> {
           style: GoogleFonts.inter(
             fontSize: 13.5,
             fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white : AppTheme.brandBlue,
+            color: isDark ? Colors.white : AppTheme.brandInk,
           ),
           items: options
               .map((o) => DropdownMenuItem(value: o, child: Text(o)))

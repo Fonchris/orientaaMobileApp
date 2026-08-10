@@ -110,9 +110,7 @@ class Step3FinancialPage extends StatelessWidget {
                               fontWeight: FontWeight.w400,
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.75)
-                                  : const Color(
-                                      0xFF1A1A2E,
-                                    ).withValues(alpha: 0.75),
+                                  : AppTheme.brandInk.withValues(alpha: 0.75),
                               height: 1.4,
                             ),
                           ),
@@ -238,32 +236,25 @@ class Step3FinancialPage extends StatelessWidget {
             curve: Curves.easeOutCubic,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              gradient: isSelected
-                  ? const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppTheme.brandBlue, Color(0xFF1F4ED8)],
-                    )
-                  : null,
+              borderRadius: BorderRadius.circular(999),
               color: isSelected
-                  ? null
+                  ? AppTheme.brandYellow
                   : isDark
                   ? Colors.white.withValues(alpha: 0.05)
                   : Colors.white.withValues(alpha: 0.9),
               border: Border.all(
                 color: isSelected
-                    ? AppTheme.brandBlue
+                    ? AppTheme.brandYellow
                     : isDark
                     ? Colors.white.withValues(alpha: 0.1)
-                    : AppTheme.brandBlue.withValues(alpha: 0.1),
+                    : AppTheme.brandYellow.withValues(alpha: 0.25),
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: AppTheme.brandBlue.withValues(alpha: 0.3),
-                        blurRadius: 14,
-                        offset: const Offset(0, 5),
+                        color: Colors.black.withValues(alpha: 0.25),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ]
                   : null,
@@ -274,10 +265,10 @@ class Step3FinancialPage extends StatelessWidget {
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
                 color: isSelected
-                    ? Colors.white
+                    ? AppTheme.brandInk
                     : isDark
                     ? Colors.white.withValues(alpha: 0.75)
-                    : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
+                    : AppTheme.brandInk.withValues(alpha: 0.75),
               ),
             ),
           ),
@@ -298,7 +289,7 @@ class Step3FinancialPage extends StatelessWidget {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.1)
-              : AppTheme.brandBlue.withValues(alpha: 0.1),
+              : AppTheme.brandYellow.withValues(alpha: 0.2),
         ),
       ),
       child: SwitchListTile(
@@ -309,13 +300,13 @@ class Step3FinancialPage extends StatelessWidget {
           style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+            color: isDark ? Colors.white : AppTheme.brandInk,
           ),
         ),
         value: model.seekingScholarship,
         onChanged: (v) => model.seekingScholarship = v,
-        activeTrackColor: AppTheme.brandBlue.withValues(alpha: 0.3),
-        activeThumbColor: AppTheme.brandBlue,
+        activeTrackColor: AppTheme.brandYellow.withValues(alpha: 0.3),
+        activeThumbColor: AppTheme.brandYellow,
         contentPadding: EdgeInsets.zero,
       ),
     );
@@ -351,24 +342,24 @@ class Step3FinancialPage extends StatelessWidget {
             hint,
             style: GoogleFonts.inter(
               fontSize: 15,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.35)
-                  : AppTheme.brandBlue.withValues(alpha: 0.35),
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.35)
+                : AppTheme.brandInk.withValues(alpha: 0.35),
             ),
           ),
           style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+            color: isDark ? Colors.white : AppTheme.brandInk,
           ),
-          dropdownColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+          dropdownColor: isDark ? AppTheme.brandInk : Colors.white,
           borderRadius: BorderRadius.circular(16),
           icon: FaIcon(
             FontAwesomeIcons.chevronDown,
             size: 13,
             color: isDark
                 ? Colors.white.withValues(alpha: 0.5)
-                : AppTheme.brandBlue.withValues(alpha: 0.5),
+                : AppTheme.brandInk.withValues(alpha: 0.5),
           ),
           items: items.map((item) {
             return DropdownMenuItem<T>(

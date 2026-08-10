@@ -107,45 +107,9 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: isDark
-                  ? [
-                      const Color(0xFF0F1115),
-                      AppTheme.brandNavySurface,
-                      const Color(0xFF151A26),
-                    ]
-                  : [
-                      const Color(0xFFF7F9FC),
-                      Colors.white,
-                      const Color(0xFFF3F6FF),
-                    ],
-            ),
-          ),
+          color: isDark ? AppTheme.brandDark : AppTheme.brandLight,
           child: Stack(
             children: [
-              Positioned(
-                top: -70,
-                right: -40,
-                child: _GlowBlob(
-                  color: AppTheme.brandGold.withValues(
-                    alpha: isDark ? 0.12 : 0.1,
-                  ),
-                  size: 180,
-                ),
-              ),
-              Positioned(
-                bottom: 120,
-                left: -60,
-                child: _GlowBlob(
-                  color: AppTheme.brandBlue.withValues(
-                    alpha: isDark ? 0.14 : 0.08,
-                  ),
-                  size: 220,
-                ),
-              ),
               Column(
                 children: [
                   Padding(
@@ -157,7 +121,7 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
                             Icons.arrow_back_rounded,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.75)
-                                : AppTheme.brandBlue.withValues(alpha: 0.75),
+                                : AppTheme.brandInk.withValues(alpha: 0.75),
                           ),
                           onPressed: () {
                             // On the split Self-Assessment step, the header
@@ -318,24 +282,5 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
       default:
         return '';
     }
-  }
-}
-
-class _GlowBlob extends StatelessWidget {
-  final Color color;
-  final double size;
-
-  const _GlowBlob({required this.color, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(colors: [color, color.withValues(alpha: 0.0)]),
-      ),
-    );
   }
 }

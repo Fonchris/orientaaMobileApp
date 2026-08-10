@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'student_onboarding_model.dart';
 
@@ -46,8 +48,9 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
     }
   }
 
-  static const _brandBlue = Color(0xFF011F7B);
-  static const _brandGold = Color(0xFFFFBA09);
+  static const _brandYellow = Color(0xFFFFC700);
+  static const _brandAmber = Color(0xFFF5B800);
+  static const _brandInk = Color(0xFF141414);
 
   static const List<String> educationLevels = [
     'Secondary school student',
@@ -104,48 +107,14 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [
-                  const Color(0xFF0F1115),
-                  const Color(0xFF151A26),
-                  const Color(0xFF0F1115),
-                ]
-              : [
-                  const Color(0xFFF6F8FF),
-                  const Color(0xFFF0F5FF),
-                  const Color(0xFFFFFFFF),
-                ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -40,
-            right: -30,
-            child: _backgroundGlow(
-              color: _brandGold.withValues(alpha: isDark ? 0.18 : 0.22),
-              size: 120,
-            ),
-          ),
-          Positioned(
-            top: 90,
-            left: -50,
-            child: _backgroundGlow(
-              color: _brandBlue.withValues(alpha: isDark ? 0.12 : 0.12),
-              size: 140,
-            ),
-          ),
-          CustomScrollView(
+      color: isDark ? const Color(0xFF121212) : const Color(0xFFF5F5F2),
+      child: CustomScrollView(
             controller: _scrollController,
             physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
@@ -181,8 +150,6 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               ),
             ],
           ),
-        ],
-      ),
     );
   }
 
@@ -197,7 +164,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.08)
-                  : _brandBlue.withValues(alpha: 0.08),
+                  : _brandYellow.withValues(alpha: 0.08),
             ),
           ),
           child: Text(
@@ -205,7 +172,9 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: isDark ? Colors.white.withValues(alpha: 0.85) : _brandBlue,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.85)
+                  : _brandInk.withValues(alpha: 0.75),
             ),
           ),
         ),
@@ -241,16 +210,11 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(999),
-          gradient: LinearGradient(
-            colors: [
-              _brandBlue.withValues(alpha: 0.95),
-              _brandGold.withValues(alpha: 0.9),
-            ],
-          ),
+          color: _brandYellow,
           boxShadow: [
             BoxShadow(
-              color: _brandBlue.withValues(alpha: 0.25),
-              blurRadius: 16,
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 12,
               offset: const Offset(0, 6),
             ),
           ],
@@ -258,14 +222,14 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FaIcon(icon, size: 13, color: Colors.white),
+            FaIcon(icon, size: 13, color: _brandInk),
             const SizedBox(width: 8),
             Text(
               label,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: _brandInk,
               ),
             ),
           ],
@@ -352,7 +316,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.08)
-                  : _brandBlue.withValues(alpha: 0.08),
+                  : _brandYellow.withValues(alpha: 0.08),
             ),
           ),
           child: Column(
@@ -364,12 +328,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _brandGold.withValues(alpha: 0.18),
+                      color: _brandAmber.withValues(alpha: 0.18),
                     ),
                     child: const FaIcon(
                       FontAwesomeIcons.circleInfo,
                       size: 14,
-                      color: _brandGold,
+                      color: _brandAmber,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -394,7 +358,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: _brandGold,
+                    color: _brandAmber,
                   ),
                 ),
               ],
@@ -405,12 +369,13 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                 child: ElevatedButton(
                   onPressed: model.step1Valid ? onNext : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _brandBlue,
+                    backgroundColor: _brandYellow,
+                    foregroundColor: _brandInk,
                     disabledBackgroundColor: isDark
                         ? Colors.white.withValues(alpha: 0.08)
-                        : _brandBlue.withValues(alpha: 0.08),
+                        : _brandYellow.withValues(alpha: 0.08),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(999),
                     ),
                   ),
                   child: Text(
@@ -418,7 +383,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: model.step1Valid ? Colors.white : subtitleColor,
+                      color: model.step1Valid ? _brandInk : subtitleColor,
                     ),
                   ),
                 ),
@@ -434,34 +399,18 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  const Color(0xFF1A1A2E),
-                  const Color(0xFF243B7A),
-                  const Color(0xFF10131D),
-                ]
-              : [
-                  Colors.white,
-                  const Color(0xFFEAF1FF),
-                  const Color(0xFFFDF8E8),
-                ],
-        ),
+        borderRadius: BorderRadius.circular(20),
+        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         border: Border.all(
           color: isDark
-              ? Colors.white.withValues(alpha: 0.06)
-              : _brandBlue.withValues(alpha: 0.08),
+              ? Colors.white.withValues(alpha: 0.08)
+              : const Color(0xFFE3E3DE),
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : _brandBlue.withValues(alpha: 0.1),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -472,23 +421,19 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             height: 58,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [_brandGold, _brandBlue.withValues(alpha: 0.95)],
-              ),
+              color: _brandYellow,
               boxShadow: [
                 BoxShadow(
-                  color: _brandBlue.withValues(alpha: 0.28),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
             child: const Center(
               child: FaIcon(
                 FontAwesomeIcons.graduationCap,
-                color: Colors.white,
+                color: _brandInk,
                 size: 26,
               ),
             ),
@@ -553,11 +498,11 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
         borderRadius: BorderRadius.circular(999),
         color: isDark
             ? Colors.white.withValues(alpha: 0.08)
-            : _brandBlue.withValues(alpha: 0.08),
+            : _brandYellow.withValues(alpha: 0.08),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : _brandBlue.withValues(alpha: 0.1),
+              : _brandYellow.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -566,7 +511,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
           FaIcon(
             icon,
             size: 11,
-            color: isDark ? Colors.white.withValues(alpha: 0.75) : _brandBlue,
+            color: isDark ? Colors.white.withValues(alpha: 0.75) : _brandInk,
           ),
           const SizedBox(width: 6),
           Text(
@@ -574,7 +519,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white.withValues(alpha: 0.8) : _brandBlue,
+              color: isDark ? Colors.white.withValues(alpha: 0.8) : _brandInk,
             ),
           ),
         ],
@@ -582,16 +527,6 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
     );
   }
 
-  Widget _backgroundGlow({required Color color, required double size}) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(colors: [color, color.withValues(alpha: 0.0)]),
-      ),
-    );
-  }
 
   Widget _buildSection({
     required FaIconData icon,
@@ -611,9 +546,9 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                 height: 28,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: _brandBlue.withValues(alpha: 0.08),
+                  color: _brandYellow.withValues(alpha: 0.08),
                 ),
-                child: FaIcon(icon, size: 13, color: _brandBlue),
+                child: FaIcon(icon, size: 13, color: _brandYellow),
               ),
               const SizedBox(width: 10),
               Text(
@@ -623,7 +558,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                   fontWeight: FontWeight.w700,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.9)
-                      : _brandBlue,
+                      : _brandInk,
                   letterSpacing: 0.2,
                 ),
               ),
@@ -652,14 +587,14 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : _brandBlue.withValues(alpha: 0.08),
+              : _brandYellow.withValues(alpha: 0.08),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
                 ? Colors.black.withValues(alpha: 0.15)
-                : _brandBlue.withValues(alpha: 0.04),
+                : _brandYellow.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -676,25 +611,25 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               fontSize: 15,
               color: isDark
                   ? Colors.white.withValues(alpha: 0.3)
-                  : _brandBlue.withValues(alpha: 0.35),
+                  : _brandInk.withValues(alpha: 0.4),
             ),
           ),
           style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w500,
-            color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+            color: isDark ? Colors.white : AppTheme.brandInk,
           ),
           dropdownColor: isDark ? const Color(0xFF323232) : Colors.white,
           icon: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: _brandBlue.withValues(alpha: isDark ? 0.15 : 0.08),
+              color: _brandYellow.withValues(alpha: isDark ? 0.15 : 0.08),
             ),
             child: const FaIcon(
               FontAwesomeIcons.chevronDown,
               size: 12,
-              color: _brandBlue,
+              color: _brandYellow,
             ),
           ),
           borderRadius: BorderRadius.circular(16),
@@ -729,17 +664,17 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               : Colors.white,
           border: Border.all(
             color: model.startLabel != null
-                ? _brandBlue
+                ? _brandYellow
                 : isDark
                 ? Colors.white.withValues(alpha: 0.08)
-                : _brandBlue.withValues(alpha: 0.08),
+                : _brandYellow.withValues(alpha: 0.08),
             width: model.startLabel != null ? 2 : 1.5,
           ),
           boxShadow: [
             BoxShadow(
               color: isDark
                   ? Colors.black.withValues(alpha: 0.15)
-                  : _brandBlue.withValues(alpha: 0.04),
+                  : _brandYellow.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -751,12 +686,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: _brandBlue.withValues(alpha: isDark ? 0.15 : 0.08),
+                color: _brandYellow.withValues(alpha: isDark ? 0.15 : 0.08),
               ),
               child: const FaIcon(
                 FontAwesomeIcons.calendar,
                 size: 14,
-                color: _brandBlue,
+                color: _brandYellow,
               ),
             ),
             const SizedBox(width: 12),
@@ -769,10 +704,10 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                       ? FontWeight.w600
                       : FontWeight.w400,
                   color: model.startLabel != null
-                      ? (isDark ? Colors.white : const Color(0xFF1A1A2E))
+                      ? (isDark ? Colors.white : AppTheme.brandInk)
                       : (isDark
                             ? Colors.white.withValues(alpha: 0.3)
-                            : _brandBlue.withValues(alpha: 0.35)),
+                            : AppTheme.brandInk.withValues(alpha: 0.4)),
                 ),
               ),
             ),
@@ -783,19 +718,19 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                   ? Container(
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
-                        color: _brandGold.withValues(alpha: 0.2),
+                        color: _brandAmber.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const FaIcon(
                         FontAwesomeIcons.check,
-                        color: _brandGold,
+                        color: _brandAmber,
                         size: 12,
                       ),
                     )
                   : const FaIcon(
                       FontAwesomeIcons.chevronDown,
                       size: 14,
-                      color: _brandBlue,
+                      color: _brandYellow,
                     ),
             ),
           ],
@@ -813,7 +748,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+      backgroundColor: isDark ? AppTheme.brandInk : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -846,7 +781,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                           fontWeight: FontWeight.w700,
                           color: isDark
                               ? Colors.white
-                              : const Color(0xFF1A1A2E),
+                              : AppTheme.brandInk,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -856,7 +791,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                           fontSize: 13,
                           color: isDark
                               ? Colors.white.withValues(alpha: 0.5)
-                              : const Color(0xFF1A1A2E).withValues(alpha: 0.5),
+                              : AppTheme.brandInk.withValues(alpha: 0.5),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -869,8 +804,8 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                               'Month',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: _brandBlue,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? _brandYellow : _brandInk,
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -893,7 +828,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       color: isSelected
-                                          ? _brandBlue
+                                          ? _brandYellow
                                           : isDark
                                           ? const Color(
                                               0xFF323232,
@@ -901,12 +836,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                                           : Colors.grey.withValues(alpha: 0.06),
                                       border: Border.all(
                                         color: isSelected
-                                            ? _brandBlue
+                                            ? _brandYellow
                                             : isDark
                                             ? Colors.white.withValues(
                                                 alpha: 0.08,
                                               )
-                                            : _brandBlue.withValues(
+                                            : _brandYellow.withValues(
                                                 alpha: 0.08,
                                               ),
                                       ),
@@ -919,14 +854,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                                             ? FontWeight.w600
                                             : FontWeight.w400,
                                         color: isSelected
-                                            ? Colors.white
+                                            ? _brandInk
                                             : isDark
                                             ? Colors.white.withValues(
                                                 alpha: 0.7,
                                               )
-                                            : const Color(
-                                                0xFF1A1A2E,
-                                              ).withValues(alpha: 0.7),
+                                            : _brandInk.withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ),
@@ -945,8 +878,8 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                               'Year',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: _brandBlue,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? _brandYellow : _brandInk,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -977,7 +910,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                                               12,
                                             ),
                                             color: isSelected
-                                                ? _brandBlue
+                                                ? _brandYellow
                                                 : isDark
                                                 ? const Color(
                                                     0xFF323232,
@@ -987,12 +920,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                                                   ),
                                             border: Border.all(
                                               color: isSelected
-                                                  ? _brandBlue
+                                                  ? _brandYellow
                                                   : isDark
                                                   ? Colors.white.withValues(
                                                       alpha: 0.08,
                                                     )
-                                                  : _brandBlue.withValues(
+                                                  : _brandYellow.withValues(
                                                       alpha: 0.08,
                                                     ),
                                             ),
@@ -1005,14 +938,14 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                                                   ? FontWeight.w700
                                                   : FontWeight.w500,
                                               color: isSelected
-                                                  ? Colors.white
+                                                  ? _brandInk
                                                   : isDark
                                                   ? Colors.white.withValues(
                                                       alpha: 0.7,
                                                     )
-                                                  : const Color(
-                                                      0xFF1A1A2E,
-                                                    ).withValues(alpha: 0.7),
+                                                  : _brandInk.withValues(
+                                                      alpha: 0.7,
+                                                    ),
                                             ),
                                           ),
                                         ),
@@ -1036,9 +969,10 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: _brandBlue,
+                              backgroundColor: _brandYellow,
+                              foregroundColor: _brandInk,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(999),
                               ),
                             ),
                             child: Text(
@@ -1046,7 +980,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                                color: _brandInk,
                               ),
                             ),
                           ),
@@ -1091,13 +1025,13 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             ? const Color(0xFF323232).withValues(alpha: 0.8)
             : Colors.white,
         border: Border.all(
-          color: _brandBlue.withValues(alpha: 0.15),
+          color: _brandYellow.withValues(alpha: 0.15),
           width: 1.5,
         ),
       ),
       child: Row(
         children: [
-          const FaIcon(FontAwesomeIcons.pen, size: 14, color: _brandBlue),
+          const FaIcon(FontAwesomeIcons.pen, size: 14, color: _brandYellow),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
@@ -1108,7 +1042,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
               onChanged: (v) => model.customField = v,
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                color: isDark ? Colors.white : AppTheme.brandInk,
               ),
               decoration: InputDecoration(
                 hintText: 'Enter your field of interest...',
@@ -1116,7 +1050,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                   fontSize: 14,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.3)
-                      : _brandBlue.withValues(alpha: 0.3),
+                      : AppTheme.brandInk.withValues(alpha: 0.35),
                 ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -1149,22 +1083,22 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
               color: isSelected
-                  ? _brandBlue
+                  ? _brandYellow
                   : isDark
                   ? const Color(0xFF323232).withValues(alpha: 0.8)
                   : Colors.white,
               border: Border.all(
                 color: isSelected
-                    ? _brandBlue
+                    ? _brandYellow
                     : isDark
                     ? Colors.white.withValues(alpha: 0.08)
-                    : _brandBlue.withValues(alpha: 0.08),
+                    : _brandYellow.withValues(alpha: 0.08),
                 width: isSelected ? 2 : 1.5,
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: _brandBlue.withValues(alpha: 0.35),
+                        color: Colors.black.withValues(alpha: 0.25),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -1173,7 +1107,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                       BoxShadow(
                         color: isDark
                             ? Colors.black.withValues(alpha: 0.1)
-                            : _brandBlue.withValues(alpha: 0.03),
+                            : _brandYellow.withValues(alpha: 0.03),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
@@ -1188,10 +1122,10 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                     color: isSelected
-                        ? Colors.white
+                        ? _brandInk
                         : isDark
                         ? Colors.white.withValues(alpha: 0.7)
-                        : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
+                        : _brandInk.withValues(alpha: 0.75),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -1203,12 +1137,12 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
                       ? Container(
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                            color: _brandGold.withValues(alpha: 0.2),
+                            color: _brandAmber.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const FaIcon(
+                          child: FaIcon(
                             FontAwesomeIcons.check,
-                            color: _brandGold,
+                            color: _brandAmber,
                             size: 10,
                           ),
                         )

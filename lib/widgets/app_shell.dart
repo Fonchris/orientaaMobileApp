@@ -48,25 +48,10 @@ class _AppShellState extends State<AppShell> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final uid = FirebaseAuth.instance.currentUser?.uid ?? 'missing';
 
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? [
-                    const Color(0xFF0F1115),
-                    AppTheme.brandNavySurface,
-                    const Color(0xFF151A26),
-                  ]
-                : [
-                    const Color(0xFFF7F9FC),
-                    Colors.white,
-                    const Color(0xFFF3F6FF),
-                  ],
-          ),
-        ),
+        color: isDark ? AppTheme.brandDark : AppTheme.brandLight,
         child: IndexedStack(
           index: _index,
           children: [
@@ -84,10 +69,8 @@ class _AppShellState extends State<AppShell> {
         selectedIndex: _index,
         onDestinationSelected: _goTo,
         height: 68,
-        backgroundColor: isDark ? const Color(0xFF10131D) : Colors.white,
-        indicatorColor: isDark
-            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
-            : AppTheme.brandBlue.withValues(alpha: 0.12),
+        backgroundColor: isDark ? AppTheme.brandSurface : Colors.white,
+        indicatorColor: scheme.primary.withValues(alpha: 0.25),
         elevation: 8,
         shadowColor: Colors.black.withValues(alpha: isDark ? 0.4 : 0.12),
         destinations: [
@@ -96,9 +79,7 @@ class _AppShellState extends State<AppShell> {
             selectedIcon: FaIcon(
               FontAwesomeIcons.houseChimney,
               size: 17,
-              color: isDark
-                  ? Theme.of(context).colorScheme.primary
-                  : AppTheme.brandBlue,
+              color: scheme.primary,
             ),
             label: l10n.tabHome,
           ),

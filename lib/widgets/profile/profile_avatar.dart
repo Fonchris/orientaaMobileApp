@@ -33,16 +33,12 @@ class ProfileAvatar extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppTheme.brandGold, AppTheme.brandBlue],
-        ),
+        color: AppTheme.brandYellow,
         boxShadow: [
           BoxShadow(
-            color: AppTheme.brandBlue.withValues(alpha: isDark ? 0.4 : 0.25),
-            blurRadius: size * 0.35,
-            offset: Offset(0, size * 0.14),
+            color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.15),
+            blurRadius: size * 0.3,
+            offset: Offset(0, size * 0.12),
           ),
         ],
       ),
@@ -53,7 +49,7 @@ class ProfileAvatar extends StatelessWidget {
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: size * 0.38,
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: AppTheme.brandInk,
                 ),
               ),
             )
@@ -73,7 +69,7 @@ class ProfileAvatar extends StatelessWidget {
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: size * 0.38,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: AppTheme.brandInk,
                     ),
                   ),
                 ),
@@ -94,7 +90,7 @@ class ProfileAvatar extends StatelessWidget {
               height: size * 0.34,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isDark ? const Color(0xFF1B2333) : Colors.white,
+                color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
                 border: Border.all(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.2)
@@ -112,7 +108,7 @@ class ProfileAvatar extends StatelessWidget {
               child: Icon(
                 Icons.photo_camera_rounded,
                 size: size * 0.16,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandYellow,
               ),
             ),
           ),

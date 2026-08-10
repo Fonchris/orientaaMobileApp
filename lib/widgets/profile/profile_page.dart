@@ -178,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 16,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.7)
-                    : AppTheme.brandBlue,
+                    : AppTheme.brandInk.withValues(alpha: 0.7),
               ),
             ),
           Expanded(
@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 15,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.7)
-                    : AppTheme.brandBlue,
+                    : AppTheme.brandInk.withValues(alpha: 0.7),
               ),
             ),
             IconButton(
@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 size: 16,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.7)
-                    : AppTheme.brandBlue,
+                    : AppTheme.brandInk.withValues(alpha: 0.7),
               ),
             ),
           ]
@@ -348,13 +348,12 @@ class _ProfilePageState extends State<ProfilePage> {
     bool busy = false,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final scheme = Theme.of(context).colorScheme;
 
     return SizedBox(
       height: 48,
       child: Material(
         color: filled
-            ? (isDark ? scheme.primary : AppTheme.brandBlue)
+            ? AppTheme.brandYellow
             : isDark
                 ? Colors.white.withValues(alpha: 0.06)
                 : Colors.white,
@@ -369,7 +368,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.2,
-                      color: Colors.white,
+                      color: AppTheme.brandInk,
                     ),
                   )
                 : Row(
@@ -379,10 +378,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         icon,
                         size: 13,
                         color: filled
-                            ? Colors.white
+                            ? AppTheme.brandInk
                             : (isDark
                                 ? Colors.white.withValues(alpha: 0.7)
-                                : AppTheme.brandBlue),
+                                : AppTheme.brandInk.withValues(alpha: 0.7)),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -391,10 +390,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: filled
-                              ? Colors.white
+                              ? AppTheme.brandInk
                               : (isDark
                                   ? Colors.white.withValues(alpha: 0.8)
-                                  : AppTheme.brandBlue),
+                                  : AppTheme.brandInk.withValues(alpha: 0.8)),
                         ),
                       ),
                     ],
@@ -512,7 +511,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final source = await showModalBottomSheet<Object>(
       context: context,
-      backgroundColor: isDark ? const Color(0xFF10131D) : Colors.white,
+      backgroundColor: isDark ? AppTheme.brandDark : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -533,7 +532,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               leading: const FaIcon(
                 FontAwesomeIcons.camera,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandAmber,
               ),
               title: Text(
                 l10n.takePhoto,
@@ -544,7 +543,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               leading: const FaIcon(
                 FontAwesomeIcons.images,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandAmber,
               ),
               title: Text(
                 l10n.chooseFromGallery,
@@ -580,7 +579,7 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 26,
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandYellow,
               ),
             ),
             const SizedBox(width: 16),
@@ -647,7 +646,7 @@ class _ProfilePageState extends State<ProfilePage> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: isDark ? const Color(0xFF10131D) : Colors.white,
+      backgroundColor: isDark ? AppTheme.brandDark : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -856,7 +855,7 @@ class _DetailsSheet extends StatelessWidget {
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandYellow.withValues(alpha: 0.15),
         ),
       ),
       child: Column(
@@ -869,7 +868,7 @@ class _DetailsSheet extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: isDark
                   ? Colors.white.withValues(alpha: 0.9)
-                  : AppTheme.brandBlue,
+                  : AppTheme.brandInk,
             ),
           ),
           const SizedBox(height: 8),
@@ -983,7 +982,7 @@ class _ProfileSkeletonState extends State<_ProfileSkeleton>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final base = isDark
         ? Colors.white.withValues(alpha: 0.06)
-        : const Color(0xFFE6EBF5);
+        : AppTheme.brandLightOutline;
 
     return FadeTransition(
       opacity: Tween(begin: 0.5, end: 1.0).animate(
@@ -1000,6 +999,7 @@ class _ProfileSkeletonState extends State<_ProfileSkeleton>
               color: base,
             ),
           ),
+
           const SizedBox(height: 14),
           Container(
             height: 90,

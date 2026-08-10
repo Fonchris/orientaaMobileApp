@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
+import 'app_theme.dart';
 import 'google_fonts.dart';
 import 'hero_illustration.dart';
 import 'role_selection_card.dart';
@@ -110,10 +111,10 @@ class _RoleSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.65)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return LayoutBuilder(
       builder: (context, constraints) {

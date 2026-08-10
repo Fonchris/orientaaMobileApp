@@ -8,7 +8,6 @@ import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'auth_logo.dart';
 import 'auth_service.dart';
-import 'glow_blob.dart';
 import 'google_fonts.dart';
 import 'hero_illustration.dart';
 import '../main.dart' show themeProvider;
@@ -314,49 +313,18 @@ class _LoginPageState extends State<LoginPage> {
     final scheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context);
     final isDark = scheme.brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? [
-                    const Color(0xFF0F1115),
-                    const Color(0xFF16203F),
-                    const Color(0xFF0F1115),
-                  ]
-                : [
-                    const Color(0xFFF7F9FC),
-                    const Color(0xFFEAF1FF),
-                    const Color(0xFFFFF3DC),
-                  ],
-          ),
-        ),
+        color: isDark ? AppTheme.brandDark : AppTheme.brandLight,
         child: SafeArea(
           child: Stack(
             children: [
-              Positioned(
-                top: -40,
-                right: -40,
-                child: GlowBlob(
-                  color: AppTheme.brandGold.withValues(alpha: isDark ? 0.16 : 0.12),
-                  size: 170,
-                ),
-              ),
-              Positioned(
-                bottom: 60,
-                left: -60,
-                child: GlowBlob(
-                  color: AppTheme.brandBlue.withValues(alpha: isDark ? 0.2 : 0.1),
-                  size: 200,
-                ),
-              ),
+
               Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -374,7 +342,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Icons.arrow_back_rounded,
                                   color: isDark
                                       ? Colors.white.withValues(alpha: 0.7)
-                                      : AppTheme.brandBlue.withValues(alpha: 0.7),
+                                      : AppTheme.brandInk.withValues(alpha: 0.7),
                                 ),
                                 onPressed: () => Navigator.pop(context),
                               )
@@ -388,7 +356,7 @@ class _LoginPageState extends State<LoginPage> {
                                     : Icons.dark_mode_outlined,
                                 color: isDark
                                     ? Colors.white.withValues(alpha: 0.5)
-                                    : AppTheme.brandBlue.withValues(alpha: 0.5),
+                                    : AppTheme.brandInk.withValues(alpha: 0.55),
                               ),
                               onPressed: () => themeProvider.toggleTheme(),
                             ),
@@ -436,21 +404,17 @@ class _LoginPageState extends State<LoginPage> {
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(24),
-                            color: isDark
-                                ? const Color(0xFF232C3F).withValues(alpha: 0.95)
-                                : Colors.white.withValues(alpha: 0.92),
+                            borderRadius: BorderRadius.circular(20),
+                            color: isDark ? AppTheme.brandSurface : Colors.white,
                             border: Border.all(
                               color: isDark
-                                  ? Colors.white.withValues(alpha: 0.12)
-                                  : AppTheme.brandBlue.withValues(alpha: 0.08),
+                                  ? Colors.white.withValues(alpha: 0.08)
+                                  : AppTheme.brandLightOutline,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: isDark
-                                    ? Colors.black.withValues(alpha: 0.3)
-                                    : AppTheme.brandBlue.withValues(alpha: 0.08),
-                                blurRadius: 24,
+                                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+                                blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
                             ],
@@ -544,11 +508,9 @@ class _LoginPageState extends State<LoginPage> {
                                   child: ElevatedButton(
                                     onPressed: _isLoading ? null : _login,
                                     style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
+                                      shape: const StadiumBorder(),
                                       elevation: _isLoading ? 0 : 4,
-                                      shadowColor: AppTheme.brandBlue.withValues(alpha: 0.4),
+                                      shadowColor: Colors.black.withValues(alpha: 0.25),
                                     ),
                                     child: _isLoading
                                         ? const SizedBox(
@@ -664,7 +626,9 @@ class _LoginPageState extends State<LoginPage> {
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
-                                  color: AppTheme.brandGold,
+                                  color: isDark
+                                      ? AppTheme.brandGold
+                                      : AppTheme.brandInk,
                                 ),
                               ),
                             ),
@@ -683,28 +647,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-/// Simple Google "G" logo rendered in brand colors (no image dependency).
+/// Simple Google "G" logo rendered in a flat brand color (no image dependency,
+/// no gradients).
 class _GoogleG extends StatelessWidget {
   const _GoogleG();
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (rect) => const LinearGradient(
-        colors: [
-          Color(0xFF4285F4),
-          Color(0xFF34A853),
-          Color(0xFFFBBC05),
-          Color(0xFFEA4335),
-        ],
-      ).createShader(rect),
-      child: const Text(
-        'G',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w800,
-          color: Colors.white,
-        ),
+    return const Text(
+      'G',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w800,
+        color: AppTheme.brandInk,
       ),
     );
   }

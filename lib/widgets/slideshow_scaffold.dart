@@ -4,7 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'auth_logo.dart';
-import 'glow_blob.dart';
 import 'google_fonts.dart';
 import '../main.dart' show themeProvider;
 import 'student_onboarding/step_ui.dart';
@@ -39,38 +38,24 @@ class CircleNextButton extends StatelessWidget {
             height: 58,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: enabled
-                    ? [AppTheme.brandBlue, const Color(0xFF1F4ED8)]
-                    : [
-                        isDark
-                            ? Colors.white.withValues(alpha: 0.1)
-                            : AppTheme.brandBlue.withValues(alpha: 0.08),
-                        isDark
-                            ? Colors.white.withValues(alpha: 0.05)
-                            : AppTheme.brandBlue.withValues(alpha: 0.04),
-                      ],
-              ),
+              color: enabled
+                  ? AppTheme.brandYellow
+                  : isDark
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : AppTheme.brandInk.withValues(alpha: 0.08),
               border: enabled
                   ? null
                   : Border.all(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.15)
-                          : AppTheme.brandBlue.withValues(alpha: 0.15),
+                          : AppTheme.brandInk.withValues(alpha: 0.15),
                     ),
               boxShadow: enabled
                   ? [
                       BoxShadow(
-                        color: AppTheme.brandBlue.withValues(alpha: isDark ? 0.4 : 0.28),
-                        blurRadius: 20,
+                        color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.2),
+                        blurRadius: 16,
                         offset: const Offset(0, 8),
-                      ),
-                      BoxShadow(
-                        color: AppTheme.brandGold.withValues(alpha: isDark ? 0.15 : 0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
                       ),
                     ]
                   : null,
@@ -80,10 +65,10 @@ class CircleNextButton extends StatelessWidget {
                 FontAwesomeIcons.arrowRight,
                 size: 20,
                 color: enabled
-                    ? Colors.white
+                    ? AppTheme.brandInk
                     : isDark
                         ? Colors.white.withValues(alpha: 0.3)
-                        : AppTheme.brandBlue.withValues(alpha: 0.3),
+                        : AppTheme.brandInk.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -160,43 +145,11 @@ class _TutorialSlideshowState extends State<TutorialSlideshow> {
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? [
-                    const Color(0xFF0F1115),
-                    const Color(0xFF16203F),
-                    const Color(0xFF0F1115),
-                  ]
-                : [
-                    const Color(0xFFF7F9FC),
-                    const Color(0xFFEAF1FF),
-                    const Color(0xFFFFF3DC),
-                  ],
-          ),
-        ),
+        color: isDark ? AppTheme.brandDark : AppTheme.brandLight,
         child: SafeArea(
           child: Stack(
             children: [
-              // Decorative glows
-              Positioned(
-                top: -50,
-                right: -40,
-                child: GlowBlob(
-                  color: AppTheme.brandGold.withValues(alpha: isDark ? 0.16 : 0.12),
-                  size: 170,
-                ),
-              ),
-              Positioned(
-                bottom: 90,
-                left: -60,
-                child: GlowBlob(
-                  color: AppTheme.brandBlue.withValues(alpha: isDark ? 0.2 : 0.1),
-                  size: 210,
-                ),
-              ),
+
               Column(
                 children: [
                   // Top bar
@@ -210,7 +163,7 @@ class _TutorialSlideshowState extends State<TutorialSlideshow> {
                               Icons.arrow_back_rounded,
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.7)
-                                  : AppTheme.brandBlue.withValues(alpha: 0.7),
+                                  : AppTheme.brandInk.withValues(alpha: 0.7),
                             ),
                             onPressed: widget.onBack,
                           )
@@ -230,7 +183,7 @@ class _TutorialSlideshowState extends State<TutorialSlideshow> {
                                   : Icons.dark_mode_outlined,
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.5)
-                                  : AppTheme.brandBlue.withValues(alpha: 0.5),
+                                  : AppTheme.brandInk.withValues(alpha: 0.55),
                             ),
                             onPressed: () => themeProvider.toggleTheme(),
                           ),
@@ -307,10 +260,10 @@ class _PageDots extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(999),
             color: active
-                ? AppTheme.brandGold
+                ? AppTheme.brandYellow
                 : isDark
                     ? Colors.white.withValues(alpha: 0.2)
-                    : AppTheme.brandBlue.withValues(alpha: 0.18),
+                    : AppTheme.brandInk.withValues(alpha: 0.18),
           ),
         );
       }),
@@ -338,10 +291,10 @@ class TutorialSlide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.65)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -400,11 +353,11 @@ class TutorialSlide extends StatelessWidget {
                         borderRadius: BorderRadius.circular(999),
                         color: isDark
                             ? Colors.white.withValues(alpha: 0.08)
-                            : AppTheme.brandBlue.withValues(alpha: 0.07),
+                            : AppTheme.brandYellow.withValues(alpha: 0.08),
                         border: Border.all(
                           color: isDark
                               ? Colors.white.withValues(alpha: 0.1)
-                              : AppTheme.brandBlue.withValues(alpha: 0.12),
+                              : AppTheme.brandYellow.withValues(alpha: 0.15),
                         ),
                       ),
                       child: Row(
@@ -413,7 +366,7 @@ class TutorialSlide extends StatelessWidget {
                           const FaIcon(
                             FontAwesomeIcons.solidStar,
                             size: 11,
-                            color: AppTheme.brandGold,
+                            color: AppTheme.brandAmber,
                           ),
                           const SizedBox(width: 6),
                           Text(
@@ -423,7 +376,7 @@ class TutorialSlide extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.85)
-                                  : AppTheme.brandBlue,
+                                  : AppTheme.brandInk,
                             ),
                           ),
                         ],

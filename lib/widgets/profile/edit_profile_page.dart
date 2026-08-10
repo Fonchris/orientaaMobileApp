@@ -219,7 +219,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             return const Center(
               child: CircularProgressIndicator(
                 strokeWidth: 2.5,
-                color: AppTheme.brandBlue,
+                color: AppTheme.brandAmber,
               ),
             );
           }
@@ -353,7 +353,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   prefixIcon: const FaIcon(
                     FontAwesomeIcons.user,
                     size: 15,
-                    color: AppTheme.brandBlue,
+                    color: AppTheme.brandAmber,
                   ),
                 ),
               ),
@@ -369,7 +369,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   prefixIcon: const FaIcon(
                     FontAwesomeIcons.locationDot,
                     size: 15,
-                    color: AppTheme.brandBlue,
+                    color: AppTheme.brandAmber,
                   ),
                 ),
               ),
@@ -392,7 +392,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: FaIcon(
                       FontAwesomeIcons.pen,
                       size: 15,
-                      color: AppTheme.brandBlue,
+                      color: AppTheme.brandAmber,
                     ),
                   ),
                 ),
@@ -424,7 +424,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).brightness == Brightness.dark
                       ? Colors.white.withValues(alpha: 0.9)
-                      : AppTheme.brandBlue,
+                      : AppTheme.brandInk,
                 ),
               ),
               const SizedBox(height: 8),
@@ -455,7 +455,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     prefixIcon: const FaIcon(
                       FontAwesomeIcons.pen,
                       size: 15,
-                      color: AppTheme.brandBlue,
+                      color: AppTheme.brandAmber,
                     ),
                   ),
                 ),
@@ -467,13 +467,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
           decoration: BoxDecoration(
             color: Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF10131D)
+                ? AppTheme.brandDark
                 : Colors.white,
             border: Border(
               top: BorderSide(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white.withValues(alpha: 0.08)
-                    : AppTheme.brandBlue.withValues(alpha: 0.08),
+                    : AppTheme.brandAmber.withValues(alpha: 0.08),
               ),
             ),
           ),
@@ -499,9 +499,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           height: 28,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: AppTheme.brandBlue.withValues(alpha: 0.08),
+            color: AppTheme.brandAmber.withValues(alpha: 0.08),
           ),
-          child: FaIcon(icon, size: 13, color: AppTheme.brandBlue),
+          child: FaIcon(icon, size: 13, color: AppTheme.brandAmber),
         ),
         const SizedBox(width: 10),
         Text(
@@ -511,7 +511,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             fontWeight: FontWeight.w700,
             color: Theme.of(context).brightness == Brightness.dark
                 ? Colors.white.withValues(alpha: 0.9)
-                : AppTheme.brandBlue,
+                : AppTheme.brandInk,
           ),
         ),
       ],
@@ -530,12 +530,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
           prefixIcon: const FaIcon(
             FontAwesomeIcons.globe,
             size: 15,
-            color: AppTheme.brandBlue,
+            color: AppTheme.brandAmber,
           ),
           suffixIcon: const FaIcon(
             FontAwesomeIcons.chevronDown,
             size: 13,
-            color: AppTheme.brandBlue,
+            color: AppTheme.brandAmber,
           ),
         ),
         child: Text(
@@ -544,10 +544,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
             fontSize: 15,
             fontWeight: _country != null ? FontWeight.w500 : FontWeight.w400,
             color: _country != null
-                ? (isDark ? Colors.white : const Color(0xFF1A1A2E))
+                ? (isDark ? Colors.white : AppTheme.brandInk)
                 : (isDark
                     ? Colors.white.withValues(alpha: 0.35)
-                    : AppTheme.brandBlue.withValues(alpha: 0.35)),
+                    : AppTheme.brandInk.withValues(alpha: 0.4)),
           ),
         ),
       ),
@@ -568,7 +568,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         prefixIcon: const FaIcon(
           FontAwesomeIcons.caretDown,
           size: 13,
-          color: AppTheme.brandBlue,
+          color: AppTheme.brandAmber,
         ),
       ),
       isExpanded: true,

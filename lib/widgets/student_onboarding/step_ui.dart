@@ -69,42 +69,26 @@ class StepHeroCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  const Color(0xFF1A1A2E),
-                  const Color(0xFF243B7A),
-                  const Color(0xFF10131D),
-                ]
-              : [
-                  Colors.white,
-                  const Color(0xFFEAF1FF),
-                  const Color(0xFFFDF8E8),
-                ],
-        ),
+        borderRadius: BorderRadius.circular(20),
+        color: isDark ? AppTheme.brandSurface : Colors.white,
         border: Border.all(
           color: isDark
-              ? Colors.white.withValues(alpha: 0.06)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              ? Colors.white.withValues(alpha: 0.08)
+              : AppTheme.brandLightOutline,
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : AppTheme.brandBlue.withValues(alpha: 0.1),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -115,20 +99,16 @@ class StepHeroCard extends StatelessWidget {
             height: 58,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AppTheme.brandGold, AppTheme.brandBlue],
-              ),
+              color: AppTheme.brandYellow,
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.brandBlue.withValues(alpha: 0.28),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: Center(child: FaIcon(icon, color: Colors.white, size: 26)),
+            child: Center(child: FaIcon(icon, color: AppTheme.brandInk, size: 26)),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -170,11 +150,11 @@ class StepHeroCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(999),
                           color: isDark
                               ? Colors.white.withValues(alpha: 0.08)
-                              : AppTheme.brandBlue.withValues(alpha: 0.08),
+                              : AppTheme.brandYellow.withValues(alpha: 0.1),
                           border: Border.all(
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.08)
-                                : AppTheme.brandBlue.withValues(alpha: 0.1),
+                                : AppTheme.brandYellow.withValues(alpha: 0.2),
                           ),
                         ),
                         child: Row(
@@ -185,7 +165,7 @@ class StepHeroCard extends StatelessWidget {
                               size: 11,
                               color: isDark
                                   ? AppTheme.brandGold
-                                  : AppTheme.brandBlue,
+                                  : AppTheme.brandAmber,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -195,7 +175,7 @@ class StepHeroCard extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                                 color: isDark
                                     ? Colors.white.withValues(alpha: 0.8)
-                                    : AppTheme.brandBlue,
+                                    : AppTheme.brandInk,
                               ),
                             ),
                           ],
@@ -234,7 +214,7 @@ class StepSectionLabel extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,9 +226,9 @@ class StepSectionLabel extends StatelessWidget {
               height: 26,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                color: AppTheme.brandBlue.withValues(alpha: 0.08),
+                color: AppTheme.brandYellow.withValues(alpha: 0.18),
               ),
-              child: FaIcon(icon, size: 12, color: AppTheme.brandBlue),
+              child: FaIcon(icon, size: 12, color: AppTheme.brandYellow),
             ),
             const SizedBox(width: 8),
             Text(
@@ -258,7 +238,7 @@ class StepSectionLabel extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.9)
-                    : AppTheme.brandBlue,
+                    : AppTheme.brandInk,
                 letterSpacing: 0.2,
               ),
             ),
@@ -377,30 +357,18 @@ class _PrimaryButtonState extends State<PrimaryButton>
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeOutCubic,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                gradient: enabled
-                    ? LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [bg, bg.withValues(alpha: 0.88)],
-                      )
-                    : null,
+                borderRadius: BorderRadius.circular(999),
                 color: enabled
-                    ? null
+                    ? bg
                     : isDark
                     ? Colors.white.withValues(alpha: 0.08)
                     : bg.withValues(alpha: 0.08),
                 boxShadow: enabled
                     ? [
                         BoxShadow(
-                          color: bg.withValues(alpha: isDark ? 0.35 : 0.25),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                        BoxShadow(
-                          color: AppTheme.brandGold.withValues(alpha: 0.12),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+                          color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.15),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
                         ),
                       ]
                     : null,
@@ -412,7 +380,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
                         height: 22,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          color: enabled ? Colors.white : scheme.onSurface,
+                          color: enabled ? AppTheme.brandInk : scheme.onSurface,
                         ),
                       )
                     : Row(
@@ -424,7 +392,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: enabled
-                                  ? Colors.white
+                                  ? AppTheme.brandInk
                                   : isDark
                                   ? Colors.white.withValues(alpha: 0.25)
                                   : bg.withValues(alpha: 0.35),
@@ -437,7 +405,7 @@ class _PrimaryButtonState extends State<PrimaryButton>
                               widget.icon,
                               size: 15,
                               color: enabled
-                                  ? Colors.white
+                                  ? AppTheme.brandInk
                                   : isDark
                                   ? Colors.white.withValues(alpha: 0.25)
                                   : bg.withValues(alpha: 0.35),
@@ -528,7 +496,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
                 border: Border.all(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.15)
-                      : AppTheme.brandBlue.withValues(alpha: 0.2),
+                      : AppTheme.brandYellow.withValues(alpha: 0.35),
                 ),
               ),
               child: Center(
@@ -541,7 +509,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
                         size: 14,
                         color: isDark
                             ? Colors.white.withValues(alpha: 0.7)
-                            : AppTheme.brandBlue.withValues(alpha: 0.7),
+                            : AppTheme.brandInk.withValues(alpha: 0.7),
                       ),
                       const SizedBox(width: 8),
                     ],
@@ -552,7 +520,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
                         fontWeight: FontWeight.w700,
                         color: isDark
                             ? Colors.white.withValues(alpha: 0.8)
-                            : AppTheme.brandBlue.withValues(alpha: 0.8),
+                            : AppTheme.brandInk.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -603,19 +571,17 @@ class StepNavBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF10131D) : Colors.white,
+        color: isDark ? AppTheme.brandSurface : Colors.white,
         border: Border(
           top: BorderSide(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.08)
-                : AppTheme.brandBlue.withValues(alpha: 0.08),
+                : AppTheme.brandLightOutline,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : AppTheme.brandBlue.withValues(alpha: 0.08),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
             blurRadius: 16,
             offset: const Offset(0, -4),
           ),
@@ -630,11 +596,13 @@ class StepNavBar extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const FaIcon(
-                    FontAwesomeIcons.circleInfo,
-                    size: 12,
-                    color: AppTheme.brandGold,
-                  ),
+              FaIcon(
+                FontAwesomeIcons.circleInfo,
+                size: 12,
+                color: isDark
+                    ? AppTheme.brandYellow
+                    : AppTheme.brandAmber,
+              ),
                   const SizedBox(width: 6),
                   Flexible(
                     child: Text(
@@ -643,7 +611,9 @@ class StepNavBar extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: AppTheme.brandGold,
+                        color: isDark
+                            ? AppTheme.brandYellow
+                            : AppTheme.brandAmber,
                       ),
                     ),
                   ),
@@ -741,7 +711,7 @@ class _BrandTextFieldState extends State<BrandTextField> {
       style: GoogleFonts.inter(
         fontSize: 15,
         fontWeight: FontWeight.w500,
-        color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+        color: isDark ? Colors.white : AppTheme.brandInk,
       ),
       decoration: InputDecoration(
         labelText: widget.label,
@@ -750,14 +720,14 @@ class _BrandTextFieldState extends State<BrandTextField> {
           fontSize: 15,
           color: isDark
               ? Colors.white.withValues(alpha: 0.35)
-              : AppTheme.brandBlue.withValues(alpha: 0.35),
+              : AppTheme.brandInk.withValues(alpha: 0.4),
         ),
         labelStyle: GoogleFonts.inter(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: isDark
               ? Colors.white.withValues(alpha: 0.7)
-              : AppTheme.brandBlue.withValues(alpha: 0.7),
+              : AppTheme.brandInk.withValues(alpha: 0.7),
         ),
         prefixIcon: Padding(
           padding: const EdgeInsets.only(left: 14, right: 8),
@@ -766,7 +736,7 @@ class _BrandTextFieldState extends State<BrandTextField> {
             size: 16,
             color: isDark
                 ? Colors.white.withValues(alpha: 0.55)
-                : AppTheme.brandBlue.withValues(alpha: 0.6),
+                : AppTheme.brandInk.withValues(alpha: 0.6),
           ),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 44),

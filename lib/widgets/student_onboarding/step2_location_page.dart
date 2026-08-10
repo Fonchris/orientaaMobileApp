@@ -162,17 +162,13 @@ class _HomeCountrySection extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppTheme.brandBlue, const Color(0xFF3B82F6)],
-                    ),
+                    color: AppTheme.brandYellow,
                   ),
                   child: const Center(
                     child: FaIcon(
                       FontAwesomeIcons.globe,
                       size: 17,
-                      color: Colors.white,
+                      color: AppTheme.brandInk,
                     ),
                   ),
                 ),
@@ -191,10 +187,10 @@ class _HomeCountrySection extends StatelessWidget {
                           color: model.homeCountry != null
                               ? (isDark
                                     ? Colors.white
-                                    : const Color(0xFF1A1A2E))
+                                    : AppTheme.brandInk)
                               : (isDark
                                     ? Colors.white.withValues(alpha: 0.35)
-                                    : AppTheme.brandBlue.withValues(
+                                    : AppTheme.brandInk.withValues(
                                         alpha: 0.4,
                                       )),
                         ),
@@ -209,7 +205,7 @@ class _HomeCountrySection extends StatelessWidget {
                             letterSpacing: 0.8,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.4)
-                                : AppTheme.brandBlue.withValues(alpha: 0.4),
+                                : AppTheme.brandInk.withValues(alpha: 0.4),
                           ),
                         ),
                       ],
@@ -241,7 +237,7 @@ class _HomeCountrySection extends StatelessWidget {
                   size: 13,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.4)
-                      : AppTheme.brandBlue.withValues(alpha: 0.4),
+                      : AppTheme.brandInk.withValues(alpha: 0.4),
                 ),
               ],
             ),
@@ -317,9 +313,9 @@ class _DestinationsSection extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(999),
-                    color: AppTheme.brandBlue.withValues(alpha: 0.1),
+                    color: AppTheme.brandYellow.withValues(alpha: 0.12),
                     border: Border.all(
-                      color: AppTheme.brandBlue.withValues(alpha: 0.22),
+                      color: AppTheme.brandYellow.withValues(alpha: 0.28),
                     ),
                   ),
                   child: Row(
@@ -328,7 +324,7 @@ class _DestinationsSection extends StatelessWidget {
                       const FaIcon(
                         FontAwesomeIcons.mapPin,
                         size: 12,
-                        color: AppTheme.brandBlue,
+                        color: AppTheme.brandInk,
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -336,7 +332,7 @@ class _DestinationsSection extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.brandBlue,
+                          color: AppTheme.brandInk,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -345,7 +341,7 @@ class _DestinationsSection extends StatelessWidget {
                         child: FaIcon(
                           FontAwesomeIcons.xmark,
                           size: 12,
-                          color: AppTheme.brandBlue.withValues(alpha: 0.5),
+                          color: AppTheme.brandInk.withValues(alpha: 0.45),
                         ),
                       ),
                     ],
@@ -373,7 +369,7 @@ class _DestinationsSection extends StatelessWidget {
               border: Border.all(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.15)
-                    : AppTheme.brandBlue.withValues(alpha: 0.15),
+                    : AppTheme.brandYellow.withValues(alpha: 0.3),
               ),
               color: isDark
                   ? Colors.white.withValues(alpha: 0.03)
@@ -385,7 +381,7 @@ class _DestinationsSection extends StatelessWidget {
                 FaIcon(
                   FontAwesomeIcons.plus,
                   size: 13,
-                  color: isDark ? AppTheme.brandGold : AppTheme.brandBlue,
+                  color: isDark ? AppTheme.brandGold : AppTheme.brandInk,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -393,7 +389,7 @@ class _DestinationsSection extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppTheme.brandGold : AppTheme.brandBlue,
+                    color: isDark ? AppTheme.brandGold : AppTheme.brandInk,
                   ),
                 ),
               ],
@@ -448,7 +444,7 @@ class _LanguageSection extends StatelessWidget {
                     size: 15,
                     color: isDark
                         ? Colors.white.withValues(alpha: 0.4)
-                        : AppTheme.brandBlue.withValues(alpha: 0.4),
+                        : AppTheme.brandInk.withValues(alpha: 0.45),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -457,7 +453,7 @@ class _LanguageSection extends StatelessWidget {
                       fontSize: 15,
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.35)
-                          : AppTheme.brandBlue.withValues(alpha: 0.35),
+                          : AppTheme.brandInk.withValues(alpha: 0.4),
                     ),
                   ),
                 ],
@@ -465,16 +461,16 @@ class _LanguageSection extends StatelessWidget {
               style: GoogleFonts.inter(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : const Color(0xFF1A1A2E),
+                color: isDark ? Colors.white : AppTheme.brandInk,
               ),
-              dropdownColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+              dropdownColor: isDark ? AppTheme.brandInk : Colors.white,
               borderRadius: BorderRadius.circular(16),
               icon: FaIcon(
                 FontAwesomeIcons.chevronDown,
                 size: 13,
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.5)
-                    : AppTheme.brandBlue.withValues(alpha: 0.5),
+                    : AppTheme.brandInk.withValues(alpha: 0.5),
               ),
               items: Step2LocationPage.languagesOfInstruction.map((lang) {
                 return DropdownMenuItem<String>(
@@ -488,7 +484,9 @@ class _LanguageSection extends StatelessWidget {
                           height: 28,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: AppTheme.brandBlue.withValues(alpha: 0.08),
+                            color: AppTheme.brandYellow.withValues(
+                              alpha: 0.14,
+                            ),
                           ),
                           child: Center(
                             child: Text(
@@ -496,7 +494,7 @@ class _LanguageSection extends StatelessWidget {
                               style: GoogleFonts.inter(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w800,
-                                color: AppTheme.brandBlue,
+                                color: AppTheme.brandInk,
                               ),
                             ),
                           ),
@@ -568,7 +566,7 @@ Color _regionColor(String countryCode) {
     case 'North Africa':
       return const Color(0xFF9C27B0);
     default:
-      return AppTheme.brandBlue;
+      return AppTheme.brandInk;
   }
 }
 
@@ -584,20 +582,11 @@ class _DestinationIllustration extends StatelessWidget {
       height: 108,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: isDark
-              ? [
-                  const Color(0xFF1A1A2E).withValues(alpha: 0.9),
-                  const Color(0xFF243B7A).withValues(alpha: 0.7),
-                ]
-              : [const Color(0xFFEAF1FF), const Color(0xFFFFF3D6)],
-        ),
+        color: isDark ? AppTheme.brandSurface : AppTheme.brandLightCard,
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              : AppTheme.brandYellow.withValues(alpha: 0.15),
         ),
       ),
       child: Stack(
@@ -612,7 +601,7 @@ class _DestinationIllustration extends StatelessWidget {
               painter: _DashedPathPainter(
                 color: isDark
                     ? AppTheme.brandGold.withValues(alpha: 0.6)
-                    : AppTheme.brandBlue.withValues(alpha: 0.35),
+                    : AppTheme.brandInk.withValues(alpha: 0.35),
               ),
             ),
           ),
@@ -635,14 +624,10 @@ class _DestinationIllustration extends StatelessWidget {
                 height: 46,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [AppTheme.brandGold, AppTheme.brandBlue],
-                  ),
+                  color: AppTheme.brandYellow,
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.brandBlue.withValues(alpha: 0.3),
+                      color: AppTheme.brandYellow.withValues(alpha: 0.35),
                       blurRadius: 14,
                       offset: const Offset(0, 6),
                     ),
@@ -651,7 +636,7 @@ class _DestinationIllustration extends StatelessWidget {
                 child: const Center(
                   child: FaIcon(
                     FontAwesomeIcons.planeUp,
-                    color: Colors.white,
+                    color: AppTheme.brandInk,
                     size: 20,
                   ),
                 ),
@@ -673,7 +658,7 @@ class _DestinationIllustration extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.55)
-                      : AppTheme.brandBlue.withValues(alpha: 0.55),
+                      : AppTheme.brandInk.withValues(alpha: 0.55),
                 ),
               ),
             ),
@@ -699,11 +684,11 @@ class _PinBadge extends StatelessWidget {
           height: 34,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppTheme.brandBlue,
+            color: AppTheme.brandYellow,
             border: Border.all(color: Colors.white, width: 2),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.brandBlue.withValues(alpha: 0.35),
+                color: AppTheme.brandYellow.withValues(alpha: 0.35),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -715,7 +700,7 @@ class _PinBadge extends StatelessWidget {
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppTheme.brandInk,
               ),
             ),
           ),
@@ -723,7 +708,7 @@ class _PinBadge extends StatelessWidget {
         const FaIcon(
           FontAwesomeIcons.chevronDown,
           size: 10,
-          color: Color(0xFF011F7B),
+          color: AppTheme.brandYellow,
         ),
       ],
     );
@@ -783,7 +768,7 @@ Future<cpf.CountryInfo?> showCountryPickerDialog(BuildContext context) async {
   return showModalBottomSheet<cpf.CountryInfo>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+    backgroundColor: isDark ? AppTheme.brandInk : Colors.white,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
     ),
@@ -836,10 +821,10 @@ class _CountryPickerSheetState extends State<_CountryPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final isDark = widget.isDark;
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return SafeArea(
       child: SizedBox(
@@ -891,7 +876,7 @@ class _CountryPickerSheetState extends State<_CountryPickerSheet> {
                     child: FaIcon(
                       FontAwesomeIcons.magnifyingGlass,
                       size: 16,
-                      color: AppTheme.brandBlue,
+                      color: AppTheme.brandInk.withValues(alpha: 0.55),
                     ),
                   ),
                   prefixIconConstraints: const BoxConstraints(minWidth: 44),
@@ -917,7 +902,7 @@ class _CountryPickerSheetState extends State<_CountryPickerSheet> {
                     borderSide: BorderSide(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.1)
-                          : AppTheme.brandBlue.withValues(alpha: 0.1),
+                          : AppTheme.brandInk.withValues(alpha: 0.15),
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
@@ -925,13 +910,13 @@ class _CountryPickerSheetState extends State<_CountryPickerSheet> {
                     borderSide: BorderSide(
                       color: isDark
                           ? Colors.white.withValues(alpha: 0.1)
-                          : AppTheme.brandBlue.withValues(alpha: 0.1),
+                          : AppTheme.brandInk.withValues(alpha: 0.15),
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: AppTheme.brandBlue,
+                      color: AppTheme.brandYellow,
                       width: 1.4,
                     ),
                   ),

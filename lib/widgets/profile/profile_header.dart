@@ -51,43 +51,27 @@ class _ProfileHeaderState extends State<ProfileHeader> {
     bool isDark,
     ProfileData p,
   ) {
-    final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
+    final textColor = isDark ? Colors.white : AppTheme.brandInk;
     final subtitleColor = isDark
         ? Colors.white.withValues(alpha: 0.6)
-        : const Color(0xFF1A1A2E).withValues(alpha: 0.6);
+        : AppTheme.brandInk.withValues(alpha: 0.6);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  const Color(0xFF1A1A2E),
-                  const Color(0xFF243B7A),
-                  const Color(0xFF10131D),
-                ]
-              : [
-                  Colors.white,
-                  const Color(0xFFEAF1FF),
-                  const Color(0xFFFDF8E8),
-                ],
-        ),
+        borderRadius: BorderRadius.circular(20),
+        color: isDark ? AppTheme.brandSurface : Colors.white,
         border: Border.all(
           color: isDark
-              ? Colors.white.withValues(alpha: 0.06)
-              : AppTheme.brandBlue.withValues(alpha: 0.08),
+              ? Colors.white.withValues(alpha: 0.08)
+              : AppTheme.brandLightOutline,
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : AppTheme.brandBlue.withValues(alpha: 0.1),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -204,7 +188,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   fontWeight: FontWeight.w500,
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.8)
-                      : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
+                      : AppTheme.brandInk.withValues(alpha: 0.75),
                   height: 1.4,
                 ),
               ),
@@ -249,7 +233,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: isDark ? Colors.white.withValues(alpha: 0.9) : AppTheme.brandBlue,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.9)
+                  : AppTheme.brandInk,
               letterSpacing: 0.2,
             ),
           ),
@@ -263,7 +249,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               fontWeight: FontWeight.w400,
               color: isDark
                   ? Colors.white.withValues(alpha: 0.75)
-                  : const Color(0xFF1A1A2E).withValues(alpha: 0.75),
+                  : AppTheme.brandInk.withValues(alpha: 0.75),
               height: 1.45,
             ),
           ),
