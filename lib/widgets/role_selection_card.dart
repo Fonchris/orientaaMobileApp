@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'google_fonts.dart';
 
 enum UserRole { student, counsellor }
@@ -55,12 +56,13 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
     final scheme = Theme.of(context).colorScheme;
     final isDark = scheme.brightness == Brightness.dark;
 
+    final l10n = AppLocalizations.of(context);
     final isStudent = widget.role == UserRole.student;
     final iconData = isStudent ? Icons.school_rounded : Icons.support_agent_rounded;
-    final title = isStudent ? 'Student' : 'Counsellor';
+    final title = isStudent ? l10n.roleStudent : l10n.roleCounsellor;
     final description = isStudent
-        ? 'Explore universities, courses, scholarships, and manage your academic journey.'
-        : 'Guide students, manage counselling sessions, and support their educational success.';
+        ? l10n.roleStudentDescription
+        : l10n.roleCounsellorDescription;
 
     return AnimatedBuilder(
       animation: _scaleAnimation,
@@ -94,7 +96,7 @@ class _RoleSelectionCardState extends State<RoleSelectionCard>
               },
               onTapCancel: () => _scaleController.reverse(),
               child: Semantics(
-                label: 'Select $title role',
+                label: l10n.selectRoleSemantics(title),
                 button: true,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 350),

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import '../student_onboarding/step_ui.dart';
@@ -12,7 +13,9 @@ import 'academic_summary_card.dart';
 import 'chat_page.dart';
 import 'connections_page.dart';
 import 'edit_profile_page.dart';
+import 'media_service.dart';
 import 'messaging_service.dart';
+import 'post_composer_page.dart';
 import 'profile_header.dart';
 import 'profile_models.dart';
 import 'profile_posts_section.dart';
@@ -158,6 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _topBar(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final canPop = Navigator.of(context).canPop();
 
@@ -167,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           if (canPop)
             IconButton(
-              tooltip: 'Back',
+              tooltip: l10n.back,
               onPressed: () => Navigator.of(context).pop(),
               icon: FaIcon(
                 FontAwesomeIcons.arrowLeft,
@@ -179,7 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           Expanded(
             child: Text(
-              _isOwn ? 'My Profile' : 'Profile',
+              _isOwn ? l10n.myProfile : l10n.profileTitle,
               textAlign: canPop ? TextAlign.center : TextAlign.start,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 20,
@@ -189,9 +193,24 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          if (_isOwn)
+          if (_isOwn) ...[
             IconButton(
-              tooltip: 'Settings',
+              tooltip: AppLocalizations.of(context).newPost,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PostComposerPage(),
+                ),
+              ),
+              icon: FaIcon(
+                FontAwesomeIcons.penToSquare,
+                size: 15,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : AppTheme.brandBlue,
+              ),
+            ),
+            IconButton(
+              tooltip: l10n.settingsTitle,
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const SettingsPage()),
               ),
@@ -202,9 +221,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ? Colors.white.withValues(alpha: 0.7)
                     : AppTheme.brandBlue,
               ),
-            )
-          else
-            const SizedBox(width: 48),
+            ),
+          ]
         ],
       ),
     );
@@ -250,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onEditProfile: _openEditProfile,
             onViewDetails: () => _showDetailsSheet(profile),
             onBrowseUniversities: () => _toast(
-              'University discovery is coming to the Search tab soon.',
+              AppLocalizations.of(context).noRecommendationsMessage,
             ),
           ),
           const SizedBox(height: 14),
@@ -270,13 +288,14 @@ class _ProfilePageState extends State<ProfilePage> {
   // ── Actions ────────────────────────────────────────────────────────────
 
   Widget _actions(ProfileData profile) {
+    final l10n = AppLocalizations.of(context);
     if (_isOwn) {
       return Row(
         children: [
           Expanded(
             child: _actionButton(
               icon: FontAwesomeIcons.penToSquare,
-              label: 'Edit Profile',
+              label: l10n.editProfile,
               filled: true,
               onTap: _openEditProfile,
             ),
@@ -285,7 +304,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Expanded(
             child: _actionButton(
               icon: FontAwesomeIcons.shareNodes,
-              label: 'Share',
+              label: l10n.share,
               filled: false,
               onTap: _shareProfile,
             ),
@@ -302,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage> {
             icon: following
                 ? FontAwesomeIcons.check
                 : FontAwesomeIcons.userPlus,
-            label: following ? 'Following' : 'Follow',
+            label: following ? l10n.following : l10n.follow,
             filled: !following,
             busy: _followBusy,
             onTap: _isFollowing == null || _followBusy ? null : _toggleFollow,
@@ -312,7 +331,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Expanded(
           child: _actionButton(
             icon: FontAwesomeIcons.solidMessage,
-            label: 'Message',
+            label: l10n.message,
             filled: false,
             onTap: () => _openChat(profile),
           ),
@@ -406,9 +425,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _openChat(ProfileData profile) async {
+    final l10n = AppLocalizations.of(context);
     final allowed = await MessagingService().canMessage(_myUid, profile.uid);
+    if (!mounted) return;
     if (!allowed) {
-      _toast('This user only accepts messages from people they follow.');
+      _toast(l10n.messagesPrivacyBlocked);
       return;
     }
     final conversationId = await MessagingService().ensureConversation(
@@ -468,9 +489,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _shareProfile() async {
+    final l10n = AppLocalizations.of(context);
     final uid = _isOwn ? _myUid : _viewingUid;
     await Clipboard.setData(ClipboardData(text: 'orientaa://profile/$uid'));
-    _toast('Profile link copied to clipboard');
+    if (!mounted) return;
+    _toast(l10n.profileLinkCopied);
   }
 
   void _scrollToPosts() {
@@ -485,8 +508,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _openPhotoSheet() async {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    await showModalBottomSheet<void>(
+    final source = await showModalBottomSheet<Object>(
       context: context,
       backgroundColor: isDark ? const Color(0xFF10131D) : Colors.white,
       shape: const RoundedRectangleBorder(
@@ -512,52 +536,110 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: AppTheme.brandBlue,
               ),
               title: Text(
-                'Change profile photo',
+                l10n.takePhoto,
                 style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
               ),
-              subtitle: Text(
-                'Photo upload is coming soon',
-                style: GoogleFonts.inter(fontSize: 12),
-              ),
-              onTap: () {
-                Navigator.pop(ctx);
-                _toast(
-                  'Photo upload is coming soon — you will be able to pick and crop from your gallery.',
-                );
-              },
+              onTap: () => Navigator.pop(ctx, 'camera'),
             ),
-            if (_isOwn && _myPhotoUrl != null)
-              ListTile(
-                leading: const FaIcon(
-                  FontAwesomeIcons.trash,
-                  color: Colors.redAccent,
-                ),
-                title: Text(
-                  'Remove photo',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.redAccent,
-                  ),
-                ),
-                onTap: () async {
-                  Navigator.pop(ctx);
-                  try {
-                    await _service.saveProfileFields(_myUid, {
-                      'photoUrl': FieldValue.delete(),
-                    });
-                    _myPhotoUrl = null;
-                    if (mounted) setState(() {});
-                    _toast('Profile photo removed');
-                  } catch (e) {
-                    _toast('Could not remove photo: $e');
-                  }
-                },
+            ListTile(
+              leading: const FaIcon(
+                FontAwesomeIcons.images,
+                color: AppTheme.brandBlue,
               ),
+              title: Text(
+                l10n.chooseFromGallery,
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
+              ),
+              onTap: () => Navigator.pop(ctx, 'gallery'),
+            ),
             const SizedBox(height: 8),
           ],
         ),
       ),
     );
+
+    if (source == null || !mounted) return;
+    await _uploadPhoto(fromCamera: source == 'camera');
+  }
+
+  Future<void> _uploadPhoto({required bool fromCamera}) async {
+    final l10n = AppLocalizations.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    // Show a blocking progress dialog while picking + uploading.
+    final progress = ValueNotifier<double>(0);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        content: Row(
+          children: [
+            const SizedBox(
+              width: 26,
+              height: 26,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: AppTheme.brandBlue,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ValueListenableBuilder<double>(
+                valueListenable: progress,
+                builder: (ctx, value, _) => Text(
+                  value > 0
+                      ? '${l10n.uploadingPhoto} ${(value * 100).round()}%'
+                      : l10n.uploadingPhoto,
+                  style: GoogleFonts.inter(fontSize: 13.5),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final file = await MediaService().pickImage(fromCamera: fromCamera);
+      if (file == null) {
+        if (navigator.canPop()) navigator.pop(); // close progress dialog
+        return;
+      }
+      final url = await MediaService().uploadProfilePhoto(
+        uid: _myUid,
+        file: file,
+        onProgress: (p) => progress.value = p,
+      );
+      await _service.saveProfileFields(_myUid, {'photoUrl': url});
+      _myPhotoUrl = url;
+      if (navigator.canPop()) navigator.pop(); // close progress dialog
+      if (mounted) {
+        setState(() {});
+        messenger.showSnackBar(SnackBar(content: Text(l10n.photoUpdated)));
+      }
+    } on PlatformException catch (e) {
+      if (navigator.canPop()) navigator.pop();
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              (e.code == 'photo_access_denied' ||
+                      e.code == 'camera_access_denied')
+                  ? l10n.photoPermissionDenied
+                  : l10n.photoUploadFailed(e.message ?? e.code),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (navigator.canPop()) navigator.pop();
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(content: Text(l10n.photoUploadFailed(e.toString()))),
+        );
+      }
+    }
   }
 
   void _showDetailsSheet(ProfileData profile) {
@@ -584,6 +666,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _errorState(BuildContext context, String error) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final notFound = error == 'profile-not-found';
     return Center(
@@ -599,7 +682,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 14),
             Text(
-              notFound ? 'Profile not found' : 'Could not load this profile',
+              notFound ? l10n.profileNotFound : l10n.couldNotLoadProfile,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -609,9 +692,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 6),
             Text(
-              notFound
-                  ? 'This user may have deleted their account.'
-                  : error,
+              notFound ? l10n.profileNotFoundMessage : error,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -629,7 +710,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   });
                 },
                 icon: const FaIcon(FontAwesomeIcons.rotate, size: 13),
-                label: const Text('Retry'),
+                label: Text(AppLocalizations.of(context).retry),
               ),
             ],
           ],
@@ -660,7 +741,7 @@ class _DetailsSheet extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
       children: [
         Text(
-          'Full profile details',
+          AppLocalizations.of(context).fullProfileDetails,
           textAlign: TextAlign.center,
           style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
@@ -669,38 +750,98 @@ class _DetailsSheet extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
-        _section(context, 'Academic', [
-          _row(context, 'Education level', o['educationLevel']),
-          _row(context, 'Desired degree', o['desiredDegreeLevel']),
-          _row(context, 'Fields of interest', _list(o['fieldsOfInterest'])),
-          _row(context, 'Planned start', o['startLabel']),
-        ]),
-        const SizedBox(height: 14),
-        _section(context, 'Location & Logistics', [
-          _row(context, 'Home', _home(o)),
-          _row(context, 'Study destinations', _list(o['preferredDestinations'])),
-          _row(context, 'Language of instruction', o['preferredLanguage']),
-        ]),
-        const SizedBox(height: 14),
-        _section(context, 'Financial', [
-          _row(context, 'Annual budget', _budget(o)),
-          _row(context, 'Household income', o['annualIncomeLabel']),
+        _section(context, AppLocalizations.of(context).sectionAcademic, [
           _row(
             context,
-            'Scholarships',
-            o['seekingScholarship'] == true
-                ? 'Seeking scholarship info'
-                : 'Not currently seeking',
+            AppLocalizations.of(context).labelEducationLevel,
+            o['educationLevel'],
+          ),
+          _row(
+            context,
+            AppLocalizations.of(context).labelDesiredDegree,
+            o['desiredDegreeLevel'],
+          ),
+          _row(
+            context,
+            AppLocalizations.of(context).labelFieldsOfInterest,
+            _list(o['fieldsOfInterest']),
+          ),
+          _row(
+            context,
+            AppLocalizations.of(context).labelPlannedStart,
+            o['startLabel'],
           ),
         ]),
         const SizedBox(height: 14),
-        _section(context, 'Assessment', [
-          _row(context, 'Career goal', o['careerGoals']),
-          _row(context, 'Strengths', _list(o['strengths'])),
-          _row(context, 'Interests', _list(o['interests'])),
-          _row(context, 'GPA', o['gpa']),
-          _row(context, 'Test scores', _scores(o['testScores'])),
-        ]),
+        _section(
+          context,
+          AppLocalizations.of(context).sectionLocationLogistics,
+          [
+            _row(context, AppLocalizations.of(context).labelHome, _home(o)),
+            _row(
+              context,
+              AppLocalizations.of(context).labelStudyDestinations,
+              _list(o['preferredDestinations']),
+            ),
+            _row(
+              context,
+              AppLocalizations.of(context).labelLanguageOfInstruction,
+              o['preferredLanguage'],
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _section(
+          context,
+          AppLocalizations.of(context).sectionFinancial,
+          [
+            _row(
+              context,
+              AppLocalizations.of(context).labelAnnualBudget,
+              _budget(o),
+            ),
+            _row(
+              context,
+              AppLocalizations.of(context).labelHouseholdIncome,
+              o['annualIncomeLabel'],
+            ),
+            _row(
+              context,
+              AppLocalizations.of(context).labelScholarships,
+              o['seekingScholarship'] == true
+                  ? AppLocalizations.of(context).seekingScholarship
+                  : AppLocalizations.of(context).notSeekingScholarship,
+            ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        _section(
+          context,
+          AppLocalizations.of(context).sectionAssessment,
+          [
+            _row(
+              context,
+              AppLocalizations.of(context).labelCareerGoal,
+              o['careerGoals'],
+            ),
+            _row(
+              context,
+              AppLocalizations.of(context).labelStrengths,
+              _list(o['strengths']),
+            ),
+            _row(
+              context,
+              AppLocalizations.of(context).labelInterests,
+              _list(o['interests']),
+            ),
+            _row(context, AppLocalizations.of(context).labelGpa, o['gpa']),
+            _row(
+              context,
+              AppLocalizations.of(context).labelTestScores,
+              _scores(o['testScores']),
+            ),
+          ],
+        ),
       ],
     );
   }

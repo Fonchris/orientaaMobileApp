@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'home_dashboard.dart';
 import 'profile/messaging_service.dart';
@@ -43,6 +44,7 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final uid = FirebaseAuth.instance.currentUser?.uid ?? 'missing';
 
@@ -98,12 +100,15 @@ class _AppShellState extends State<AppShell> {
                   ? Theme.of(context).colorScheme.primary
                   : AppTheme.brandBlue,
             ),
-            label: 'Home',
+            label: l10n.tabHome,
           ),
-          const NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),
-            selectedIcon: FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),
-            label: 'Search',
+          NavigationDestination(
+            icon: const FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),
+            selectedIcon: const FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 16,
+            ),
+            label: l10n.tabSearch,
           ),
           NavigationDestination(
             icon: StreamBuilder<List<ConversationData>>(
@@ -122,12 +127,15 @@ class _AppShellState extends State<AppShell> {
                 );
               },
             ),
-            label: 'Messages',
+            label: l10n.tabMessages,
           ),
-          const NavigationDestination(
-            icon: FaIcon(FontAwesomeIcons.circleUser, size: 18),
-            selectedIcon: FaIcon(FontAwesomeIcons.circleUser, size: 18),
-            label: 'Profile',
+          NavigationDestination(
+            icon: const FaIcon(FontAwesomeIcons.circleUser, size: 18),
+            selectedIcon: const FaIcon(
+              FontAwesomeIcons.circleUser,
+              size: 18,
+            ),
+            label: l10n.tabProfile,
           ),
         ],
       ),

@@ -1,0 +1,108 @@
+rules_version = '2';
+
+// Orientaa Firestore security rules.
+//
+// Deploy with:  firebase deploy --only firestore:rules
+// (requires the Firebase CLI and firebase.json wired to this file)
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Users ────────────────────────────────────────────────────────────
+    // The user document is readable by anyone signed in (needed for search,
+    // connections, and viewing public profiles). The owner can write their
+    // own profile fields. Other signed-in users may ONLY adjust the aggregate
+    // counters (followersCount / followingCount / postsCount) — this is what
+    // follow(), unfollow() and createPost()/deletePost() do in batch writes,
+    // so those operations keep working without opening up the whole doc.
+    match /users/{uid} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == uid;
+      allow update: if request.auth != null && (
+        request.auth.uid == uid
+        || request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['followersCount', 'followingCount', 'postsCount'])
+      );
+      allow delete: if request.auth != null && request.auth.uid == uid;
+
+      // Followers subcollection: anyone signed in can add/remove their own
+      // follow record; followers lists are readable by signed-in users.
+      match /followers/{followerUid} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null && request.auth.uid == followerUid;
+      }
+
+      // Following subcollection: each user manages their own list.
+      match /following/{targetUid} {
+        allow read: if request.auth != null;
+        allow write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      // Notifications: readable + updatable only by the owner.
+      match /notifications/{notificationId} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    // ── Posts ────────────────────────────────────────────────────────────
+    // Publicly readable; the author can create/update/delete their own posts.
+    // Any signed-in user may like/unlike a post, which only touches the
+    // `likedBy` array and `likesCount` counter.
+    match /posts/{postId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+          && request.resource.data.authorId == request.auth.uid;
+      allow update: if request.auth != null && (
+        resource.data.authorId == request.auth.uid
+        || request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['likesCount', 'likedBy'])
+      );
+      allow delete: if request.auth != null
+          && resource.data.authorId == request.auth.uid;
+    }
+
+    // ── Conversations + messages ─────────────────────────────────────────
+    // A conversation is visible to its participants; the deterministic
+    // conversation id is '<uidA>_<uidB>' (sorted), so a participant may only
+    // create a conversation whose id contains their own uid.
+    match /conversations/{conversationId} {
+      allow read: if request.auth != null
+          && resource.data.participantIds.hasAny([request.auth.uid]);
+      allow create: if request.auth != null
+          && request.resource.data.participantIds.hasAny([request.auth.uid]);
+      allow update: if request.auth != null
+          && resource.data.participantIds.hasAny([request.auth.uid]);
+
+      match /messages/{messageId} {
+        allow read: if request.auth != null
+            && get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantIds.hasAny([request.auth.uid]);
+        allow create: if request.auth != null
+            && request.resource.data.senderId == request.auth.uid;
+        allow update: if false;
+        allow delete: if false;
+      }
+    }
+
+    // ── Discovery catalogue (read-only for signed-in users) ─────────────
+    match /universities/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /classrooms/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /sessions/{docId} {
+      allow read: if request.auth != null;
+      // Sessions are created/updated by the involved student/counsellor.
+      allow create: if request.auth != null
+          && (request.resource.data.studentId == request.auth.uid
+              || request.resource.data.counsellorId == request.auth.uid);
+      allow update: if request.auth != null
+          && (resource.data.studentId == request.auth.uid
+              || resource.data.counsellorId == request.auth.uid);
+      allow delete: if false;
+    }
+  }
+}

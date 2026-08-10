@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'profile_avatar.dart';
@@ -161,6 +162,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
   }
 
   Widget _buildBioCard(BuildContext context, bool isDark, ProfileData p) {
+    final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
     final bio = p.bio?.trim();
 
@@ -196,7 +198,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Add a short bio so students and counsellors can learn more about you.',
+                l10n.addBioPrompt,
                 style: GoogleFonts.inter(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w500,
@@ -212,7 +214,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               onPressed: widget.onEditProfile,
               style: TextButton.styleFrom(foregroundColor: AppTheme.brandGold),
               child: Text(
-                'Add',
+                l10n.add,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -243,7 +245,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'About',
+            l10n.about,
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -271,7 +273,7 @@ class _ProfileHeaderState extends State<ProfileHeader> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 6),
                 child: Text(
-                  _bioExpanded ? 'Show less' : 'Read more',
+                  _bioExpanded ? l10n.showLess : l10n.readMore,
                   style: GoogleFonts.inter(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,

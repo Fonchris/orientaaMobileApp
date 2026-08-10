@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'profile_avatar.dart';
@@ -28,10 +29,11 @@ class _ConnectionsPageState extends State<ConnectionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _followers ? 'Followers' : 'Following',
+          _followers ? l10n.statFollowers : l10n.statFollowing,
           style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w800,
@@ -43,16 +45,16 @@ class _ConnectionsPageState extends State<ConnectionsPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
             child: SegmentedButton<bool>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: true,
-                  label: Text('Followers'),
-                  icon: Icon(Icons.people_alt_outlined, size: 16),
+                  label: Text(l10n.statFollowers),
+                  icon: const Icon(Icons.people_alt_outlined, size: 16),
                 ),
                 ButtonSegment(
                   value: false,
-                  label: Text('Following'),
-                  icon: Icon(Icons.person_add_alt_1_outlined, size: 16),
+                  label: Text(l10n.statFollowing),
+                  icon: const Icon(Icons.person_add_alt_1_outlined, size: 16),
                 ),
               ],
               selected: {_followers},
@@ -145,6 +147,7 @@ class _ConnectionsPageState extends State<ConnectionsPage> {
   }
 
   Widget _emptyState() {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
@@ -161,7 +164,7 @@ class _ConnectionsPageState extends State<ConnectionsPage> {
             ),
             const SizedBox(height: 14),
             Text(
-              _followers ? 'No followers yet' : 'Not following anyone yet',
+              _followers ? l10n.noFollowersYet : l10n.notFollowingAnyone,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -171,8 +174,8 @@ class _ConnectionsPageState extends State<ConnectionsPage> {
             const SizedBox(height: 6),
             Text(
               _followers
-                  ? 'When other students and counsellors follow you, they will show up here.'
-                  : 'Follow students and counsellors to see their activity in your feed.',
+                  ? l10n.followersEmptyMessage
+                  : l10n.followingEmptyMessage,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,

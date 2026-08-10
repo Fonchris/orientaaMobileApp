@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
 class GoogleFonts {
-  static const String _defaultFontFamily = 'sans-serif';
+  /// Active font family. Switched to the bundled Cairo font (which covers
+  /// Arabic + Latin glyphs) whenever the app locale is Arabic, so Arabic text
+  /// no longer falls back to a mismatched system font.
+  static String _fontFamily = 'sans-serif';
+
+  /// Updates the active family (call from the locale change handler).
+  static void setFontFamily(String family) {
+    _fontFamily = family;
+  }
 
   static TextStyle plusJakartaSans({
     TextStyle? textStyle,
@@ -134,7 +142,7 @@ class GoogleFonts {
     double? decorationThickness,
   }) {
     return (textStyle ?? const TextStyle()).copyWith(
-      fontFamily: _defaultFontFamily,
+      fontFamily: _fontFamily,
       color: color,
       backgroundColor: backgroundColor,
       fontSize: fontSize,

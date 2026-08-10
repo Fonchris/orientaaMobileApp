@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'auth_logo.dart';
 import 'auth_service.dart';
@@ -53,12 +54,10 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            'Verification email sent to ${_emailController.text.trim()}. '
-            'Please verify your email before logging in.',
-          ),
+          content: Text(l10n.verificationEmailSentTo(_emailController.text.trim())),
           duration: const Duration(seconds: 6),
         ),
       );
@@ -78,6 +77,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     final isDark = scheme.brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
     final subtitleColor = isDark
@@ -177,7 +177,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 14),
                         Text(
-                          'Create account',
+                          l10n.createAccountTitle,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 30,
@@ -189,7 +189,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Start your journey with Orientaa',
+                          l10n.signupSubtitle,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 15,
@@ -229,13 +229,13 @@ class _SignupPageState extends State<SignupPage> {
                               children: [
                                 TextFormField(
                                   controller: _nameController,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Full name',
-                                    prefixIcon: Icon(Icons.person_outline),
+                                  decoration: InputDecoration(
+                                    labelText: l10n.labelFullName,
+                                    prefixIcon: const Icon(Icons.person_outline),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Enter your full name';
+                                      return l10n.enterYourFullName;
                                     }
                                     return null;
                                   },
@@ -244,16 +244,16 @@ class _SignupPageState extends State<SignupPage> {
                                 TextFormField(
                                   controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Email',
-                                    prefixIcon: Icon(Icons.email_outlined),
+                                  decoration: InputDecoration(
+                                    labelText: l10n.labelEmail,
+                                    prefixIcon: const Icon(Icons.email_outlined),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Enter your email';
+                                      return l10n.enterYourEmail;
                                     }
                                     if (!value.contains('@')) {
-                                      return 'Enter a valid email';
+                                      return l10n.enterValidEmail;
                                     }
                                     return null;
                                   },
@@ -263,7 +263,7 @@ class _SignupPageState extends State<SignupPage> {
                                   controller: _passwordController,
                                   obscureText: _obscurePassword,
                                   decoration: InputDecoration(
-                                    labelText: 'Password',
+                                    labelText: l10n.labelPassword,
                                     prefixIcon: const Icon(Icons.lock_outline),
                                     suffixIcon: IconButton(
                                       onPressed: () {
@@ -280,10 +280,10 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Enter a password';
+                                      return l10n.enterAPassword;
                                     }
                                     if (value.length < 6) {
-                                      return 'Password must be at least 6 characters';
+                                      return l10n.passwordMinLength;
                                     }
                                     return null;
                                   },
@@ -293,7 +293,7 @@ class _SignupPageState extends State<SignupPage> {
                                   controller: _confirmPasswordController,
                                   obscureText: _obscureConfirmPassword,
                                   decoration: InputDecoration(
-                                    labelText: 'Confirm password',
+                                    labelText: l10n.confirmPassword,
                                     prefixIcon: const Icon(Icons.lock_reset_outlined),
                                     suffixIcon: IconButton(
                                       onPressed: () {
@@ -310,10 +310,10 @@ class _SignupPageState extends State<SignupPage> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Confirm your password';
+                                      return l10n.confirmYourPassword;
                                     }
                                     if (value != _passwordController.text) {
-                                      return 'Passwords do not match';
+                                      return l10n.passwordsDoNotMatch;
                                     }
                                     return null;
                                   },
@@ -351,7 +351,7 @@ class _SignupPageState extends State<SignupPage> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Create Account',
+                                                l10n.createAccount,
                                                 style: GoogleFonts.plusJakartaSans(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w700,
@@ -376,7 +376,7 @@ class _SignupPageState extends State<SignupPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Already have an account?',
+                              l10n.alreadyHaveAccount,
                               style: GoogleFonts.inter(
                                 fontSize: 14,
                                 color: subtitleColor,
@@ -387,7 +387,7 @@ class _SignupPageState extends State<SignupPage> {
                                 Navigator.pop(context);
                               },
                               child: Text(
-                                'Log in',
+                                l10n.logIn,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,

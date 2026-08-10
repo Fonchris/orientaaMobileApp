@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import '../student_onboarding/step2_location_page.dart'
@@ -139,11 +140,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   bool _validate() {
+    final l10n = AppLocalizations.of(context);
     final nameError =
-        _name.text.trim().isEmpty ? 'Full name is required' : null;
-    final bioError = _bio.text.length > 250
-        ? 'Bio must be 250 characters or fewer'
-        : null;
+        _name.text.trim().isEmpty ? l10n.fullNameRequired : null;
+    final bioError =
+        _bio.text.length > 250 ? l10n.bioTooLong : null;
     setState(() {
       _nameError = nameError;
       _bioError = bioError;
@@ -183,14 +184,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
       } catch (_) {}
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully')),
+        SnackBar(content: Text(AppLocalizations.of(context).profileUpdated)),
       );
       Navigator.of(context).pop();
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Could not save your profile: $e')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context).couldNotSaveProfile(e.toString()),
+          ),
+        ),
       );
     }
   }
@@ -200,7 +205,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Edit Profile',
+          AppLocalizations.of(context).editProfile,
           style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w800,
@@ -233,6 +238,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _missingProfileState() {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -246,7 +252,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             const SizedBox(height: 14),
             Text(
-              'No profile found',
+              l10n.noProfileFound,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -254,7 +260,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             const SizedBox(height: 6),
             Text(
-              'Complete the onboarding first so you have a profile to edit.',
+              l10n.completeOnboardingFirst,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -268,7 +274,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   .pushNamedAndRemoveUntil('/student-onboarding',
                       (route) => false),
               icon: const FaIcon(FontAwesomeIcons.listCheck, size: 13),
-              label: const Text('Complete my profile'),
+              label: Text(l10n.completeMyProfile),
             ),
           ],
         ),
@@ -277,6 +283,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _errorState(String error) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -290,7 +297,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
             const SizedBox(height: 14),
             Text(
-              'Could not load your profile',
+              l10n.couldNotLoadYourProfile,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -312,7 +319,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 _loaded = false;
               }),
               icon: const FaIcon(FontAwesomeIcons.rotate, size: 13),
-              label: const Text('Retry'),
+              label: Text(l10n.retry),
             ),
           ],
         ),
@@ -321,6 +328,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _buildForm() {
+    final l10n = AppLocalizations.of(context);
     return Column(
       children: [
         Expanded(
@@ -329,7 +337,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               _sectionLabel(
                 icon: FontAwesomeIcons.userPen,
-                label: 'Personal Information',
+                label: l10n.personalInformation,
               ),
               const SizedBox(height: 10),
               TextField(
@@ -339,8 +347,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
                 style: GoogleFonts.inter(fontSize: 15),
                 decoration: InputDecoration(
-                  labelText: 'Full name',
-                  hintText: 'e.g. Ada Lovelace',
+                  labelText: l10n.labelFullName,
+                  hintText: l10n.fullNameHint,
                   errorText: _nameError,
                   prefixIcon: const FaIcon(
                     FontAwesomeIcons.user,
@@ -355,10 +363,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               TextField(
                 controller: _city,
                 style: GoogleFonts.inter(fontSize: 15),
-                decoration: const InputDecoration(
-                  labelText: 'City',
-                  hintText: 'e.g. Lagos',
-                  prefixIcon: FaIcon(
+                decoration: InputDecoration(
+                  labelText: l10n.labelCity,
+                  hintText: l10n.cityHint,
+                  prefixIcon: const FaIcon(
                     FontAwesomeIcons.locationDot,
                     size: 15,
                     color: AppTheme.brandBlue,
@@ -375,9 +383,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
                 style: GoogleFonts.inter(fontSize: 14.5),
                 decoration: InputDecoration(
-                  labelText: 'Bio',
-                  hintText:
-                      'e.g. Aspiring software engineer passionate about renewable energy',
+                  labelText: l10n.labelBio,
+                  hintText: l10n.bioHint,
                   errorText: _bioError,
                   alignLabelWithHint: true,
                   prefixIcon: const Padding(
@@ -393,25 +400,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 18),
               _sectionLabel(
                 icon: FontAwesomeIcons.bookOpen,
-                label: 'Academic Information',
+                label: l10n.academicInformation,
               ),
               const SizedBox(height: 10),
               _dropdown(
-                label: 'Education level',
+                label: l10n.labelEducationLevel,
                 value: _educationLevel,
                 items: _educationLevels,
                 onChanged: (v) => setState(() => _educationLevel = v),
               ),
               const SizedBox(height: 12),
               _dropdown(
-                label: 'Degree goal',
+                label: l10n.labelDegreeGoal,
                 value: _degreeGoal,
                 items: _degreeLevels,
                 onChanged: (v) => setState(() => _degreeGoal = v),
               ),
               const SizedBox(height: 12),
               Text(
-                'Field(s) of interest',
+                l10n.labelFieldsOfInterest,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -442,10 +449,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   onChanged: (v) => _customField = v,
                   style: GoogleFonts.inter(fontSize: 14.5),
-                  decoration: const InputDecoration(
-                    labelText: 'Your custom field',
-                    hintText: 'Enter your field of interest...',
-                    prefixIcon: FaIcon(
+                  decoration: InputDecoration(
+                    labelText: l10n.yourCustomField,
+                    hintText: l10n.customFieldHint,
+                    prefixIcon: const FaIcon(
                       FontAwesomeIcons.pen,
                       size: 15,
                       color: AppTheme.brandBlue,
@@ -471,7 +478,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
           ),
           child: PrimaryButton(
-            label: 'Save changes',
+            label: AppLocalizations.of(context).saveChanges,
             onPressed: _saving ? null : _save,
             loading: _saving,
             icon: FontAwesomeIcons.check,
@@ -512,26 +519,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget _countryField() {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: _pickCountry,
       borderRadius: BorderRadius.circular(16),
       child: InputDecorator(
-        decoration: const InputDecoration(
-          labelText: 'Country',
-          prefixIcon: FaIcon(
+        decoration: InputDecoration(
+          labelText: l10n.labelCountry,
+          prefixIcon: const FaIcon(
             FontAwesomeIcons.globe,
             size: 15,
             color: AppTheme.brandBlue,
           ),
-          suffixIcon: FaIcon(
+          suffixIcon: const FaIcon(
             FontAwesomeIcons.chevronDown,
             size: 13,
             color: AppTheme.brandBlue,
           ),
         ),
         child: Text(
-          _country ?? 'Tap to select your country',
+          _country ?? l10n.tapToSelectCountry,
           style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: _country != null ? FontWeight.w500 : FontWeight.w400,

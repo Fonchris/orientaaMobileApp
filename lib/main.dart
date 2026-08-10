@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'l10n/app_localizations.dart';
 import 'widgets/app_theme.dart';
 import 'widgets/app_shell.dart';
+import 'widgets/google_fonts.dart';
 import 'widgets/login_page.dart';
 import 'widgets/onboarding_page.dart';
 import 'widgets/signup_page.dart';
 import 'widgets/reset_password_page.dart';
 import 'widgets/student_onboarding/student_onboarding_page.dart';
 import 'widgets/theme_provider.dart';
+import 'widgets/locale_provider.dart';
 import 'widgets/welcome_page.dart';
 
 final ThemeProvider themeProvider = ThemeProvider();
+final LocaleProvider localeProvider = LocaleProvider();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   final prefs = await SharedPreferences.getInstance();
   final hasSeenWelcome = prefs.getBool('hasSeenWelcome') ?? false;
+  await Future.wait([themeProvider.load(), localeProvider.load()]);
   runApp(OrientaaApp(initialRoute: hasSeenWelcome ? '/login' : '/welcome'));
 }
 
@@ -35,16 +41,27 @@ class _OrientaaAppState extends State<OrientaaApp> {
   @override
   void initState() {
     super.initState();
-    themeProvider.addListener(_onThemeChanged);
+    themeProvider.addListener(_onChanged);
+    localeProvider.addListener(_onChanged);
+    _syncFontFamily();
   }
 
   @override
   void dispose() {
-    themeProvider.removeListener(_onThemeChanged);
+    themeProvider.removeListener(_onChanged);
+    localeProvider.removeListener(_onChanged);
     super.dispose();
   }
 
-  void _onThemeChanged() {
+  /// Uses the bundled Cairo font for Arabic (covers Arabic + Latin glyphs);
+  /// keeps the system font elsewhere so nothing else changes.
+  void _syncFontFamily() {
+    final code = localeProvider.locale.languageCode;
+    GoogleFonts.setFontFamily(code == 'ar' ? 'Cairo' : 'sans-serif');
+  }
+
+  void _onChanged() {
+    _syncFontFamily();
     setState(() {});
   }
 
@@ -56,6 +73,14 @@ class _OrientaaAppState extends State<OrientaaApp> {
       themeMode: themeProvider.themeMode,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
+      locale: localeProvider.locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       initialRoute: widget.initialRoute,
       routes: {
         '/welcome': (_) => const WelcomePage(),

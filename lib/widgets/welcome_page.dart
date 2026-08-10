@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
 import 'hero_illustration.dart';
 import 'slideshow_scaffold.dart';
 import 'student_onboarding/step_ui.dart';
@@ -29,43 +30,46 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return TutorialSlideshow(
       pageCount: 3,
       onFinish: () => _goToSignup(context),
       pageBuilder: (page) {
         switch (page) {
           case 0:
-            return const TutorialSlide(
-              illustration: HeroIllustration(
+            return TutorialSlide(
+              illustration: const HeroIllustration(
                 icon: FontAwesomeIcons.graduationCap,
                 orbitTopRight: FontAwesomeIcons.planeUp,
                 orbitBottomLeft: FontAwesomeIcons.mapPin,
               ),
-              title: 'Welcome to Orientaa',
-              subtitle: 'Your career. Your future.',
-              chips: ['Explore', 'Compare', 'Get matched'],
+              title: l10n.welcomeTitle,
+              subtitle: l10n.welcomeSubtitle,
+              chips: [
+                l10n.welcomeChipExplore,
+                l10n.welcomeChipCompare,
+                l10n.welcomeChipGetMatched,
+              ],
             );
           case 1:
-            return const TutorialSlide(
-              illustration: HeroIllustration(
+            return TutorialSlide(
+              illustration: const HeroIllustration(
                 icon: FontAwesomeIcons.compass,
                 orbitTopRight: FontAwesomeIcons.heart,
                 orbitBottomLeft: FontAwesomeIcons.magnifyingGlass,
               ),
-              title: 'Find your path',
-              subtitle:
-                  'Discover universities, courses and scholarships across Africa and the world — tailored to you.',
+              title: l10n.welcomeFindPathTitle,
+              subtitle: l10n.welcomeFindPathSubtitle,
             );
           default:
-            return const TutorialSlide(
-              illustration: HeroIllustration(
+            return TutorialSlide(
+              illustration: const HeroIllustration(
                 icon: FontAwesomeIcons.rocket,
                 orbitTopRight: FontAwesomeIcons.chartSimple,
                 orbitBottomLeft: FontAwesomeIcons.lightbulb,
               ),
-              title: 'Ready to begin?',
-              subtitle:
-                  'Create your account in minutes and start exploring opportunities built around your goals.',
+              title: l10n.welcomeReadyTitle,
+              subtitle: l10n.welcomeReadySubtitle,
             );
         }
       },
@@ -77,7 +81,7 @@ class WelcomePage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: PrimaryButton(
-                label: 'Get Started',
+                label: l10n.getStarted,
                 onPressed: () => _goToSignup(context),
                 icon: FontAwesomeIcons.paperPlane,
               ),
@@ -86,7 +90,7 @@ class WelcomePage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: SecondaryButton(
-                label: 'I already have an account — Log in',
+                label: l10n.alreadyHaveAccountLogin,
                 onPressed: () => _goToLogin(context),
               ),
             ),

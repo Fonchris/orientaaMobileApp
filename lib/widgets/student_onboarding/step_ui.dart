@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 
@@ -654,7 +655,7 @@ class StepNavBar extends StatelessWidget {
             children: [
               if (onBack != null) ...[
                 SecondaryButton(
-                  label: 'Back',
+                  label: AppLocalizations.of(context).back,
                   onPressed: onBack,
                   icon: FontAwesomeIcons.arrowLeft,
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 
@@ -22,9 +23,10 @@ class RoleBadge extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isCounsellor = role == 'counsellor';
 
+    final l10n = AppLocalizations.of(context);
     final label = isCounsellor
-        ? (isVerified ? 'Verified Counsellor' : 'Counsellor')
-        : 'Student';
+        ? (isVerified ? l10n.roleVerifiedCounsellor : l10n.roleCounsellor)
+        : l10n.roleStudent;
 
     final Color fg;
     final Color bg;

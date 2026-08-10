@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'google_fonts.dart';
 import 'profile/profile_avatar.dart';
@@ -93,6 +94,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -104,7 +106,7 @@ class _SearchPageState extends State<SearchPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
               child: Text(
-                'Search',
+                l10n.searchTitle,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,
@@ -122,7 +124,7 @@ class _SearchPageState extends State<SearchPage> {
                 onSubmitted: (v) => _remember(v),
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                  hintText: 'Search people, universities, classrooms...',
+                  hintText: l10n.searchHint,
                   prefixIcon: const FaIcon(
                     FontAwesomeIcons.magnifyingGlass,
                     size: 15,
@@ -130,7 +132,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
-                          tooltip: 'Clear',
+                          tooltip: l10n.clear,
                           onPressed: () {
                             _controller.clear();
                             _onQueryChanged('');
@@ -157,13 +159,14 @@ class _SearchPageState extends State<SearchPage> {
   // ── Pre-search state ───────────────────────────────────────────────────
 
   Widget _preSearchState(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Expanded(
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
           _chipList(
             context,
-            title: 'Recent searches',
+            title: l10n.recentSearches,
             icon: FontAwesomeIcons.clockRotateLeft,
             items: _recent,
             trailing: _recent.isEmpty
@@ -171,7 +174,7 @@ class _SearchPageState extends State<SearchPage> {
                 : GestureDetector(
                     onTap: _clearRecent,
                     child: Text(
-                      'Clear',
+                      l10n.clear,
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -184,7 +187,7 @@ class _SearchPageState extends State<SearchPage> {
           const SizedBox(height: 24),
           _chipList(
             context,
-            title: 'Suggested searches',
+            title: l10n.suggestedSearches,
             icon: FontAwesomeIcons.lightbulb,
             items: _suggestedSearches,
             onTap: (q) => _submit(q),
@@ -192,7 +195,7 @@ class _SearchPageState extends State<SearchPage> {
           const SizedBox(height: 24),
           _chipList(
             context,
-            title: 'Trending searches',
+            title: l10n.trendingSearches,
             icon: FontAwesomeIcons.fireFlameCurved,
             items: _trendingSearches,
             onTap: (q) => _submit(q),
@@ -240,7 +243,7 @@ class _SearchPageState extends State<SearchPage> {
         const SizedBox(height: 12),
         if (items.isEmpty)
           Text(
-            'Nothing here yet',
+            AppLocalizations.of(context).nothingHereYet,
             style: GoogleFonts.inter(
               fontSize: 12.5,
               color: isDark
@@ -285,6 +288,7 @@ class _SearchPageState extends State<SearchPage> {
   // ── Tabs + results ─────────────────────────────────────────────────────
 
   Widget _tabs(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Expanded(
       child: Column(
         children: [
@@ -294,10 +298,10 @@ class _SearchPageState extends State<SearchPage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _tabChip(_SearchTab.people, 'People'),
-                  _tabChip(_SearchTab.universities, 'Universities'),
-                  _tabChip(_SearchTab.classrooms, 'Classrooms'),
-                  _tabChip(_SearchTab.posts, 'Posts'),
+                  _tabChip(_SearchTab.people, l10n.tabPeople),
+                  _tabChip(_SearchTab.universities, l10n.tabUniversities),
+                  _tabChip(_SearchTab.classrooms, l10n.tabClassrooms),
+                  _tabChip(_SearchTab.posts, l10n.tabPosts),
                 ],
               ),
             ),
@@ -307,9 +311,9 @@ class _SearchPageState extends State<SearchPage> {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 4),
               child: Row(
                 children: [
-                  _roleChip(null, 'All'),
-                  _roleChip('student', 'Students'),
-                  _roleChip('counsellor', 'Counsellors'),
+                  _roleChip(null, l10n.filterAll),
+                  _roleChip('student', l10n.filterStudents),
+                  _roleChip('counsellor', l10n.filterCounsellors),
                 ],
               ),
             ),
@@ -416,14 +420,16 @@ class _SearchPageState extends State<SearchPage> {
           collection: 'universities',
           field: 'name',
           icon: FontAwesomeIcons.school,
-          emptyTitle: 'No universities found',
+          emptyTitle:
+              AppLocalizations.of(context).noUniversitiesFound,
         );
       case _SearchTab.classrooms:
         return _collectionResults(
           collection: 'classrooms',
           field: 'topic',
           icon: FontAwesomeIcons.chalkboardUser,
-          emptyTitle: 'No classrooms found',
+          emptyTitle:
+              AppLocalizations.of(context).noClassroomsFound,
         );
       case _SearchTab.posts:
         return _postsResults();
@@ -443,6 +449,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _peopleResults() {
+    final l10n = AppLocalizations.of(context);
     final q = _query;
     if (q.isEmpty) {
       return const SizedBox.shrink();
@@ -464,7 +471,10 @@ class _SearchPageState extends State<SearchPage> {
                 _roleFilter == null || d.data()['role'] == _roleFilter)
             .toList();
         if (users.isEmpty) {
-          return _noResults(context, 'No people found for "$q"');
+          return _noResults(
+            context,
+            AppLocalizations.of(context).noPeopleFound(q),
+          );
         }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
@@ -524,8 +534,8 @@ class _SearchPageState extends State<SearchPage> {
                               const SizedBox(height: 2),
                               Text(
                                 role == 'counsellor'
-                                    ? 'Counsellor'
-                                    : 'Student',
+                                    ? l10n.roleCounsellor
+                                    : l10n.roleStudent,
                                 style: GoogleFonts.inter(
                                   fontSize: 12,
                                   color: Theme.of(context).brightness ==
@@ -583,7 +593,7 @@ class _SearchPageState extends State<SearchPage> {
         }
         final docs = snapshot.data?.docs ?? const [];
         if (docs.isEmpty) {
-          return _noResults(context, '$emptyTitle for "$q"');
+          return _noResults(context, '$emptyTitle · $q');
         }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
@@ -622,7 +632,10 @@ class _SearchPageState extends State<SearchPage> {
         }
         final docs = snapshot.data?.docs ?? const [];
         if (docs.isEmpty) {
-          return _noResults(context, 'No posts found for "$q"');
+          return _noResults(
+            context,
+            AppLocalizations.of(context).noPostsFound(q),
+          );
         }
         return ListView.separated(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
@@ -708,6 +721,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _noResults(BuildContext context, String message) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
@@ -734,7 +748,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
             const SizedBox(height: 5),
             Text(
-              'Try a different keyword or check your spelling.',
+              l10n.tryDifferentKeyword,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 12.5,

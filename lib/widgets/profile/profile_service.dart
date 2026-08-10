@@ -138,6 +138,36 @@ class ProfileService {
     });
   }
 
+  /// Creates a post authored by [uid] and increments the author's
+  /// `postsCount` in one batch. Returns the new post id.
+  Future<String> createPost({
+    required String uid,
+    required String authorName,
+    String? authorPhotoUrl,
+    required String content,
+    String? imageUrl,
+  }) async {
+    final ref = _posts.doc();
+    final batch = FirebaseFirestore.instance.batch();
+    batch.set(ref, {
+      'authorId': uid,
+      'authorName': authorName,
+      'authorPhotoUrl': authorPhotoUrl,
+      'content': content,
+      'imageUrl': ?imageUrl,
+      'createdAt': FieldValue.serverTimestamp(),
+      'likesCount': 0,
+      'commentsCount': 0,
+      'repostsCount': 0,
+      'likedBy': [],
+    });
+    batch.update(_users.doc(uid), {
+      'postsCount': FieldValue.increment(1),
+    });
+    await batch.commit();
+    return ref.id;
+  }
+
   /// Deletes a post and decrements the author's `postsCount` in one batch.
   Future<void> deletePost(String postId) async {
     final snap = await _posts.doc(postId).get();

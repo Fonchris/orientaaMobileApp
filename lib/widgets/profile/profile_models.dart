@@ -179,6 +179,7 @@ class PostData {
   final String authorName;
   final String? authorPhotoUrl;
   final String content;
+  final String? imageUrl;
   final DateTime? createdAt;
   final int likesCount;
   final int commentsCount;
@@ -191,6 +192,7 @@ class PostData {
     required this.authorName,
     this.authorPhotoUrl,
     required this.content,
+    this.imageUrl,
     this.createdAt,
     this.likesCount = 0,
     this.commentsCount = 0,
@@ -207,6 +209,7 @@ class PostData {
       authorName: d['authorName'] as String? ?? '',
       authorPhotoUrl: d['authorPhotoUrl'] as String?,
       content: d['content'] as String? ?? '',
+      imageUrl: d['imageUrl'] as String?,
       createdAt: ts?.toDate(),
       likesCount: (d['likesCount'] as num?)?.toInt() ?? 0,
       commentsCount: (d['commentsCount'] as num?)?.toInt() ?? 0,

@@ -1,0 +1,443 @@
+{
+  "@@locale": "en",
+
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "retry": "Retry",
+  "back": "Back",
+  "close": "Close",
+
+  "tabHome": "Home",
+  "tabSearch": "Search",
+  "tabMessages": "Messages",
+  "tabProfile": "Profile",
+
+  "greetingMorning": "Good morning",
+  "greetingAfternoon": "Good afternoon",
+  "greetingEvening": "Good evening",
+  "notifications": "Notifications",
+  "noNotificationsYet": "No notifications yet",
+  "recommendedUniversities": "Recommended Universities",
+  "seeAll": "See all",
+  "noRecommendationsTitle": "No recommendations yet",
+  "noRecommendationsMessage": "Universities matched to your profile will appear here once our discovery catalogue goes live.",
+  "counsellorSession": "Counsellor Session",
+  "noSessionsScheduled": "No sessions scheduled",
+  "noUpcomingSessions": "No upcoming sessions",
+  "sessionsCounsellorEmpty": "Sessions you book with students will show up here.",
+  "sessionsStudentEmpty": "Book a session with a counsellor and it will be surfaced here so you never miss it.",
+  "upcoming": "Upcoming",
+  "booked": "booked",
+  "suggestedClassrooms": "Suggested Classrooms",
+  "noClassroomsYet": "No classrooms yet",
+  "noClassroomsMessage": "Classrooms matching your interests will be suggested here.",
+  "recentActivity": "Recent Activity",
+  "nothingNewYet": "Nothing new yet",
+  "activityMessage": "Activity from people you follow — new posts, follows and session updates — will appear here.",
+
+  "searchTitle": "Search",
+  "searchHint": "Search people, universities, classrooms...",
+  "clear": "Clear",
+  "recentSearches": "Recent searches",
+  "suggestedSearches": "Suggested searches",
+  "trendingSearches": "Trending searches",
+  "nothingHereYet": "Nothing here yet",
+  "tabPeople": "People",
+  "tabUniversities": "Universities",
+  "tabClassrooms": "Classrooms",
+  "tabPosts": "Posts",
+  "filterAll": "All",
+  "filterStudents": "Students",
+  "filterCounsellors": "Counsellors",
+  "noUniversitiesFound": "No universities found",
+  "noClassroomsFound": "No classrooms found",
+  "noPeopleFound": "No people found for \"{query}\"",
+  "@noPeopleFound": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "noPostsFound": "No posts found for \"{query}\"",
+  "@noPostsFound": {
+    "placeholders": {
+      "query": {"type": "String"}
+    }
+  },
+  "tryDifferentKeyword": "Try a different keyword or check your spelling.",
+  "roleStudent": "Student",
+  "roleCounsellor": "Counsellor",
+
+  "myProfile": "My Profile",
+  "profileTitle": "Profile",
+  "settingsTitle": "Settings",
+  "profileNotFound": "Profile not found",
+  "profileNotFoundMessage": "This user may have deleted their account.",
+  "couldNotLoadProfile": "Could not load this profile",
+  "editProfile": "Edit Profile",
+  "share": "Share",
+  "follow": "Follow",
+  "following": "Following",
+  "message": "Message",
+  "profileLinkCopied": "Profile link copied to clipboard",
+  "fullProfileDetails": "Full profile details",
+  "sectionAcademic": "Academic",
+  "labelEducationLevel": "Education level",
+  "labelDesiredDegree": "Desired degree",
+  "labelFieldsOfInterest": "Fields of interest",
+  "labelPlannedStart": "Planned start",
+  "sectionLocationLogistics": "Location & Logistics",
+  "labelHome": "Home",
+  "labelStudyDestinations": "Study destinations",
+  "labelLanguageOfInstruction": "Language of instruction",
+  "sectionFinancial": "Financial",
+  "labelAnnualBudget": "Annual budget",
+  "labelHouseholdIncome": "Household income",
+  "labelScholarships": "Scholarships",
+  "seekingScholarship": "Seeking scholarship info",
+  "notSeekingScholarship": "Not currently seeking",
+  "sectionAssessment": "Assessment",
+  "labelCareerGoal": "Career goal",
+  "labelStrengths": "Strengths",
+  "labelInterests": "Interests",
+  "labelGpa": "GPA",
+  "labelTestScores": "Test scores",
+  "addBioPrompt": "Add a short bio so students and counsellors can learn more about you.",
+  "add": "Add",
+  "about": "About",
+  "showLess": "Show less",
+  "readMore": "Read more",
+  "changeProfilePhoto": "Change profile photo",
+  "takePhoto": "Take photo",
+  "chooseFromGallery": "Choose from gallery",
+  "uploadingPhoto": "Uploading photo...",
+  "photoUpdated": "Profile photo updated",
+  "photoUploadFailed": "Could not upload photo: {error}",
+  "@photoUploadFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "photoPermissionDenied": "Photo access was denied. Allow it in your device settings and try again.",
+
+  "statFollowers": "Followers",
+  "statFollowing": "Following",
+  "statPosts": "Posts",
+
+  "roleVerifiedCounsellor": "Verified Counsellor",
+
+  "academicProfile": "Academic Profile",
+  "fullDetails": "Full details",
+  "labelEducation": "Education",
+  "labelDegreeGoal": "Degree goal",
+  "labelFieldOfInterest": "Field of interest",
+  "savedUniversityOne": "{count} saved university",
+  "@savedUniversityOne": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "savedUniversityMany": "{count} saved universities",
+  "@savedUniversityMany": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "saveUniversitiesCta": "Save universities to build your shortlist",
+
+  "postsTitle": "Posts",
+  "shareYourJourney": "Share your journey",
+  "noPostsYet": "No posts yet",
+  "postsJourneyMessage": "Posts about your study-abroad journey will appear here.",
+  "studentNoPostsMessage": "This student has not posted anything yet.",
+  "writeFirstPost": "Write your first post",
+
+  "postOptions": "Post options",
+  "editPost": "Edit post",
+  "whatOnYourMind": "What is on your mind?",
+  "deletePostTitle": "Delete post?",
+  "cannotUndo": "This action cannot be undone.",
+  "couldNotUpdateLike": "Could not update like: {error}",
+  "@couldNotUpdateLike": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "couldNotSaveChanges": "Could not save changes: {error}",
+  "@couldNotSaveChanges": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "couldNotDeletePost": "Could not delete post: {error}",
+  "@couldNotDeletePost": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "noFollowersYet": "No followers yet",
+  "notFollowingAnyone": "Not following anyone yet",
+  "followersEmptyMessage": "When other students and counsellors follow you, they will show up here.",
+  "followingEmptyMessage": "Follow students and counsellors to see their activity in your feed.",
+
+  "profileUpdated": "Profile updated successfully",
+  "couldNotSaveProfile": "Could not save your profile: {error}",
+  "@couldNotSaveProfile": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "fullNameRequired": "Full name is required",
+  "bioTooLong": "Bio must be 250 characters or fewer",
+  "personalInformation": "Personal Information",
+  "labelFullName": "Full name",
+  "fullNameHint": "e.g. Ada Lovelace",
+  "labelCountry": "Country",
+  "tapToSelectCountry": "Tap to select your country",
+  "labelCity": "City",
+  "cityHint": "e.g. Lagos",
+  "labelBio": "Bio",
+  "bioHint": "e.g. Aspiring software engineer passionate about renewable energy",
+  "academicInformation": "Academic Information",
+  "yourCustomField": "Your custom field",
+  "customFieldHint": "Enter your field of interest...",
+  "saveChanges": "Save changes",
+  "noProfileFound": "No profile found",
+  "completeOnboardingFirst": "Complete the onboarding first so you have a profile to edit.",
+  "completeMyProfile": "Complete my profile",
+  "couldNotLoadYourProfile": "Could not load your profile",
+
+  "accountSection": "Account",
+  "labelEmail": "Email",
+  "notAvailable": "Not available",
+  "changePassword": "Change password",
+  "passwordResetHint": "We will email you a reset link",
+  "linkedGoogle": "Linked Google account",
+  "linked": "Linked",
+  "notLinked": "Not linked",
+  "notificationsSection": "Notifications",
+  "settingNewFollowers": "New followers",
+  "settingMessages": "Messages",
+  "settingClassroomActivity": "Classroom activity",
+  "settingBookingReminders": "Booking reminders",
+  "languageSection": "Language",
+  "languagePreference": "Language preference",
+  "privacySection": "Privacy",
+  "whoCanMessageYou": "Who can message you",
+  "everyone": "Everyone",
+  "followersOnly": "Followers only",
+  "showSavedUniversities": "Show my saved universities",
+  "accountActions": "Account actions",
+  "logout": "Logout",
+  "logoutHint": "Sign out of this device",
+  "deleteAccount": "Delete account",
+  "deleteAccountHint": "Permanently remove your profile and data",
+  "dataSafetyNote": "Orientaa keeps your data safe. Deleting your account is permanent.",
+  "resetPasswordTitle": "Reset your password?",
+  "resetPasswordMessage": "We will send a password reset link to {email}.",
+  "@resetPasswordMessage": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "sendLink": "Send link",
+  "passwordResetSent": "Password reset link sent to {email}",
+  "@passwordResetSent": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "couldNotSendReset": "Could not send reset link: {error}",
+  "@couldNotSendReset": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "noEmailOnAccount": "No email address on this account",
+  "logoutConfirmTitle": "Log out?",
+  "logoutConfirmMessage": "You will need to sign in again to access your profile.",
+  "logOut": "Log out",
+  "deleteAccountConfirmTitle": "Delete account?",
+  "deleteAccountConfirmMessage": "This permanently removes your profile, posts and settings. Type your email to confirm:",
+  "enterYourEmail": "Enter your email",
+  "emailDoesNotMatch": "Email does not match",
+  "requiresRecentLogin": "Please sign in again, then try deleting your account.",
+  "couldNotDeleteAccount": "Could not delete account: {error}",
+  "@couldNotDeleteAccount": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "couldNotSaveSetting": "Could not save setting: {error}",
+  "@couldNotSaveSetting": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "appearanceSection": "Appearance",
+  "themePreference": "Theme",
+  "themeSystem": "System default",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "messagesTitle": "Messages",
+  "newMessage": "New message",
+  "noMessagesYet": "No messages yet",
+  "startConversationPrompt": "Start a conversation with a student or counsellor.",
+  "you": "You",
+  "messagesPrivacyBlocked": "This user only accepts messages from people they follow.",
+  "searchUsersHint": "Search students and counsellors...",
+  "noUsersFound": "No users found",
+  "searchByNamePrompt": "Search by name to start a conversation",
+
+  "counsellorSessionChip": "Counsellor Session",
+  "sayHello": "Say hello to {name}!",
+  "@sayHello": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "conversationStart": "This is the start of your conversation.",
+  "writeMessage": "Write a message...",
+  "couldNotSendMessage": "Could not send message: {error}",
+  "@couldNotSendMessage": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "newPost": "New Post",
+  "postHint": "What's on your mind?",
+  "addPhoto": "Add photo",
+  "removeImage": "Remove image",
+  "publishPost": "Post",
+  "posting": "Posting...",
+  "postPublished": "Your post was published.",
+  "couldNotPublishPost": "Could not publish your post: {error}",
+  "@couldNotPublishPost": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "writeSomethingFirst": "Write something before posting.",
+  "uploadFailed": "Upload failed: {error}",
+  "@uploadFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
+  "next": "Next",
+  "toggleTheme": "Toggle theme",
+  "continueAction": "Continue",
+
+  "welcomeTitle": "Welcome to Orientaa",
+  "welcomeSubtitle": "Your career. Your future.",
+  "welcomeChipExplore": "Explore",
+  "welcomeChipCompare": "Compare",
+  "welcomeChipGetMatched": "Get matched",
+  "welcomeFindPathTitle": "Find your path",
+  "welcomeFindPathSubtitle": "Discover universities, courses and scholarships across Africa and the world — tailored to you.",
+  "welcomeReadyTitle": "Ready to begin?",
+  "welcomeReadySubtitle": "Create your account in minutes and start exploring opportunities built around your goals.",
+  "getStarted": "Get Started",
+  "alreadyHaveAccountLogin": "I already have an account — Log in",
+
+  "onboardingWelcomeTitle": "Welcome, explorer!",
+  "onboardingWelcomeSubtitle": "Answer a few questions and Orientaa will chart your path to studying anywhere in the world.",
+  "onboardingChipTailored": "Tailored matches",
+  "onboardingChipScholarships": "Scholarships",
+  "onboardingChipExpert": "Expert guidance",
+  "howWillYouUse": "How will you use Orientaa?",
+  "pickRoleSubtitle": "Pick your role to personalize your experience",
+  "selectRoleToContinue": "Select a role to continue",
+  "roleStudentDescription": "Explore universities, courses, scholarships, and manage your academic journey.",
+  "roleCounsellorDescription": "Guide students, manage counselling sessions, and support their educational success.",
+  "selectRoleSemantics": "Select {role} role",
+  "@selectRoleSemantics": {
+    "placeholders": {
+      "role": {"type": "String"}
+    }
+  },
+
+  "loginWelcomeBack": "Welcome back!",
+  "loginSubtitle": "Log in to continue your journey",
+  "labelPassword": "Password",
+  "enterValidEmail": "Enter a valid email",
+  "enterYourPassword": "Enter your password",
+  "passwordMinLength": "Password must be at least 6 characters",
+  "logIn": "Log In",
+  "sendSignInLinkPasswordless": "Send Sign-In Link (Passwordless)",
+  "orContinueWith": "or continue with",
+  "continueWithGoogle": "Continue with Google",
+  "forgotPassword": "Forgot password?",
+  "dontHaveAccount": "Don't have an account?",
+  "signUp": "Sign up",
+  "resendVerificationEmail": "Resend Verification Email",
+  "pleaseEnterEmailToComplete": "Please enter your email to complete sign-in.",
+  "signedInWithEmailLink": "Successfully signed in with email link.",
+  "emailLinkSignInFailed": "Email link sign-in failed: {error}",
+  "@emailLinkSignInFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "confirmYourEmail": "Confirm your email",
+  "signInLinkSent": "Sign-in link sent to {email}",
+  "@signInLinkSent": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "enterValidEmailForLink": "Enter a valid email to receive a sign-in link",
+  "failedToSendSignInLink": "Failed to send sign-in link: {error}",
+  "@failedToSendSignInLink": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "loginSuccessful": "Login successful",
+  "emailNotVerified": "Email not verified. A new verification email has been sent to {email}. Please check your inbox (and spam folder) and click the verification link.",
+  "@emailNotVerified": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "googleSignInSuccessful": "Google sign-in successful",
+  "verificationResent": "Verification email re-sent to {email}. Please check your inbox.",
+  "@verificationResent": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+  "failedToResendVerification": "Failed to resend verification: {error}",
+  "@failedToResendVerification": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "emailExampleHint": "you@example.com",
+
+  "createAccountTitle": "Create account",
+  "signupSubtitle": "Start your journey with Orientaa",
+  "enterYourFullName": "Enter your full name",
+  "enterAPassword": "Enter a password",
+  "confirmPassword": "Confirm password",
+  "confirmYourPassword": "Confirm your password",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "createAccount": "Create Account",
+  "alreadyHaveAccount": "Already have an account?",
+  "verificationEmailSentTo": "Verification email sent to {email}. Please verify your email before logging in.",
+  "@verificationEmailSentTo": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+
+  "resetPasswordHeader": "Reset password",
+  "resetPasswordSubtitle": "Enter your email and we will send a reset link",
+  "sendResetLink": "Send Reset Link",
+  "backToLogin": "Back to login",
+  "resetEmailSent": "Password reset email sent. Check your inbox."
+}

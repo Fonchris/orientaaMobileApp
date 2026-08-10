@@ -4,6 +4,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'auth_logo.dart';
 import 'auth_service.dart';
@@ -84,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
       if (email == null || email.trim().isEmpty) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please enter your email to complete sign-in.')),
+          SnackBar(content: Text(AppLocalizations.of(context).pleaseEnterEmailToComplete)),
         );
         return;
       }
@@ -98,12 +99,12 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       _emailController.text = email;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Successfully signed in with email link.')),
+        SnackBar(content: Text(AppLocalizations.of(context).signedInWithEmailLink)),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email link sign-in failed: $e')),
+        SnackBar(content: Text(AppLocalizations.of(context).emailLinkSignInFailed(e.toString()))),
       );
     } finally {
       _isHandlingEmailLink = false;
@@ -112,27 +113,28 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<String?> _promptForEmail() {
     final controller = TextEditingController();
+    final l10n = AppLocalizations.of(context);
     return showDialog<String>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Confirm your email'),
+          title: Text(l10n.confirmYourEmail),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: 'you@example.com',
-              labelText: 'Email',
+            decoration: InputDecoration(
+              hintText: l10n.emailExampleHint,
+              labelText: l10n.labelEmail,
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, controller.text.trim()),
-              child: const Text('Continue'),
+              child: Text(l10n.continueAction),
             ),
           ],
         );
@@ -144,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailController.text.trim();
     if (!_isValidEmail(email)) {
       setState(() {
-        _errorMessage = 'Enter a valid email to receive a sign-in link';
+        _errorMessage = AppLocalizations.of(context).enterValidEmailForLink;
       });
       return;
     }
@@ -159,11 +161,12 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sign-in link sent to $email')),
+        SnackBar(content: Text(AppLocalizations.of(context).signInLinkSent(email))),
       );
     } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _errorMessage = 'Failed to send sign-in link: $e';
+        _errorMessage = AppLocalizations.of(context).failedToSendSignInLink(e.toString());
       });
     } finally {
       if (mounted) {
@@ -195,16 +198,15 @@ class _LoginPageState extends State<LoginPage> {
         if (!mounted) return;
         setState(() {
           _unverifiedEmail = _emailController.text.trim();
-          _errorMessage =
-              'Email not verified. A new verification email has been sent to $_unverifiedEmail. '
-              'Please check your inbox (and spam folder) and click the verification link.';
+          _errorMessage = AppLocalizations.of(context)
+              .emailNotVerified(_unverifiedEmail!);
         });
         return;
       }
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login successful')),
+        SnackBar(content: Text(AppLocalizations.of(context).loginSuccessful)),
       );
 
       // Attempt backend authentication, but don't block login if unavailable
@@ -222,6 +224,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/onboarding');
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _errorMessage = e.toString();
       });
@@ -251,13 +254,14 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
       setState(() {
-        _errorMessage =
-            'Verification email re-sent to $_unverifiedEmail. Please check your inbox.';
+        _errorMessage = AppLocalizations.of(context)
+            .verificationResent(_unverifiedEmail!);
       });
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Failed to resend verification: $e';
+        _errorMessage = AppLocalizations.of(context)
+            .failedToResendVerification(e.toString());
       });
     } finally {
       if (mounted) {
@@ -276,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
       await _authService.signInWithGoogle();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Google sign-in successful')),
+        SnackBar(content: Text(AppLocalizations.of(context).googleSignInSuccessful)),
       );
 
       // Attempt backend authentication, but don't block login if unavailable
@@ -308,6 +312,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     final isDark = scheme.brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : const Color(0xFF1A1A2E);
     final subtitleColor = isDark
@@ -404,7 +409,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 14),
                         Text(
-                          'Welcome back!',
+                          l10n.loginWelcomeBack,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 30,
@@ -416,7 +421,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Log in to continue your journey',
+                          l10n.loginSubtitle,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: 15,
@@ -457,16 +462,16 @@ class _LoginPageState extends State<LoginPage> {
                                 TextFormField(
                                   controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Email',
-                                    prefixIcon: Icon(Icons.email_outlined),
+                                  decoration: InputDecoration(
+                                    labelText: l10n.labelEmail,
+                                    prefixIcon: const Icon(Icons.email_outlined),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Enter your email';
+                                      return l10n.enterYourEmail;
                                     }
                                     if (!value.contains('@')) {
-                                      return 'Enter a valid email';
+                                      return l10n.enterValidEmail;
                                     }
                                     return null;
                                   },
@@ -476,7 +481,7 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: _passwordController,
                                   obscureText: _obscurePassword,
                                   decoration: InputDecoration(
-                                    labelText: 'Password',
+                                    labelText: l10n.labelPassword,
                                     prefixIcon: const Icon(Icons.lock_outline),
                                     suffixIcon: IconButton(
                                       onPressed: () {
@@ -493,10 +498,10 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Enter your password';
+                                      return l10n.enterYourPassword;
                                     }
                                     if (value.length < 6) {
-                                      return 'Password must be at least 6 characters';
+                                      return l10n.passwordMinLength;
                                     }
                                     return null;
                                   },
@@ -528,7 +533,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   strokeWidth: 2),
                                             )
                                           : const Icon(Icons.refresh_outlined),
-                                      label: const Text('Resend Verification Email'),
+                                      label: Text(l10n.resendVerificationEmail),
                                     ),
                                   ),
                                 ],
@@ -555,7 +560,7 @@ class _LoginPageState extends State<LoginPage> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                'Log In',
+                                                l10n.logIn,
                                                 style: GoogleFonts.plusJakartaSans(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w700,
@@ -582,7 +587,7 @@ class _LoginPageState extends State<LoginPage> {
                                             child: CircularProgressIndicator(strokeWidth: 2),
                                           )
                                         : const Icon(Icons.mark_email_read_outlined),
-                                    label: const Text('Send Sign-In Link (Passwordless)'),
+                                    label: Text(l10n.sendSignInLinkPasswordless),
                                   ),
                                 ),
                                 const SizedBox(height: 18),
@@ -592,7 +597,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 12),
                                       child: Text(
-                                        'or continue with',
+                                        l10n.orContinueWith,
                                         style: GoogleFonts.inter(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
@@ -618,7 +623,7 @@ class _LoginPageState extends State<LoginPage> {
                                             child: CircularProgressIndicator(strokeWidth: 2),
                                           )
                                         : const _GoogleG(),
-                                    label: const Text('Continue with Google'),
+                                    label: Text(l10n.continueWithGoogle),
                                   ),
                                 ),
                               ],
@@ -632,7 +637,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.pushNamed(context, '/reset-password');
                           },
                           child: Text(
-                            'Forgot password?',
+                            l10n.forgotPassword,
                             style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -644,7 +649,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Don't have an account?",
+                              l10n.dontHaveAccount,
                               style: GoogleFonts.inter(
                                 fontSize: 14,
                                 color: subtitleColor,
@@ -655,7 +660,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.pushNamed(context, '/signup');
                               },
                               child: Text(
-                                'Sign up',
+                                l10n.signUp,
                                 style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,

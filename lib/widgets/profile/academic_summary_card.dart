@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'profile_models.dart';
@@ -28,6 +29,7 @@ class AcademicSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final o = profile.onboardingData;
 
@@ -67,7 +69,7 @@ class AcademicSummaryCard extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                'Academic Profile',
+                l10n.academicProfile,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -81,7 +83,7 @@ class AcademicSummaryCard extends StatelessWidget {
               GestureDetector(
                 onTap: onViewDetails,
                 child: Text(
-                  'Full details',
+                  l10n.fullDetails,
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -93,10 +95,16 @@ class AcademicSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (education != null)
-            _row(context, isDark, 'Education', education),
-          if (degree != null) _row(context, isDark, 'Degree goal', degree),
+            _row(context, isDark, l10n.labelEducation, education),
+          if (degree != null)
+            _row(context, isDark, l10n.labelDegreeGoal, degree),
           if (fields != null && fields is List && fields.isNotEmpty)
-            _row(context, isDark, 'Field of interest', fields.join(', ')),
+            _row(
+              context,
+              isDark,
+              l10n.labelFieldOfInterest,
+              fields.join(', '),
+            ),
           const SizedBox(height: 4),
           InkWell(
             onTap: onBrowseUniversities,
@@ -114,8 +122,10 @@ class AcademicSummaryCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       savedUniversities > 0
-                          ? '$savedUniversities saved universit${savedUniversities == 1 ? 'y' : 'ies'}'
-                          : 'Save universities to build your shortlist',
+                          ? (savedUniversities == 1
+                              ? l10n.savedUniversityOne(savedUniversities)
+                              : l10n.savedUniversityMany(savedUniversities))
+                          : l10n.saveUniversitiesCta,
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -153,7 +163,7 @@ class AcademicSummaryCard extends StatelessWidget {
               ),
               icon: const FaIcon(FontAwesomeIcons.penToSquare, size: 13),
               label: Text(
-                'Edit Profile',
+                l10n.editProfile,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,

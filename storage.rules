@@ -1,0 +1,37 @@
+rules_version = '2';
+
+// Orientaa Firebase Storage rules.
+//
+// Deploy with:  firebase deploy --only storage
+// (requires the Firebase CLI and firebase.json wired to this file)
+//
+// Users may only write under paths owned by their uid. Uploads are readable
+// by any signed-in user so profile photos and post images render for others.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Profile photos: profile_photos/<uid>.jpg — the owner writes, everyone
+    // signed in reads.
+    match /profile_photos/{uid}.jpg {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid
+          && request.resource.size < 10 * 1024 * 1024
+          && request.resource.contentType.matches('image/.*');
+    }
+
+    // Post images: post_images/<uid>/<timestamp>.jpg — owner writes, all
+    // signed-in users read.
+    match /post_images/{uid}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid
+          && request.resource.size < 15 * 1024 * 1024
+          && request.resource.contentType.matches('image/.*');
+    }
+
+    // Default: deny everything else.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:orientaa_mobile_app/l10n/app_localizations.dart';
 import 'package:orientaa_mobile_app/widgets/student_onboarding/step2_location_page.dart';
 import 'package:orientaa_mobile_app/widgets/student_onboarding/student_onboarding_model.dart';
 
@@ -49,6 +51,13 @@ void main() {
     var nextCalled = false;
 
     await tester.pumpWidget(MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: _Harness(model: model, onNext: () => nextCalled = true),
     ));
 

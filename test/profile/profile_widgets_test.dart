@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:orientaa_mobile_app/l10n/app_localizations.dart';
 import 'package:orientaa_mobile_app/widgets/app_theme.dart';
 import 'package:orientaa_mobile_app/widgets/profile/profile_stats.dart';
 import 'package:orientaa_mobile_app/widgets/profile/role_badge.dart';
@@ -8,6 +9,8 @@ import 'package:orientaa_mobile_app/widgets/profile/role_badge.dart';
 Widget _wrap(Widget child) {
   return MaterialApp(
     theme: AppTheme.light(),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: Center(child: child)),
   );
 }

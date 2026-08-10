@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'messaging_service.dart';
@@ -66,7 +67,11 @@ class _ChatPageState extends State<ChatPage> {
       if (mounted) {
         _composer.text = text;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not send message: $e')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).couldNotSendMessage(e.toString()),
+            ),
+          ),
         );
       }
     } finally {
@@ -76,6 +81,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -119,7 +125,7 @@ class _ChatPageState extends State<ChatPage> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'Counsellor Session',
+                          l10n.counsellorSessionChip,
                           style: GoogleFonts.inter(
                             fontSize: 9.5,
                             fontWeight: FontWeight.w700,
@@ -173,6 +179,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _emptyState(bool isDark) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -188,7 +195,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Say hello to ${widget.otherName.split(' ').first}!',
+              l10n.sayHello(widget.otherName.split(' ').first),
               textAlign: TextAlign.center,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
@@ -198,7 +205,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              'This is the start of your conversation.',
+              l10n.conversationStart,
               style: GoogleFonts.inter(
                 fontSize: 13,
                 color: isDark
@@ -296,7 +303,7 @@ class _ChatPageState extends State<ChatPage> {
               onSubmitted: (_) => _send(),
               style: GoogleFonts.inter(fontSize: 14.5),
               decoration: InputDecoration(
-                hintText: 'Write a message...',
+                hintText: AppLocalizations.of(context).writeMessage,
                 filled: true,
                 fillColor: isDark
                     ? Colors.white.withValues(alpha: 0.05)

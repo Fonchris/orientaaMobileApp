@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'chat_page.dart';
@@ -27,6 +28,7 @@ class _MessagesPageState extends State<MessagesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = FirebaseAuth.instance.currentUser?.uid ?? 'missing';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -42,7 +44,7 @@ class _MessagesPageState extends State<MessagesPage> {
                 children: [
                   Expanded(
                     child: Text(
-                      'Messages',
+                      l10n.messagesTitle,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -52,7 +54,7 @@ class _MessagesPageState extends State<MessagesPage> {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'New message',
+                    tooltip: l10n.newMessage,
                     onPressed: () => _openNewMessage(),
                     icon: FaIcon(
                       FontAwesomeIcons.penToSquare,
@@ -100,13 +102,14 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   Widget _conversationTile(ConversationData conversation, String uid) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final unread = conversation.unreadFor(uid);
     final lastFromMe = conversation.lastSenderId == uid;
     final preview = conversation.lastMessage.isEmpty
-        ? 'No messages yet'
+        ? l10n.noMessagesYet
         : lastFromMe
-            ? 'You: ${conversation.lastMessage}'
+            ? '${l10n.you}: ${conversation.lastMessage}'
             : conversation.lastMessage;
 
     return Material(
@@ -245,6 +248,7 @@ class _MessagesPageState extends State<MessagesPage> {
   }
 
   Widget _emptyState(bool isDark) {
+    final l10n = AppLocalizations.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -272,7 +276,7 @@ class _MessagesPageState extends State<MessagesPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'No messages yet',
+              l10n.noMessagesYet,
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
@@ -281,7 +285,7 @@ class _MessagesPageState extends State<MessagesPage> {
             ),
             const SizedBox(height: 6),
             Text(
-              'Start a conversation with a student or counsellor.',
+              l10n.startConversationPrompt,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -295,7 +299,7 @@ class _MessagesPageState extends State<MessagesPage> {
             OutlinedButton.icon(
               onPressed: _openNewMessage,
               icon: const FaIcon(FontAwesomeIcons.penToSquare, size: 13),
-              label: const Text('New message'),
+              label: Text(l10n.newMessage),
             ),
           ],
         ),
@@ -333,9 +337,9 @@ class _MessagesPageState extends State<MessagesPage> {
     if (!allowed) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'This user only accepts messages from people they follow.',
+              AppLocalizations.of(context).messagesPrivacyBlocked,
             ),
           ),
         );
@@ -415,6 +419,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(
@@ -436,7 +441,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Text(
-                'New message',
+                l10n.newMessage,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
@@ -450,9 +455,9 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                 controller: _search,
                 autofocus: true,
                 onChanged: _onChanged,
-                decoration: const InputDecoration(
-                  hintText: 'Search students and counsellors...',
-                  prefixIcon: FaIcon(
+                decoration: InputDecoration(
+                  hintText: l10n.searchUsersHint,
+                  prefixIcon: const FaIcon(
                     FontAwesomeIcons.magnifyingGlass,
                     size: 15,
                     color: AppTheme.brandBlue,
@@ -480,7 +485,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
                         if (users.isEmpty) {
                           return Center(
                             child: Text(
-                              'No users found',
+                              l10n.noUsersFound,
                               style: GoogleFonts.inter(
                                 fontSize: 13,
                                 color: isDark
@@ -547,7 +552,7 @@ class _UserPickerSheetState extends State<_UserPickerSheet> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Search by name to start a conversation',
+              AppLocalizations.of(context).searchByNamePrompt,
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,

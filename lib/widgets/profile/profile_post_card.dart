@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 import 'profile_avatar.dart';
@@ -57,7 +58,11 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
           _likeBusy = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not update like: $e')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).couldNotUpdateLike(e.toString()),
+            ),
+          ),
         );
       }
     } finally {
@@ -66,28 +71,29 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
   }
 
   Future<void> _edit() async {
+    final l10n = AppLocalizations.of(context);
     final controller = TextEditingController(text: widget.post.content);
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          'Edit post',
+          l10n.editPost,
           style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
         ),
         content: TextField(
           controller: controller,
           maxLines: 4,
           maxLength: 500,
-          decoration: const InputDecoration(hintText: 'What is on your mind?'),
+          decoration: InputDecoration(hintText: l10n.whatOnYourMind),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-            child: const Text('Save'),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -100,32 +106,33 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not save changes: $e')),
+          SnackBar(content: Text(l10n.couldNotSaveChanges(e.toString()))),
         );
       }
     }
   }
 
   Future<void> _delete() async {
+    final l10n = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(
-          'Delete post?',
+          l10n.deletePostTitle,
           style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
         ),
-        content: const Text('This action cannot be undone.'),
+        content: Text(l10n.cannotUndo),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(ctx).colorScheme.error,
             ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -136,7 +143,7 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not delete post: $e')),
+          SnackBar(content: Text(l10n.couldNotDeletePost(e.toString()))),
         );
       }
     }
@@ -144,6 +151,7 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final post = widget.post;
     final displayLikes =
@@ -198,7 +206,7 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
               ),
               if (widget.isOwner)
                 PopupMenuButton<String>(
-                  tooltip: 'Post options',
+                  tooltip: l10n.postOptions,
                   icon: FaIcon(
                     FontAwesomeIcons.ellipsisVertical,
                     size: 15,
@@ -207,30 +215,30 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
                         : AppTheme.brandInk.withValues(alpha: 0.5),
                   ),
                   onSelected: (v) => v == 'edit' ? _edit() : _delete(),
-                  itemBuilder: (ctx) => const [
+                  itemBuilder: (ctx) => [
                     PopupMenuItem(
                       value: 'edit',
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: FaIcon(
+                        leading: const FaIcon(
                           FontAwesomeIcons.penToSquare,
                           size: 15,
                         ),
-                        title: Text('Edit'),
+                        title: Text(l10n.editPost),
                       ),
                     ),
                     PopupMenuItem(
                       value: 'delete',
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: FaIcon(
+                        leading: const FaIcon(
                           FontAwesomeIcons.trash,
                           size: 15,
                           color: Colors.redAccent,
                         ),
                         title: Text(
-                          'Delete',
-                          style: TextStyle(color: Colors.redAccent),
+                          l10n.delete,
+                          style: const TextStyle(color: Colors.redAccent),
                         ),
                       ),
                     ),
@@ -250,6 +258,35 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
               height: 1.45,
             ),
           ),
+          if (post.imageUrl != null) ...[
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: Image.network(
+                post.imageUrl!,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+                cacheWidth:
+                    (MediaQuery.sizeOf(context).width * 0.9).round(),
+                errorBuilder: (_, _, _) => Container(
+                  height: 120,
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.05)
+                      : const Color(0xFFEFF3FA),
+                  child: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.image,
+                      size: 26,
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.3)
+                          : AppTheme.brandInk.withValues(alpha: 0.3),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 12),
           Row(
             children: [

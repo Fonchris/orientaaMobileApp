@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
 import 'google_fonts.dart';
 import 'hero_illustration.dart';
 import 'role_selection_card.dart';
@@ -52,6 +53,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return TutorialSlideshow(
       pageCount: 2,
       onFinish: _continue,
@@ -60,16 +62,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
           : null,
       pageBuilder: (page) {
         if (page == 0) {
-          return const TutorialSlide(
-            illustration: HeroIllustration(
+          return TutorialSlide(
+            illustration: const HeroIllustration(
               icon: FontAwesomeIcons.graduationCap,
               orbitTopRight: FontAwesomeIcons.planeUp,
               orbitBottomLeft: FontAwesomeIcons.bookOpen,
             ),
-            title: 'Welcome, explorer!',
-            subtitle:
-                'Answer a few questions and Orientaa will chart your path to studying anywhere in the world.',
-            chips: ['Tailored matches', 'Scholarships', 'Expert guidance'],
+            title: l10n.onboardingWelcomeTitle,
+            subtitle: l10n.onboardingWelcomeSubtitle,
+            chips: [
+              l10n.onboardingChipTailored,
+              l10n.onboardingChipScholarships,
+              l10n.onboardingChipExpert,
+            ],
           );
         }
         return _RoleSlide(
@@ -82,7 +87,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         return SizedBox(
           width: double.infinity,
           child: PrimaryButton(
-            label: _selectedRole != null ? 'Continue' : 'Select a role to continue',
+            label: _selectedRole != null ? l10n.continueAction : l10n.selectRoleToContinue,
             onPressed: _selectedRole != null && !_isNavigating ? _continue : null,
             loading: _isNavigating,
             icon: FontAwesomeIcons.arrowRight,
@@ -138,7 +143,7 @@ class _RoleSlide extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'How will you use Orientaa?',
+                      AppLocalizations.of(context).howWillYouUse,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 27,
@@ -150,7 +155,7 @@ class _RoleSlide extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Pick your role to personalize your experience',
+                      AppLocalizations.of(context).pickRoleSubtitle,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 14,

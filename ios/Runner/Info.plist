@@ -6,6 +6,13 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- Photo library + camera usage descriptions (image_picker). -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Orientaa uses your photo library so you can set a profile photo and add images to your posts.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Orientaa uses the camera so you can take a new profile photo.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Orientaa may access the microphone when recording video in the future.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Orientaa Mobile App</string>
 	<key>CFBundleExecutable</key>

@@ -63,6 +63,10 @@ class ProfileAvatar extends StatelessWidget {
                 width: size,
                 height: size,
                 fit: BoxFit.cover,
+                // Decode at a resolution close to the rendered size to keep
+                // memory low when avatars are listed (posts, followers, chats).
+                cacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
+                    .round(),
                 errorBuilder: (_, _, _) => Center(
                   child: Text(
                     initials,

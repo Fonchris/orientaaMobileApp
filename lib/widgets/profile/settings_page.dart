@@ -3,9 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../auth_service.dart';
 import '../google_fonts.dart';
+import '../../main.dart' show localeProvider, themeProvider;
+import '../locale_provider.dart';
 import 'profile_models.dart';
 import 'profile_service.dart';
 
@@ -30,7 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Settings',
+          AppLocalizations.of(context).settingsTitle,
           style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w800,
@@ -61,6 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildList(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final email = FirebaseAuth.instance.currentUser?.email ?? '';
     final providers = FirebaseAuth.instance.currentUser?.providerData
             .map((p) => p.providerId)
@@ -71,38 +75,103 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
       children: [
-        _sectionLabel(FontAwesomeIcons.userLock, 'Account'),
+        _sectionLabel(FontAwesomeIcons.userLock, l10n.accountSection),
         const SizedBox(height: 8),
         _card(
           children: [
             _row(
               icon: FontAwesomeIcons.envelope,
-              title: 'Email',
-              subtitle: email.isEmpty ? 'Not available' : email,
+              title: l10n.labelEmail,
+              subtitle: email.isEmpty ? l10n.notAvailable : email,
             ),
             _divider(),
             _row(
               icon: FontAwesomeIcons.key,
-              title: 'Change password',
-              subtitle: 'We will email you a reset link',
+              title: l10n.changePassword,
+              subtitle: l10n.passwordResetHint,
               onTap: _changePassword,
             ),
             _divider(),
             _row(
               icon: FontAwesomeIcons.google,
-              title: 'Linked Google account',
-              subtitle: linkedGoogle ? 'Linked' : 'Not linked',
+              title: l10n.linkedGoogle,
+              subtitle: linkedGoogle ? l10n.linked : l10n.notLinked,
             ),
           ],
         ),
         const SizedBox(height: 20),
-        _sectionLabel(FontAwesomeIcons.bell, 'Notifications'),
+        _sectionLabel(FontAwesomeIcons.palette, l10n.appearanceSection),
+        const SizedBox(height: 8),
+        _card(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const FaIcon(
+                        FontAwesomeIcons.palette,
+                        size: 14,
+                        color: AppTheme.brandBlue,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        l10n.themePreference,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  SegmentedButton<ThemeMode>(
+                    segments: [
+                      ButtonSegment(
+                        value: ThemeMode.system,
+                        label: Text(l10n.themeSystem),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.display,
+                          size: 13,
+                        ),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.light,
+                        label: Text(l10n.themeLight),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.sun,
+                          size: 13,
+                        ),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.dark,
+                        label: Text(l10n.themeDark),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.moon,
+                          size: 13,
+                        ),
+                      ),
+                    ],
+                    selected: {themeProvider.themeMode},
+                    showSelectedIcon: false,
+                    onSelectionChanged: (s) =>
+                        themeProvider.setThemeMode(s.first),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        _sectionLabel(FontAwesomeIcons.bell, l10n.notificationsSection),
         const SizedBox(height: 8),
         _card(
           children: [
             _switchTile(
               icon: FontAwesomeIcons.userPlus,
-              title: 'New followers',
+              title: l10n.settingNewFollowers,
               value: _settings.notifyNewFollowers,
               onChanged: (v) => _update((s) => s.copyWith(
                     notifyNewFollowers: v,
@@ -111,7 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _divider(),
             _switchTile(
               icon: FontAwesomeIcons.message,
-              title: 'Messages',
+              title: l10n.settingMessages,
               value: _settings.notifyMessages,
               onChanged: (v) =>
                   _update((s) => s.copyWith(notifyMessages: v)),
@@ -119,7 +188,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _divider(),
             _switchTile(
               icon: FontAwesomeIcons.chalkboardUser,
-              title: 'Classroom activity',
+              title: l10n.settingClassroomActivity,
               value: _settings.notifyClassroomActivity,
               onChanged: (v) => _update(
                 (s) => s.copyWith(notifyClassroomActivity: v),
@@ -128,7 +197,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _divider(),
             _switchTile(
               icon: FontAwesomeIcons.calendarCheck,
-              title: 'Booking reminders',
+              title: l10n.settingBookingReminders,
               value: _settings.notifyBookingReminders,
               onChanged: (v) => _update(
                 (s) => s.copyWith(notifyBookingReminders: v),
@@ -137,21 +206,26 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         const SizedBox(height: 20),
-        _sectionLabel(FontAwesomeIcons.globe, 'Language'),
+        _sectionLabel(FontAwesomeIcons.globe, l10n.languageSection),
         const SizedBox(height: 8),
         _card(
           children: [
             _dropdownTile(
               icon: FontAwesomeIcons.language,
-              title: 'Language preference',
-              value: _settings.language,
+              title: l10n.languagePreference,
+              value: localeProvider.languageName,
               options: const ['English', 'French', 'Arabic', 'Portuguese'],
-              onChanged: (v) => _update((s) => s.copyWith(language: v)),
+              onChanged: (v) async {
+                await localeProvider.setLocale(
+                  Locale(LocaleProvider.codeForLanguage(v)),
+                );
+                _update((s) => s.copyWith(language: v));
+              },
             ),
           ],
         ),
         const SizedBox(height: 20),
-        _sectionLabel(FontAwesomeIcons.shieldHalved, 'Privacy'),
+        _sectionLabel(FontAwesomeIcons.shieldHalved, l10n.privacySection),
         const SizedBox(height: 8),
         _card(
           children: [
@@ -169,7 +243,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Who can message you',
+                        l10n.whoCanMessageYou,
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -188,14 +262,14 @@ class _SettingsPageState extends State<SettingsPage> {
                         RadioListTile<String>(
                           contentPadding: EdgeInsets.zero,
                           dense: true,
-                          title: Text('Everyone',
+                          title: Text(l10n.everyone,
                               style: GoogleFonts.inter(fontSize: 13.5)),
                           value: 'everyone',
                         ),
                         RadioListTile<String>(
                           contentPadding: EdgeInsets.zero,
                           dense: true,
-                          title: Text('Followers only',
+                          title: Text(l10n.followersOnly,
                               style: GoogleFonts.inter(fontSize: 13.5)),
                           value: 'followers',
                         ),
@@ -208,7 +282,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _divider(),
             _switchTile(
               icon: FontAwesomeIcons.eye,
-              title: 'Show my saved universities',
+              title: l10n.showSavedUniversities,
               value: _settings.showSavedUniversities,
               onChanged: (v) => _update(
                 (s) => s.copyWith(showSavedUniversities: v),
@@ -217,22 +291,25 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
         const SizedBox(height: 20),
-        _sectionLabel(FontAwesomeIcons.triangleExclamation, 'Account actions'),
+        _sectionLabel(
+          FontAwesomeIcons.triangleExclamation,
+          l10n.accountActions,
+        ),
         const SizedBox(height: 8),
         _card(
           children: [
             _row(
               icon: FontAwesomeIcons.rightFromBracket,
-              title: 'Logout',
-              subtitle: 'Sign out of this device',
+              title: l10n.logout,
+              subtitle: l10n.logoutHint,
               iconColor: AppTheme.brandGold,
               onTap: _signingOut ? null : _confirmLogout,
             ),
             _divider(),
             _row(
               icon: FontAwesomeIcons.trash,
-              title: 'Delete account',
-              subtitle: 'Permanently remove your profile and data',
+              title: l10n.deleteAccount,
+              subtitle: l10n.deleteAccountHint,
               iconColor: Theme.of(context).colorScheme.error,
               onTap: _deleteAccount,
             ),
@@ -240,7 +317,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         const SizedBox(height: 12),
         Text(
-          'Orientaa keeps your data safe. Deleting your account is permanent.',
+          l10n.dataSafetyNote,
           style: GoogleFonts.inter(
             fontSize: 11.5,
             color: Theme.of(context).brightness == Brightness.dark
@@ -268,7 +345,11 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not save setting: $e')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context).couldNotSaveSetting(e.toString()),
+            ),
+          ),
         );
       }
     } finally {
@@ -279,30 +360,32 @@ class _SettingsPageState extends State<SettingsPage> {
   // ── Account actions ────────────────────────────────────────────────────
 
   Future<void> _changePassword() async {
+    final l10n = AppLocalizations.of(context);
     final email = FirebaseAuth.instance.currentUser?.email;
     if (email == null || email.isEmpty) {
-      _toast('No email address on this account');
+      _toast(l10n.noEmailOnAccount);
       return;
     }
     final ok = await _confirm(
-      title: 'Reset your password?',
-      message: 'We will send a password reset link to $email.',
-      confirmLabel: 'Send link',
+      title: l10n.resetPasswordTitle,
+      message: l10n.resetPasswordMessage(email),
+      confirmLabel: l10n.sendLink,
     );
     if (ok != true) return;
     try {
       await _auth.sendPasswordResetEmail(email);
-      if (mounted) _toast('Password reset link sent to $email');
+      if (mounted) _toast(l10n.passwordResetSent(email));
     } catch (e) {
-      if (mounted) _toast('Could not send reset link: $e');
+      if (mounted) _toast(l10n.couldNotSendReset(e.toString()));
     }
   }
 
   Future<void> _confirmLogout() async {
+    final l10n = AppLocalizations.of(context);
     final ok = await _confirm(
-      title: 'Log out?',
-      message: 'You will need to sign in again to access your profile.',
-      confirmLabel: 'Log out',
+      title: l10n.logoutConfirmTitle,
+      message: l10n.logoutConfirmMessage,
+      confirmLabel: l10n.logOut,
     );
     if (ok != true) return;
     setState(() => _signingOut = true);
@@ -312,6 +395,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _deleteAccount() async {
+    final l10n = AppLocalizations.of(context);
     final email = FirebaseAuth.instance.currentUser?.email ?? '';
     final controller = TextEditingController();
     final confirmed = await showDialog<bool>(
@@ -320,7 +404,7 @@ class _SettingsPageState extends State<SettingsPage> {
         final isDark = Theme.of(ctx).brightness == Brightness.dark;
         return AlertDialog(
           title: Text(
-            'Delete account?',
+            l10n.deleteAccountConfirmTitle,
             style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800),
           ),
           content: StatefulBuilder(
@@ -331,8 +415,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'This permanently removes your profile, posts and settings. '
-                    'Type your email to confirm:',
+                    l10n.deleteAccountConfirmMessage,
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       height: 1.4,
@@ -346,9 +429,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     controller: controller,
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
-                      hintText: email.isEmpty ? 'Enter your email' : email,
+                      hintText: email.isEmpty ? l10n.enterYourEmail : email,
                       errorText: controller.text.isNotEmpty && !matches
-                          ? 'Email does not match'
+                          ? l10n.emailDoesNotMatch
                           : null,
                     ),
                   ),
@@ -359,7 +442,7 @@ class _SettingsPageState extends State<SettingsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel'),
+              child: Text(l10n.cancel),
             ),
             FilledButton(
               style: FilledButton.styleFrom(
@@ -369,7 +452,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   email.isNotEmpty && controller.text.trim() == email
                       ? () => Navigator.pop(ctx, true)
                       : null,
-              child: const Text('Delete'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -394,13 +477,14 @@ class _SettingsPageState extends State<SettingsPage> {
       setState(() => _saving = false);
       _toast(
         e.code == 'requires-recent-login'
-            ? 'Please sign in again, then try deleting your account.'
-            : 'Could not delete account: ${e.message}',
+            ? AppLocalizations.of(context).requiresRecentLogin
+            : AppLocalizations.of(context)
+                .couldNotDeleteAccount(e.message ?? e.code),
       );
     } catch (e) {
       if (!mounted) return;
       setState(() => _saving = false);
-      _toast('Could not delete account: $e');
+      _toast(AppLocalizations.of(context).couldNotDeleteAccount(e.toString()));
     }
   }
 

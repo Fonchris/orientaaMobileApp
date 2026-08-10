@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'auth_logo.dart';
 import 'glow_blob.dart';
@@ -25,7 +26,7 @@ class CircleNextButton extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: 'Next',
+      label: AppLocalizations.of(context).next,
       child: GestureDetector(
         onTap: enabled ? onPressed : null,
         child: AnimatedScale(
@@ -221,7 +222,7 @@ class _TutorialSlideshowState extends State<TutorialSlideshow> {
                           ),
                         ),
                         Semantics(
-                          label: 'Toggle theme',
+                          label: AppLocalizations.of(context).toggleTheme,
                           child: IconButton(
                             icon: Icon(
                               themeProvider.isDarkMode

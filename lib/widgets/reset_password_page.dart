@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/auth_service.dart';
 import '../widgets/auth_logo.dart';
 import '../main.dart' show themeProvider;
@@ -38,7 +39,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       await _authService.sendPasswordResetEmail(_emailController.text);
 
       setState(() {
-        _message = 'Password reset email sent. Check your inbox.';
+        _message = AppLocalizations.of(context).resetEmailSent;
       });
     } catch (e) {
       setState(() {
@@ -54,6 +55,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +87,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   const AuthLogo(height: 120),
                   const SizedBox(height: 24),
                   Text(
-                    'Reset password',
+                    l10n.resetPasswordHeader,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.w700,
@@ -93,7 +95,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Enter your email and we will send a reset link',
+                    l10n.resetPasswordSubtitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: scheme.onSurfaceVariant,
@@ -107,16 +109,16 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email_outlined),
+                          decoration: InputDecoration(
+                            labelText: l10n.labelEmail,
+                            prefixIcon: const Icon(Icons.email_outlined),
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
-                              return 'Enter your email';
+                              return l10n.enterYourEmail;
                             }
                             if (!value.contains('@')) {
-                              return 'Enter a valid email';
+                              return l10n.enterValidEmail;
                             }
                             return null;
                           },
@@ -125,13 +127,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         if (_message != null)
                           Text(
                             _message!,
-                            style: const TextStyle(color: Colors.green),
+                            style: TextStyle(color: scheme.primary),
                             textAlign: TextAlign.center,
                           ),
                         if (_errorMessage != null)
                           Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(color: scheme.error),
                             textAlign: TextAlign.center,
                           ),
                         const SizedBox(height: 20),
@@ -146,7 +148,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                                     width: 20,
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
-                                : const Text('Send Reset Link'),
+                                : Text(l10n.sendResetLink),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -154,7 +156,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text('Back to login'),
+                          child: Text(l10n.backToLogin),
                         ),
                       ],
                     ),

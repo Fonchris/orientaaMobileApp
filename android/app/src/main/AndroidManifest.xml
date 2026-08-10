@@ -1,6 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Required for Firebase Authentication and network communication -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Camera + photo access for profile photos and post images (image_picker).
+         On Android 13+ the system photo picker needs no storage permission;
+         older devices rely on the photo picker fallback, so storage access is
+         declared for max compatibility. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
     <application
         android:label="orientaa_mobile_app"
         android:name="${applicationName}"

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
 
@@ -48,7 +49,7 @@ class ProfileStats extends StatelessWidget {
             child: _StatItem(
               icon: FontAwesomeIcons.userGroup,
               value: followers,
-              label: 'Followers',
+              label: AppLocalizations.of(context).statFollowers,
               onTap: onTapFollowers,
             ),
           ),
@@ -57,7 +58,7 @@ class ProfileStats extends StatelessWidget {
             child: _StatItem(
               icon: FontAwesomeIcons.userPlus,
               value: following,
-              label: 'Following',
+              label: AppLocalizations.of(context).statFollowing,
               onTap: onTapFollowing,
             ),
           ),
@@ -66,7 +67,7 @@ class ProfileStats extends StatelessWidget {
             child: _StatItem(
               icon: FontAwesomeIcons.newspaper,
               value: posts,
-              label: 'Posts',
+              label: AppLocalizations.of(context).statPosts,
               onTap: onTapPosts,
             ),
           ),

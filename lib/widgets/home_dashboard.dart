@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
 import 'google_fonts.dart';
 import 'profile/profile_avatar.dart';
@@ -71,11 +72,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
     return words.isEmpty ? 'explorer' : words.join(' ');
   }
 
-  String _greeting() {
+  String _greeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return l10n.greetingMorning;
+    if (hour < 17) return l10n.greetingAfternoon;
+    return l10n.greetingEvening;
   }
 
   @override
@@ -121,6 +122,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _header(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final name = _displayName.split(' ').first;
     final firstName = name.isEmpty ? 'explorer' : name;
@@ -143,7 +145,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$_greeting(),',
+                  '${_greeting(l10n)},',
                   style: GoogleFonts.inter(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w500,
@@ -173,6 +175,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _notificationBell(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final uid = FirebaseAuth.instance.currentUser?.uid ?? 'missing';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -186,7 +189,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
           clipBehavior: Clip.none,
           children: [
             IconButton(
-              tooltip: 'Notifications',
+              tooltip: l10n.notifications,
               onPressed: () => _openNotifications(items),
               icon: FaIcon(
                 FontAwesomeIcons.bell,
@@ -230,6 +233,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Future<void> _openNotifications(List<NotificationData> items) async {
+    final l10n = AppLocalizations.of(context);
     final uid = FirebaseAuth.instance.currentUser?.uid;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     await showModalBottomSheet<void>(
@@ -254,7 +258,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
               child: Text(
-                'Notifications',
+                l10n.notifications,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
@@ -276,7 +280,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'No notifications yet',
+                      l10n.noNotificationsYet,
                       style: GoogleFonts.inter(
                         fontSize: 13,
                         color: isDark
@@ -391,13 +395,14 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _universitiesSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionHeader(
           context,
-          title: 'Recommended Universities',
-          actionLabel: 'See all',
+          title: l10n.recommendedUniversities,
+          actionLabel: l10n.seeAll,
           onAction: widget.onOpenSearch,
         ),
         const SizedBox(height: 10),
@@ -412,9 +417,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
               return _emptyCard(
                 context,
                 icon: FontAwesomeIcons.school,
-                title: 'No recommendations yet',
-                message:
-                    'Universities matched to your profile will appear here once our discovery catalogue goes live.',
+                title: l10n.noRecommendationsTitle,
+                message: l10n.noRecommendationsMessage,
               );
             }
             return Column(
@@ -517,10 +521,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _sessionsSection(BuildContext context, String uid) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader(context, title: 'Counsellor Session'),
+        _sectionHeader(context, title: l10n.counsellorSession),
         const SizedBox(height: 10),
         StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: _role == 'counsellor'
@@ -541,11 +546,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 context,
                 icon: FontAwesomeIcons.calendarCheck,
                 title: _role == 'counsellor'
-                    ? 'No sessions scheduled'
-                    : 'No upcoming sessions',
+                    ? l10n.noSessionsScheduled
+                    : l10n.noUpcomingSessions,
                 message: _role == 'counsellor'
-                    ? 'Sessions you book with students will show up here.'
-                    : 'Book a session with a counsellor and it will be surfaced here so you never miss it.',
+                    ? l10n.sessionsCounsellorEmpty
+                    : l10n.sessionsStudentEmpty,
               );
             }
             final data = docs.first.data();
@@ -598,7 +603,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${data['dateLabel'] ?? 'Upcoming'} · ${data['status'] ?? 'booked'}',
+                          '${data['dateLabel'] ?? l10n.upcoming} · ${data['status'] ?? l10n.booked}',
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.75),
@@ -622,13 +627,14 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _classroomsSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionHeader(
           context,
-          title: 'Suggested Classrooms',
-          actionLabel: 'See all',
+          title: l10n.suggestedClassrooms,
+          actionLabel: l10n.seeAll,
           onAction: widget.onOpenSearch,
         ),
         const SizedBox(height: 10),
@@ -643,9 +649,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
               return _emptyCard(
                 context,
                 icon: FontAwesomeIcons.chalkboardUser,
-                title: 'No classrooms yet',
-                message:
-                    'Classrooms matching your interests will be suggested here.',
+                title: l10n.noClassroomsYet,
+                message: l10n.noClassroomsMessage,
               );
             }
             return Column(
@@ -718,10 +723,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
   }
 
   Widget _activitySection(BuildContext context, String uid) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader(context, title: 'Recent Activity'),
+        _sectionHeader(context, title: l10n.recentActivity),
         const SizedBox(height: 10),
         StreamBuilder<List<NotificationData>>(
           stream: _service.watchNotifications(uid),
@@ -731,9 +737,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
               return _emptyCard(
                 context,
                 icon: FontAwesomeIcons.userClock,
-                title: 'Nothing new yet',
-                message:
-                    'Activity from people you follow — new posts, follows and session updates — will appear here.',
+                title: l10n.nothingNewYet,
+                message: l10n.activityMessage,
               );
             }
             return Container(
