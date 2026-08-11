@@ -100,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).signedInWithEmailLink)),
       );
+      await _goToPostLoginDestination();
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -219,9 +220,9 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
 
-      // Navigate to onboarding after successful login
+      // Returning users skip onboarding; only new users see it.
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/onboarding');
+      await _goToPostLoginDestination();
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -232,6 +233,14 @@ class _LoginPageState extends State<LoginPage> {
         setState(() => _isLoading = false);
       }
     }
+  }
+
+  /// Routes the just-signed-in user to the right screen: dashboard for
+  /// returning users, onboarding only for brand-new accounts.
+  Future<void> _goToPostLoginDestination() async {
+    final route = await _authService.postLoginDestination();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, route);
   }
 
   Future<void> _resendVerification() async {
@@ -293,9 +302,9 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
 
-      // Navigate to onboarding after successful login
+      // Returning users skip onboarding; only new users see it.
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/onboarding');
+      await _goToPostLoginDestination();
     } catch (e) {
       if (!mounted) return;
       setState(() {

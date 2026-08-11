@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,11 +34,23 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     setState(() => _isNavigating = true);
 
+    final role = _selectedRole == UserRole.student ? 'student' : 'counsellor';
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-      'user_role',
-      _selectedRole == UserRole.student ? 'student' : 'counsellor',
-    );
+    await prefs.setString('user_role', role);
+
+    // Persist the role to Firestore so returning users are recognised on any
+    // device and can skip this onboarding flow on their next login.
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .set({'role': role}, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('Failed to persist role to Firestore: $e');
+    }
 
     if (!mounted) return;
 
@@ -46,9 +60,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     Navigator.of(context).pushReplacementNamed(
       route,
-      arguments: {
-        'role': _selectedRole == UserRole.student ? 'student' : 'counsellor',
-      },
+      arguments: {'role': role},
     );
   }
 

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -157,6 +158,67 @@ class AuthService {
   }
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();
+
+  /// Determines where the user should land after a successful login.
+  ///
+  /// Returning users skip the onboarding flow entirely:
+  /// - A student whose profile has `onboardingComplete: true` goes straight to
+  ///   the student dashboard.
+  /// - A counsellor goes to the counsellor dashboard.
+  /// - Only new users / users with an incomplete profile go to `/onboarding`.
+  ///
+  /// Role is stored in Firestore (written during onboarding/role selection) so
+  /// it survives across devices. If Firestore can't be reached, the
+  /// device-local role from SharedPreferences is used as a fallback.
+  Future<String> postLoginDestination() async {
+    final user = _auth.currentUser;
+    if (user == null) return '/onboarding';
+
+    final prefs = await SharedPreferences.getInstance();
+    final localRole = prefs.getString('user_role');
+
+    String? remoteRole;
+    bool? remoteOnboardingComplete;
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (doc.exists) {
+        final data = doc.data() ?? const <String, dynamic>{};
+        remoteRole = data['role'] as String?;
+        remoteOnboardingComplete = data['onboardingComplete'] == true;
+      }
+    } catch (e) {
+      // Firestore read failed (offline, permissions) — fall back below so a
+      // returning user is never forced back through onboarding just because of
+      // a transient network error.
+      debugPrint('postLoginDestination: could not read profile ($e)');
+    }
+
+    // Remote data wins when it gives a clear signal.
+    if (remoteRole == 'counsellor') {
+      // Sync the device-local role so AppShell shows the right dashboard.
+      await prefs.setString('user_role', 'counsellor');
+      return '/counsellor-dashboard';
+    }
+    if (remoteOnboardingComplete == true) {
+      await prefs.setString('user_role', 'student');
+      return '/student-dashboard';
+    }
+
+    // No clear remote signal (doc missing, read failed, or the profile doc
+    // exists but carries no role/onboardingComplete marker — e.g. a counsellor
+    // who posted but never completed onboarding fields): consult the
+    // device-local flags so a returning user is never forced back through
+    // onboarding because of a transient error or a partial Firestore doc.
+    if (localRole == 'counsellor') return '/counsellor-dashboard';
+    if (prefs.getBool('onboarding_complete') == true) {
+      await prefs.setString('user_role', 'student');
+      return '/student-dashboard';
+    }
+    return '/onboarding';
+  }
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();

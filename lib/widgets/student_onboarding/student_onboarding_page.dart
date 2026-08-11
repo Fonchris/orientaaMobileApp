@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app_theme.dart';
 import '../google_fonts.dart';
@@ -82,8 +83,15 @@ class _StudentOnboardingPageState extends State<StudentOnboardingPage> {
 
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         ..._model.toFirestoreMap(),
+        'role': 'student',
         'completedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+
+      // Cache locally so a returning user is never re-sent to onboarding, even
+      // if Firestore is temporarily unreachable at their next login.
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('onboarding_complete', true);
+      await prefs.setString('user_role', 'student');
 
       if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/student-dashboard');
