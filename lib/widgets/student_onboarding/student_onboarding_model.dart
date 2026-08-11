@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'personality_question_model.dart';
+
 class StudentOnboardingModel extends ChangeNotifier {
   // ── Step 1: Identity & Academic Stage ──
   String? _educationLevel;
@@ -276,12 +278,77 @@ class StudentOnboardingModel extends ChangeNotifier {
   // ── Step 5: Big Five Personality Assessment ──
   final Map<String, int> _personalityResponses = {};
 
+  /// Question catalog (id -> question) registered by the Big Five step so the
+  /// model can aggregate per-trait scores at save time. Without this, the trait
+  /// and reverse-scored flags would only exist in the question catalogue and
+  /// would be lost once answers are persisted.
+  final Map<String, PersonalityQuestion> _personalityQuestions = {};
+
   Map<String, int> get personalityResponses =>
       Map.unmodifiable(_personalityResponses);
 
   void setPersonalityResponse(String questionId, int score) {
     _personalityResponses[questionId] = score;
     notifyListeners();
+  }
+
+  /// Registers the questions shown in the personality step (id -> question),
+  /// so [bigFiveReport] can be computed at save time. Safe to call multiple
+  /// times — later calls replace the catalog.
+  ///
+  /// Unlike the other setters this intentionally does not call
+  /// [notifyListeners]: it is invoked from the step's async question fetch
+  /// (already after its own setState), so notifying would only trigger a
+  /// redundant parent rebuild.
+  void setPersonalityQuestions(List<PersonalityQuestion> questions) {
+    _personalityQuestions
+      ..clear()
+      ..addEntries(questions.map((q) => MapEntry(q.id, q)));
+  }
+
+  /// Aggregated Big Five results: per-trait average score (1–5, with
+  /// reverse-scored items flipped) plus a human-readable level
+  /// (Low / Moderate / High). Null when the assessment was skipped. Stored
+  /// alongside the raw responses so the recommendation engine can match on
+  /// traits without re-scoring raw answers or re-reading the question set.
+  Map<String, dynamic>? get bigFiveReport {
+    if (_personalityQuestions.isEmpty || _personalityResponses.isEmpty) {
+      return null;
+    }
+    final perTrait = <String, List<double>>{};
+    _personalityResponses.forEach((questionId, score) {
+      final q = _personalityQuestions[questionId];
+      if (q == null) return;
+      // Reverse-scored items: agreeing means the opposite trait, so flip the
+      // Likert value (6 - score) before averaging.
+      final adjusted = q.reverseScored ? 6 - score : score;
+      perTrait.putIfAbsent(q.trait, () => []).add(adjusted.toDouble());
+    });
+    if (perTrait.isEmpty) return null;
+
+    final report = <String, dynamic>{};
+    perTrait.forEach((trait, scores) {
+      final avg = scores.reduce((a, b) => a + b) / scores.length;
+      report[trait] = {
+        'score': double.parse(avg.toStringAsFixed(2)),
+        'level': _bigFiveLevel(avg),
+      };
+    });
+    return report;
+  }
+
+  // Score bands for the human-readable level. These are neutral magnitude
+  // bands, NOT a judgement of desirability: a "High" neuroticism simply means
+  // the student scored high on that trait, and recommenders should interpret
+  // it per-trait (raw per-trait scores are stored alongside).
+  static const double _lowLevelThreshold = 2.5;
+  static const double _moderateLevelThreshold = 3.5;
+
+  /// Maps an average trait score (1–5) to a Low / Moderate / High band.
+  static String _bigFiveLevel(double avg) {
+    if (avg < _lowLevelThreshold) return 'Low';
+    if (avg < _moderateLevelThreshold) return 'Moderate';
+    return 'High';
   }
 
   bool get step5Valid => _personalityResponses.isNotEmpty;
@@ -318,41 +385,47 @@ class StudentOnboardingModel extends ChangeNotifier {
   bool get step6Valid => true;
 
   /// Converts the model to a Map for Firestore.
+  ///
+  /// Optional fields that the student skipped are omitted entirely (`?value`
+  /// null-aware elements) rather than written as null, because Firestore does
+  /// not accept null field values. Everything the student actually entered is
+  /// persisted verbatim so the recommendation engine has the full picture.
   Map<String, dynamic> toFirestoreMap() {
     return {
       'onboardingComplete': true,
       'onboardingData': {
-        // Step 1
-        'educationLevel': _educationLevel,
-        'desiredDegreeLevel': _desiredDegreeLevel,
+        // Step 1: Identity & Academic Stage
+        'educationLevel': ?_educationLevel,
+        'desiredDegreeLevel': ?_desiredDegreeLevel,
         'fieldsOfInterest': _fieldsOfInterest,
-        'customField': _customField,
-        'startMonth': _startMonth,
-        'startYear': _startYear,
-        'startLabel': _startLabel,
-        // Step 2
-        'homeCountry': _homeCountry,
-        'homeCountryCode': _homeCountryCode,
-        'homeCity': _homeCity,
+        'customField': ?_customField,
+        'startMonth': ?_startMonth,
+        'startYear': ?_startYear,
+        'startLabel': ?_startLabel,
+        // Step 2: Location & Logistics
+        'homeCountry': ?_homeCountry,
+        'homeCountryCode': ?_homeCountryCode,
+        'homeCity': ?_homeCity,
         'preferredDestinations': _preferredDestinations,
-        'preferredLanguage': _preferredLanguage,
-        // Step 3
-        'budgetPerYear': _budgetPerYear,
-        'currency': _currency,
-        'annualIncome': _annualIncome,
-        'annualIncomeLabel': _annualIncomeLabel,
+        'preferredLanguage': ?_preferredLanguage,
+        // Step 3: Financial
+        'budgetPerYear': ?_budgetPerYear,
+        'currency': ?_currency,
+        'annualIncome': ?_annualIncome,
+        'annualIncomeLabel': ?_annualIncomeLabel,
         'seekingScholarship': _seekingScholarship,
-        // Step 4
+        // Step 4: Self-Assessment
         'strengths': _strengths,
         'weaknesses': _weaknesses,
         'interests': _interests,
-        'careerGoals': _careerGoals,
-        // Step 5
+        'careerGoals': ?_careerGoals,
+        // Step 5: Big Five Personality
         'personalityResponses': _personalityResponses,
-        // Step 6
-        'gpa': _gpa,
+        'bigFiveReport': ?bigFiveReport,
+        // Step 6: Optional Extras
+        'gpa': ?_gpa,
         'testScores': _testScores.map((ts) => ts.toMap()).toList(),
-        'accessibilityNeeds': _accessibilityNeeds,
+        'accessibilityNeeds': ?_accessibilityNeeds,
       },
     };
   }

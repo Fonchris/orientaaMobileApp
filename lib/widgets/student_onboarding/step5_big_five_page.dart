@@ -216,6 +216,9 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
           _usingBundled = true;
           _isLoading = false;
         });
+        // Register the catalog (trait + reverse-scored flags) so the model can
+        // compute the aggregated Big Five report when onboarding is submitted.
+        widget.model.setPersonalityQuestions(_bundledQuestions);
         return;
       }
       setState(() {
@@ -223,6 +226,7 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
         _usingBundled = false;
         _isLoading = false;
       });
+      widget.model.setPersonalityQuestions(questions);
     } catch (e) {
       if (!mounted) return;
       // Firestore unreachable (offline, rules, or not configured) — fall back
@@ -233,6 +237,7 @@ class _Step5BigFivePageState extends State<Step5BigFivePage> {
         _usingBundled = true;
         _isLoading = false;
       });
+      widget.model.setPersonalityQuestions(_bundledQuestions);
     }
   }
 
