@@ -1,14 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
-import 'api_config.dart';
 
 class AuthService {
   static const String _pendingEmailKey = 'pending_email_link_sign_in';
@@ -123,38 +117,6 @@ class AuthService {
     final user = _auth.currentUser;
     if (user == null) return null;
     return user.getIdToken();
-  }
-
-  /// Sends the Firebase ID token to the Django backend to authenticate the session.
-  /// Returns the profile data if successful, or null if the backend is unavailable.
-  Future<Map<String, dynamic>?> sendTokenToBackend(String idToken) async {
-    try {
-      final response = await http
-          .get(
-            Uri.parse(ApiConfig.profileUrl),
-            headers: {
-              'Authorization': 'Bearer $idToken',
-              'Content-Type': 'application/json',
-            },
-          )
-          .timeout(const Duration(seconds: 5));
-
-      if (response.statusCode < 200 || response.statusCode >= 300) {
-        debugPrint('Backend rejected token: ${response.body}');
-        return null;
-      }
-
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } on SocketException catch (e) {
-      debugPrint('Backend unavailable (SocketException): $e');
-      return null;
-    } on HttpException catch (e) {
-      debugPrint('Backend unavailable (HttpException): $e');
-      return null;
-    } catch (e) {
-      debugPrint('Backend communication error: $e');
-      return null;
-    }
   }
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();

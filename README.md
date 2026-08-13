@@ -1,6 +1,6 @@
 # Orientaa Mobile App
 
-A production-style Flutter mobile application for African students and counsellors to explore universities, courses and scholarships abroad. Built with **Firebase Authentication**, **Cloud Firestore**, **Firebase Storage** and a Django REST backend.
+A production-style Flutter mobile application for African students and counsellors to explore universities, courses and scholarships abroad. Built with **Firebase Authentication**, **Cloud Firestore**, **Firebase Storage** and **Firebase Cloud Functions**.
 
 ---
 
@@ -82,7 +82,7 @@ Bottom navigation with 4 tabs:
 │  MessagingService ─► Firestore conversations/messages        │
 │  MediaService ──► Firebase Storage (profile_photos,          │
 │                   post_images)                               │
-│  AuthService ──► HTTP → Django backend (optional, /api/...)  │
+│  FunctionsClient ─► Cloud Functions (recommendations)        │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -95,7 +95,7 @@ Bottom navigation with 4 tabs:
 | **Database** | Cloud Firestore (NoSQL) |
 | **Media storage** | Firebase Storage |
 | **Localization** | flutter_localizations + intl (EN/FR/AR/PT) |
-| **Backend API (optional)** | Django + Django REST Framework |
+| **Serverless backend** | Firebase Cloud Functions (recommendations) |
 | **State management** | ChangeNotifier providers + `StreamBuilder`/`FutureBuilder` on Firestore streams |
 | **Fonts** | Bundled Cairo variable font (Arabic) + system font elsewhere |
 
@@ -152,11 +152,8 @@ orientaa_mobile_app/
 │           ├── messages_page.dart       # Inbox
 │           └── chat_page.dart           # 1:1 + classroom chat
 │
-├── backend/                             # Optional Django REST backend
-│   ├── manage.py
-│   ├── requirements.txt
-│   ├── authapp/                         # views, urls, firebase admin auth
-│   └── config/                          # settings, urls, wsgi
+├── scripts/
+│   └── seed_personality_questions.py    # One-time Firestore seeding (firebase-admin)
 │
 ├── assets/
 │   ├── fonts/Cairo-Variable.ttf         # Arabic-capable variable font
@@ -223,17 +220,8 @@ The app requires a Firebase project with **Authentication**, **Cloud Firestore**
 ### Prerequisites
 - Flutter SDK (Dart `^3.11.4`)
 - A Firebase project configured as above
-- (Optional) Python 3.x for the Django backend
 
-### 1. Start the Django backend (optional)
-```bash
-cd backend
-pip install -r requirements.txt
-python manage.py runserver
-```
-The app hits it at `http://10.0.2.2:8000` (Android emulator) / `127.0.0.1:8000` (iOS/desktop). The backend is **optional** — Firebase Auth/Firestore work without it; `ApiConfig` (`lib/widgets/api_config.dart`) points at the local dev URL.
-
-### 2. Run the Flutter app
+### 1. Run the Flutter app
 ```bash
 flutter pub get
 flutter run
@@ -257,15 +245,14 @@ Tests cover onboarding step navigation, the self-assessment split flow, profile 
 - Firebase Auth is the source of truth for identity; Firestore/Storage rules enforce ownership.
 - Follow/unfollow and like counters use **batched writes** so counts stay in sync.
 - Deleting an account requires the user to type their email to confirm; destructive actions always confirm first.
-- No secrets are committed: `google-services.json`, `GoogleService-Info.plist`, service-account keys, `.env`, keystores and backend secrets are gitignored.
+- No secrets are committed: `google-services.json`, `GoogleService-Info.plist`, service-account keys, `.env` and keystores are gitignored.
 
 ---
 
 ## 🚀 Production Checklist
 
-- [ ] Replace the Django `SECRET_KEY` placeholder in `backend/config/settings.py`
-- [ ] Host the backend (Render/Railway/AWS) and update `ApiConfig.baseUrl` to the deployed URL
-- [ ] Deploy Firestore + Storage rules (`firebase deploy`)
+- [ ] Deploy Firestore + Storage rules and Cloud Functions (`firebase deploy`)
 - [ ] Seed `universities`, `classrooms`, `sessions` data
+- [ ] Seed personality questions once (`python scripts/seed_personality_questions.py`)
 - [ ] Add Firestore security rules review + budget alerts
 - [ ] Set up app signing keys (gitignored) for release builds

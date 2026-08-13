@@ -209,17 +209,6 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text(AppLocalizations.of(context).loginSuccessful)),
       );
 
-      // Attempt backend authentication, but don't block login if unavailable
-      final token = await _authService.getIdToken();
-      if (token != null) {
-        final backendResponse = await _authService.sendTokenToBackend(token);
-        if (backendResponse == null) {
-          debugPrint('Backend is not available — proceeding without backend session');
-        } else {
-          debugPrint('Backend response: $backendResponse');
-        }
-      }
-
       // Returning users skip onboarding; only new users see it.
       if (!mounted) return;
       await _goToPostLoginDestination();
@@ -290,17 +279,6 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).googleSignInSuccessful)),
       );
-
-      // Attempt backend authentication, but don't block login if unavailable
-      final token = await _authService.getIdToken();
-      if (token != null) {
-        final backendResponse = await _authService.sendTokenToBackend(token);
-        if (backendResponse == null) {
-          debugPrint('Backend is not available — proceeding without backend session');
-        } else {
-          debugPrint('Backend response: $backendResponse');
-        }
-      }
 
       // Returning users skip onboarding; only new users see it.
       if (!mounted) return;
