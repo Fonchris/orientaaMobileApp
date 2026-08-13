@@ -9,6 +9,153 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get tabSaved => 'Enregistrés';
+
+  @override
+  String get discoverTitle => 'Découvrir';
+
+  @override
+  String get recommendedForYou => 'Recommandé pour vous';
+
+  @override
+  String get refresh => 'Actualiser';
+
+  @override
+  String get offlineShowingCached =>
+      'Vous êtes hors ligne — affichage des derniers résultats enregistrés';
+
+  @override
+  String get completeProfileCtaTitle => 'Complétez votre profil';
+
+  @override
+  String get completeProfileCtaMessage =>
+      'Complétez votre profil pour recevoir des recommandations personnalisées';
+
+  @override
+  String get completeProfileButton => 'Compléter le profil';
+
+  @override
+  String get couldNotLoadRecommendations =>
+      'Impossible de charger les recommandations';
+
+  @override
+  String get upgradeToSeeAllRecommendations =>
+      'Passez à l\'offre supérieure pour voir toutes les recommandations';
+
+  @override
+  String get filterCountry => 'Pays / Région';
+
+  @override
+  String get filterDegreeLevel => 'Niveau du diplôme';
+
+  @override
+  String get filterFeeRange => 'Frais annuels';
+
+  @override
+  String get filterFieldOfStudy => 'Domaine d\'études';
+
+  @override
+  String get filterLanguage => 'Langue d\'enseignement';
+
+  @override
+  String get fieldsShort => 'domaines';
+
+  @override
+  String get clearFilters => 'Effacer les filtres';
+
+  @override
+  String get compare => 'Comparer';
+
+  @override
+  String compareSelectedCount(int count) {
+    return '$count sélectionné(s)';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'Essayez d\'ajuster vos filtres';
+
+  @override
+  String get upgradeToSeeAllMatches =>
+      'Passez à l\'offre supérieure pour voir toutes les correspondances';
+
+  @override
+  String get applyFilters => 'Appliquer les filtres';
+
+  @override
+  String get currencyLabel => 'Devise';
+
+  @override
+  String get savedTitle => 'Enregistrés';
+
+  @override
+  String get newFolder => 'Nouveau dossier';
+
+  @override
+  String get savedEmptyTitle => 'Aucune université enregistrée';
+
+  @override
+  String get savedEmptyMessage =>
+      'Appuyez sur le signet d\'une université pour créer votre liste.';
+
+  @override
+  String get exploreUniversities => 'Explorer les universités';
+
+  @override
+  String get folderEmptyTitle => 'Aucun élément dans ce dossier';
+
+  @override
+  String get aboutThisUniversity => 'À propos de cette université';
+
+  @override
+  String get programsTitle => 'Programmes';
+
+  @override
+  String get locationSection => 'Localisation';
+
+  @override
+  String get mapNotAvailable => 'Aperçu de la carte indisponible';
+
+  @override
+  String get studentsAlsoViewed =>
+      'Les étudiants comme vous ont aussi consulté';
+
+  @override
+  String get lockedAlsoViewedMessage =>
+      'Passez à Pro ou Premium pour découvrir ce que des étudiants comme vous ont consulté.';
+
+  @override
+  String get bookCounselorSession =>
+      'Réserver une séance avec un conseiller sur cette université';
+
+  @override
+  String get counselorBookingTitle => 'Réservation de conseiller';
+
+  @override
+  String get counselorBookingMessage =>
+      'La réservation fait partie d\'un module séparé à venir.';
+
+  @override
+  String get gotIt => 'Compris';
+
+  @override
+  String get compareStubMessage =>
+      'La comparaison côte à côte arrive bientôt. Voici vos programmes sélectionnés.';
+
+  @override
+  String get sortRelevance => 'Pertinence';
+
+  @override
+  String get sortFeeAsc => 'Frais : croissants';
+
+  @override
+  String get sortAlphabetical => 'Université A–Z';
+
+  @override
+  String couldNotUpdateSaved(String error) {
+    return 'Impossible de mettre à jour les universités enregistrées : $error';
+  }
+
+  @override
   String get cancel => 'Annuler';
 
   @override

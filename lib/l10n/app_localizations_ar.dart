@@ -9,6 +9,146 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get tabSaved => 'المحفوظات';
+
+  @override
+  String get discoverTitle => 'اكتشف';
+
+  @override
+  String get recommendedForYou => 'موصى به لك';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get offlineShowingCached => 'أنت غير متصل — عرض آخر النتائج المحفوظة';
+
+  @override
+  String get completeProfileCtaTitle => 'أكمل ملفك الشخصي';
+
+  @override
+  String get completeProfileCtaMessage =>
+      'أكمل ملفك الشخصي للحصول على توصيات مخصصة';
+
+  @override
+  String get completeProfileButton => 'إكمال الملف';
+
+  @override
+  String get couldNotLoadRecommendations => 'تعذّر تحميل التوصيات';
+
+  @override
+  String get upgradeToSeeAllRecommendations => 'قم بالترقية لعرض جميع التوصيات';
+
+  @override
+  String get filterCountry => 'الدولة / المنطقة';
+
+  @override
+  String get filterDegreeLevel => 'مستوى الدرجة';
+
+  @override
+  String get filterFeeRange => 'نطاق الرسوم السنوية';
+
+  @override
+  String get filterFieldOfStudy => 'مجال الدراسة';
+
+  @override
+  String get filterLanguage => 'لغة التدريس';
+
+  @override
+  String get fieldsShort => 'مجالات';
+
+  @override
+  String get clearFilters => 'مسح الفلاتر';
+
+  @override
+  String get compare => 'مقارنة';
+
+  @override
+  String compareSelectedCount(int count) {
+    return '$count محدد';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'جرّب تعديل الفلاتر';
+
+  @override
+  String get upgradeToSeeAllMatches => 'قم بالترقية لعرض جميع النتائج';
+
+  @override
+  String get applyFilters => 'تطبيق الفلاتر';
+
+  @override
+  String get currencyLabel => 'العملة';
+
+  @override
+  String get savedTitle => 'المحفوظات';
+
+  @override
+  String get newFolder => 'مجلد جديد';
+
+  @override
+  String get savedEmptyTitle => 'لا توجد جامعات محفوظة بعد';
+
+  @override
+  String get savedEmptyMessage =>
+      'اضغط على العلامة في أي جامعة لبناء قائمتك المختصرة.';
+
+  @override
+  String get exploreUniversities => 'استكشف الجامعات';
+
+  @override
+  String get folderEmptyTitle => 'لا توجد عناصر في هذا المجلد';
+
+  @override
+  String get aboutThisUniversity => 'حول هذه الجامعة';
+
+  @override
+  String get programsTitle => 'البرامج';
+
+  @override
+  String get locationSection => 'الموقع';
+
+  @override
+  String get mapNotAvailable => 'معاينة الخريطة غير متاحة';
+
+  @override
+  String get studentsAlsoViewed => 'جامعات شاهدها طلاب مثلك أيضاً';
+
+  @override
+  String get lockedAlsoViewedMessage =>
+      'قم بالترقية إلى Pro أو Premium للاطلاع على ما شاهده طلاب مثلك.';
+
+  @override
+  String get bookCounselorSession => 'احجز جلسة مع مستشار حول هذه الجامعة';
+
+  @override
+  String get counselorBookingTitle => 'حجز جلسة مع مستشار';
+
+  @override
+  String get counselorBookingMessage => 'الحجز جزء من وحدة منفصلة قريباً.';
+
+  @override
+  String get gotIt => 'حسناً';
+
+  @override
+  String get compareStubMessage =>
+      'المقارنة جنباً إلى جنب قادمة قريباً. هذه برامجك المحددة.';
+
+  @override
+  String get sortRelevance => 'الصلة';
+
+  @override
+  String get sortFeeAsc => 'الرسوم: من الأقل إلى الأعلى';
+
+  @override
+  String get sortAlphabetical => 'الجامعة أ–ي';
+
+  @override
+  String couldNotUpdateSaved(String error) {
+    return 'تعذّر تحديث الجامعات المحفوظة: $error';
+  }
+
+  @override
   String get cancel => 'إلغاء';
 
   @override

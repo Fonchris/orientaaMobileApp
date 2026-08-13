@@ -1,6 +1,61 @@
 {
   "@@locale": "ar",
 
+  "tabSaved": "المحفوظات",
+  "discoverTitle": "اكتشف",
+  "recommendedForYou": "موصى به لك",
+  "refresh": "تحديث",
+  "offlineShowingCached": "أنت غير متصل — عرض آخر النتائج المحفوظة",
+  "completeProfileCtaTitle": "أكمل ملفك الشخصي",
+  "completeProfileCtaMessage": "أكمل ملفك الشخصي للحصول على توصيات مخصصة",
+  "completeProfileButton": "إكمال الملف",
+  "couldNotLoadRecommendations": "تعذّر تحميل التوصيات",
+  "upgradeToSeeAllRecommendations": "قم بالترقية لعرض جميع التوصيات",
+  "filterCountry": "الدولة / المنطقة",
+  "filterDegreeLevel": "مستوى الدرجة",
+  "filterFeeRange": "نطاق الرسوم السنوية",
+  "filterFieldOfStudy": "مجال الدراسة",
+  "filterLanguage": "لغة التدريس",
+  "fieldsShort": "مجالات",
+  "clearFilters": "مسح الفلاتر",
+  "compare": "مقارنة",
+  "compareSelectedCount": "{count} محدد",
+  "@compareSelectedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tryAdjustingFilters": "جرّب تعديل الفلاتر",
+  "upgradeToSeeAllMatches": "قم بالترقية لعرض جميع النتائج",
+  "applyFilters": "تطبيق الفلاتر",
+  "currencyLabel": "العملة",
+  "savedTitle": "المحفوظات",
+  "newFolder": "مجلد جديد",
+  "savedEmptyTitle": "لا توجد جامعات محفوظة بعد",
+  "savedEmptyMessage": "اضغط على العلامة في أي جامعة لبناء قائمتك المختصرة.",
+  "exploreUniversities": "استكشف الجامعات",
+  "folderEmptyTitle": "لا توجد عناصر في هذا المجلد",
+  "aboutThisUniversity": "حول هذه الجامعة",
+  "programsTitle": "البرامج",
+  "locationSection": "الموقع",
+  "mapNotAvailable": "معاينة الخريطة غير متاحة",
+  "studentsAlsoViewed": "جامعات شاهدها طلاب مثلك أيضاً",
+  "lockedAlsoViewedMessage": "قم بالترقية إلى Pro أو Premium للاطلاع على ما شاهده طلاب مثلك.",
+  "bookCounselorSession": "احجز جلسة مع مستشار حول هذه الجامعة",
+  "counselorBookingTitle": "حجز جلسة مع مستشار",
+  "counselorBookingMessage": "الحجز جزء من وحدة منفصلة قريباً.",
+  "gotIt": "حسناً",
+  "compareStubMessage": "المقارنة جنباً إلى جنب قادمة قريباً. هذه برامجك المحددة.",
+  "sortRelevance": "الصلة",
+  "sortFeeAsc": "الرسوم: من الأقل إلى الأعلى",
+  "sortAlphabetical": "الجامعة أ–ي",
+  "couldNotUpdateSaved": "تعذّر تحديث الجامعات المحفوظة: {error}",
+  "@couldNotUpdateSaved": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
   "cancel": "إلغاء",
   "save": "حفظ",
   "delete": "حذف",

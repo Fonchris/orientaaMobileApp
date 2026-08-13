@@ -9,6 +9,150 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get tabSaved => 'Saved';
+
+  @override
+  String get discoverTitle => 'Discover';
+
+  @override
+  String get recommendedForYou => 'Recommended for you';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get offlineShowingCached =>
+      'You\'re offline — showing your last saved matches';
+
+  @override
+  String get completeProfileCtaTitle => 'Complete your profile';
+
+  @override
+  String get completeProfileCtaMessage =>
+      'Complete your profile to get personalized recommendations';
+
+  @override
+  String get completeProfileButton => 'Complete profile';
+
+  @override
+  String get couldNotLoadRecommendations => 'Couldn\'t load recommendations';
+
+  @override
+  String get upgradeToSeeAllRecommendations =>
+      'Upgrade to see all recommendations';
+
+  @override
+  String get filterCountry => 'Country / Region';
+
+  @override
+  String get filterDegreeLevel => 'Degree level';
+
+  @override
+  String get filterFeeRange => 'Annual fee range';
+
+  @override
+  String get filterFieldOfStudy => 'Field of study';
+
+  @override
+  String get filterLanguage => 'Language of instruction';
+
+  @override
+  String get fieldsShort => 'fields';
+
+  @override
+  String get clearFilters => 'Clear filters';
+
+  @override
+  String get compare => 'Compare';
+
+  @override
+  String compareSelectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get tryAdjustingFilters => 'Try adjusting your filters';
+
+  @override
+  String get upgradeToSeeAllMatches => 'Upgrade to see all matches';
+
+  @override
+  String get applyFilters => 'Apply filters';
+
+  @override
+  String get currencyLabel => 'Currency';
+
+  @override
+  String get savedTitle => 'Saved';
+
+  @override
+  String get newFolder => 'New folder';
+
+  @override
+  String get savedEmptyTitle => 'No saved universities yet';
+
+  @override
+  String get savedEmptyMessage =>
+      'Tap the bookmark on any university to build your shortlist.';
+
+  @override
+  String get exploreUniversities => 'Explore universities';
+
+  @override
+  String get folderEmptyTitle => 'No items in this folder';
+
+  @override
+  String get aboutThisUniversity => 'About this university';
+
+  @override
+  String get programsTitle => 'Programs';
+
+  @override
+  String get locationSection => 'Location';
+
+  @override
+  String get mapNotAvailable => 'Map preview not available';
+
+  @override
+  String get studentsAlsoViewed => 'Students like you also viewed';
+
+  @override
+  String get lockedAlsoViewedMessage =>
+      'Upgrade to Pro or Premium to unlock peer insights.';
+
+  @override
+  String get bookCounselorSession =>
+      'Book a counselor session about this university';
+
+  @override
+  String get counselorBookingTitle => 'Counselor booking';
+
+  @override
+  String get counselorBookingMessage =>
+      'Booking is part of a separate module coming soon.';
+
+  @override
+  String get gotIt => 'Got it';
+
+  @override
+  String get compareStubMessage =>
+      'Full side-by-side comparison is coming soon. Here are your selected programs.';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortFeeAsc => 'Fee: low to high';
+
+  @override
+  String get sortAlphabetical => 'University A–Z';
+
+  @override
+  String couldNotUpdateSaved(String error) {
+    return 'Could not update saved universities: $error';
+  }
+
+  @override
   String get cancel => 'Cancel';
 
   @override

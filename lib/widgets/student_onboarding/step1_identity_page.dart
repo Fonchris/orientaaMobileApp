@@ -17,6 +17,45 @@ class Step1IdentityPage extends StatefulWidget {
     this.onBack,
   });
 
+  /// Shared education-level options. Public so the discovery module's
+  /// filters reuse the same catalog as onboarding.
+  static const List<String> educationLevels = [
+    'Secondary school student',
+    'Secondary school graduate',
+    "Bachelor's in progress",
+    "Bachelor's graduate",
+    "Master's in progress",
+    "Master's graduate",
+    'Dropout',
+    'Other',
+  ];
+
+  /// Shared degree-level options (also used by the discovery filters).
+  static const List<String> degreeLevels = [
+    "Bachelor's",
+    "Master's",
+    'PhD',
+    'Diploma / Vocational',
+  ];
+
+  /// Shared fields-of-interest options (also used by the discovery filters).
+  static const List<String> fieldsOfInterest = [
+    'Arts & Design',
+    'Biology',
+    'Business',
+    'Chemistry',
+    'Computer Science',
+    'Economics',
+    'Engineering',
+    'Environmental Science',
+    'Liberal Arts & Social Sciences',
+    'Mathematics',
+    'Medicine',
+    'Physics',
+    'Psychology',
+    'Other',
+  ];
+
   @override
   State<Step1IdentityPage> createState() => _Step1IdentityPageState();
 }
@@ -51,41 +90,6 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
   static const _brandYellow = Color(0xFFFFC700);
   static const _brandAmber = Color(0xFFF5B800);
   static const _brandInk = Color(0xFF141414);
-
-  static const List<String> educationLevels = [
-    'Secondary school student',
-    'Secondary school graduate',
-    "Bachelor's in progress",
-    "Bachelor's graduate",
-    "Master's in progress",
-    "Master's graduate",
-    'Dropout',
-    'Other',
-  ];
-
-  static const List<String> degreeLevels = [
-    "Bachelor's",
-    "Master's",
-    'PhD',
-    'Diploma / Vocational',
-  ];
-
-  static const List<String> fieldsOfInterest = [
-    'Arts & Design',
-    'Biology',
-    'Business',
-    'Chemistry',
-    'Computer Science',
-    'Economics',
-    'Engineering',
-    'Environmental Science',
-    'Liberal Arts & Social Sciences',
-    'Mathematics',
-    'Medicine',
-    'Physics',
-    'Psychology',
-    'Other',
-  ];
 
   static const String _otherField = 'Other';
 
@@ -250,7 +254,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
           child: _buildDropdown<String>(
             context,
             value: model.educationLevel,
-            items: educationLevels,
+            items: Step1IdentityPage.educationLevels,
             hint: 'Select your current level',
             onChanged: (v) => model.educationLevel = v,
             isDark: isDark,
@@ -264,7 +268,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
           child: _buildDropdown<String>(
             context,
             value: model.desiredDegreeLevel,
-            items: degreeLevels,
+            items: Step1IdentityPage.degreeLevels,
             hint: 'Select desired degree',
             onChanged: (v) => model.desiredDegreeLevel = v,
             isDark: isDark,
@@ -277,7 +281,7 @@ class _Step1IdentityPageState extends State<Step1IdentityPage> {
           isDark: isDark,
           child: _buildMultiSelectChips(
             context,
-            options: fieldsOfInterest,
+            options: Step1IdentityPage.fieldsOfInterest,
             selected: model.fieldsOfInterest,
             onToggle: (v) => model.toggleFieldOfInterest(v),
             isDark: isDark,

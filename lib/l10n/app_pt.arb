@@ -1,6 +1,61 @@
 {
   "@@locale": "pt",
 
+  "tabSaved": "Guardados",
+  "discoverTitle": "Descobrir",
+  "recommendedForYou": "Recomendado para si",
+  "refresh": "Atualizar",
+  "offlineShowingCached": "Está offline — a mostrar os últimos resultados guardados",
+  "completeProfileCtaTitle": "Complete o seu perfil",
+  "completeProfileCtaMessage": "Complete o seu perfil para receber recomendações personalizadas",
+  "completeProfileButton": "Completar perfil",
+  "couldNotLoadRecommendations": "Não foi possível carregar as recomendações",
+  "upgradeToSeeAllRecommendations": "Faça upgrade para ver todas as recomendações",
+  "filterCountry": "País / Região",
+  "filterDegreeLevel": "Nível do grau",
+  "filterFeeRange": "Faixa de propinas anuais",
+  "filterFieldOfStudy": "Área de estudo",
+  "filterLanguage": "Idioma de ensino",
+  "fieldsShort": "áreas",
+  "clearFilters": "Limpar filtros",
+  "compare": "Comparar",
+  "compareSelectedCount": "{count} selecionado(s)",
+  "@compareSelectedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tryAdjustingFilters": "Tente ajustar os filtros",
+  "upgradeToSeeAllMatches": "Faça upgrade para ver todas as correspondências",
+  "applyFilters": "Aplicar filtros",
+  "currencyLabel": "Moeda",
+  "savedTitle": "Guardados",
+  "newFolder": "Nova pasta",
+  "savedEmptyTitle": "Ainda não guardou universidades",
+  "savedEmptyMessage": "Toque no marcador de qualquer universidade para criar a sua lista.",
+  "exploreUniversities": "Explorar universidades",
+  "folderEmptyTitle": "Sem itens nesta pasta",
+  "aboutThisUniversity": "Sobre esta universidade",
+  "programsTitle": "Programas",
+  "locationSection": "Localização",
+  "mapNotAvailable": "Pré-visualização do mapa indisponível",
+  "studentsAlsoViewed": "Estudantes como você também viram",
+  "lockedAlsoViewedMessage": "Faça upgrade para Pro ou Premium para ver o que estudantes como você consultaram.",
+  "bookCounselorSession": "Marcar sessão com um conselheiro sobre esta universidade",
+  "counselorBookingTitle": "Marcação de conselheiro",
+  "counselorBookingMessage": "A marcação faz parte de um módulo separado que chega em breve.",
+  "gotIt": "Entendi",
+  "compareStubMessage": "A comparação lado a lado chega em breve. Estes são os seus programas selecionados.",
+  "sortRelevance": "Relevância",
+  "sortFeeAsc": "Propinas: mais baixas primeiro",
+  "sortAlphabetical": "Universidade A–Z",
+  "couldNotUpdateSaved": "Não foi possível atualizar as universidades guardadas: {error}",
+  "@couldNotUpdateSaved": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
   "cancel": "Cancelar",
   "save": "Guardar",
   "delete": "Eliminar",

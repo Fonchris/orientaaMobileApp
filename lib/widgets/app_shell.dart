@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
+import 'discovery/screens/saved_universities_page.dart';
+import 'discovery/screens/university_list_page.dart';
 import 'home_dashboard.dart';
 import 'profile/messaging_service.dart';
 import 'profile/messages_page.dart';
@@ -12,9 +14,9 @@ import 'profile/profile_page.dart';
 import 'search_page.dart';
 
 /// Post-login app shell with bottom navigation:
-/// Home (dashboard), Search, Messages and Profile.
+/// Home (dashboard), Search, Saved, Messages and Profile.
 ///
-/// The four tabs stay alive in an [IndexedStack] so streams (messages,
+/// The tabs stay alive in an [IndexedStack] so streams (messages,
 /// notifications, profile) keep updating in the background and switching tabs
 /// is instant. The Messages tab shows a live unread badge.
 class AppShell extends StatefulWidget {
@@ -57,9 +59,15 @@ class _AppShellState extends State<AppShell> {
           children: [
             HomeDashboard(
               onOpenSearch: () => _goTo(1),
-              onOpenProfile: () => _goTo(3),
+              onOpenDiscover: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const UniversityListPage(),
+                ),
+              ),
+              onOpenProfile: () => _goTo(4),
             ),
             const SearchPage(),
+            const SavedUniversitiesPage(),
             const MessagesPage(),
             const ProfilePage(),
           ],
@@ -109,6 +117,21 @@ class _AppShellState extends State<AppShell> {
               },
             ),
             label: l10n.tabMessages,
+          ),
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.bookmark,
+              size: 17,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.6)
+                  : AppTheme.brandInk.withValues(alpha: 0.65),
+            ),
+            selectedIcon: FaIcon(
+              FontAwesomeIcons.solidBookmark,
+              size: 17,
+              color: scheme.primary,
+            ),
+            label: l10n.tabSaved,
           ),
           NavigationDestination(
             icon: const FaIcon(FontAwesomeIcons.circleUser, size: 18),

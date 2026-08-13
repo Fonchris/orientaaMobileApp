@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
+import 'discovery/screens/recommendations_section.dart';
 import 'google_fonts.dart';
+import 'profile/edit_profile_page.dart';
 import 'profile/profile_avatar.dart';
 import 'profile/profile_models.dart';
 import 'profile/profile_service.dart';
@@ -19,11 +21,13 @@ import 'student_onboarding/step_ui.dart';
 /// empty state — nothing fake is rendered when collections are empty.
 class HomeDashboard extends StatefulWidget {
   final VoidCallback onOpenSearch;
+  final VoidCallback onOpenDiscover;
   final VoidCallback onOpenProfile;
 
   const HomeDashboard({
     super.key,
     required this.onOpenSearch,
+    required this.onOpenDiscover,
     required this.onOpenProfile,
   });
 
@@ -33,6 +37,8 @@ class HomeDashboard extends StatefulWidget {
 
 class _HomeDashboardState extends State<HomeDashboard> {
   final ProfileService _service = ProfileService();
+  final GlobalKey<RecommendationsSectionState> _recommendationsKey =
+      GlobalKey<RecommendationsSectionState>();
   String _role = 'student';
   String _displayName = '';
   String _email = '';
@@ -91,7 +97,10 @@ class _HomeDashboardState extends State<HomeDashboard> {
             _header(context),
             Expanded(
               child: RefreshIndicator(
-                onRefresh: () async => setState(() {}),
+                onRefresh: () async {
+                  setState(() {});
+                  await _recommendationsKey.currentState?.refresh();
+                },
                 child: ListView(
                   physics: const AlwaysScrollableScrollPhysics(
                     parent: BouncingScrollPhysics(),
@@ -103,7 +112,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       const SizedBox(height: 14),
                       _sessionsSection(context, uid),
                     ] else ...[
-                      _universitiesSection(context),
+                      _recommendationsSection(context),
                       const SizedBox(height: 14),
                       _sessionsSection(context, uid),
                       const SizedBox(height: 14),
@@ -394,118 +403,16 @@ class _HomeDashboardState extends State<HomeDashboard> {
     );
   }
 
-  Widget _universitiesSection(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _sectionHeader(
-          context,
-          title: l10n.recommendedUniversities,
-          actionLabel: l10n.seeAll,
-          onAction: widget.onOpenSearch,
+  /// Recommendations rail backed by the `getRecommendedUniversities` Cloud
+  /// Function (see [RecommendationsSection]).
+  Widget _recommendationsSection(BuildContext context) {
+    return RecommendationsSection(
+      key: _recommendationsKey,
+      onOpenDiscover: widget.onOpenDiscover,
+      onCompleteProfile: () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => const EditProfilePage(),
         ),
-        const SizedBox(height: 10),
-        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: FirebaseFirestore.instance
-              .collection('universities')
-              .limit(4)
-              .snapshots(),
-          builder: (context, snapshot) {
-            final docs = snapshot.data?.docs ?? const <QueryDocumentSnapshot<Map<String, dynamic>>>[];
-            if (docs.isEmpty) {
-              return _emptyCard(
-                context,
-                icon: FontAwesomeIcons.school,
-                title: l10n.noRecommendationsTitle,
-                message: l10n.noRecommendationsMessage,
-              );
-            }
-            return Column(
-              children: docs
-                  .map((d) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _universityCard(context, d.id, d.data()),
-                      ))
-                  .toList(),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _universityCard(
-    BuildContext context,
-    String id,
-    Map<String, dynamic> data,
-  ) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final name = data['name'] as String? ?? id;
-    final country = data['country'] as String?;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: isDark ? AppTheme.brandSurface : Colors.white,
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.06)
-              : AppTheme.brandLightOutline,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: AppTheme.brandYellow,
-            ),
-            child: const Center(
-              child: FaIcon(
-                FontAwesomeIcons.school,
-                size: 17,
-                color: AppTheme.brandInk,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 14.5,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : AppTheme.brandInk,
-                  ),
-                ),
-                if (country != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    country,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.5)
-                          : AppTheme.brandInk.withValues(alpha: 0.5),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-          const FaIcon(
-            FontAwesomeIcons.chevronRight,
-            size: 13,
-            color: AppTheme.brandGold,
-          ),
-        ],
       ),
     );
   }

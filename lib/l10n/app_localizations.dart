@@ -102,6 +102,270 @@ abstract class AppLocalizations {
     Locale('pt'),
   ];
 
+  /// No description provided for @tabSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get tabSaved;
+
+  /// No description provided for @discoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get discoverTitle;
+
+  /// No description provided for @recommendedForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get recommendedForYou;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @offlineShowingCached.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re offline — showing your last saved matches'**
+  String get offlineShowingCached;
+
+  /// No description provided for @completeProfileCtaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your profile'**
+  String get completeProfileCtaTitle;
+
+  /// No description provided for @completeProfileCtaMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your profile to get personalized recommendations'**
+  String get completeProfileCtaMessage;
+
+  /// No description provided for @completeProfileButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete profile'**
+  String get completeProfileButton;
+
+  /// No description provided for @couldNotLoadRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load recommendations'**
+  String get couldNotLoadRecommendations;
+
+  /// No description provided for @upgradeToSeeAllRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to see all recommendations'**
+  String get upgradeToSeeAllRecommendations;
+
+  /// No description provided for @filterCountry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country / Region'**
+  String get filterCountry;
+
+  /// No description provided for @filterDegreeLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Degree level'**
+  String get filterDegreeLevel;
+
+  /// No description provided for @filterFeeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Annual fee range'**
+  String get filterFeeRange;
+
+  /// No description provided for @filterFieldOfStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Field of study'**
+  String get filterFieldOfStudy;
+
+  /// No description provided for @filterLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language of instruction'**
+  String get filterLanguage;
+
+  /// No description provided for @fieldsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'fields'**
+  String get fieldsShort;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// No description provided for @compare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get compare;
+
+  /// No description provided for @compareSelectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected'**
+  String compareSelectedCount(int count);
+
+  /// No description provided for @tryAdjustingFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters'**
+  String get tryAdjustingFilters;
+
+  /// No description provided for @upgradeToSeeAllMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to see all matches'**
+  String get upgradeToSeeAllMatches;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply filters'**
+  String get applyFilters;
+
+  /// No description provided for @currencyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currencyLabel;
+
+  /// No description provided for @savedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get savedTitle;
+
+  /// No description provided for @newFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'New folder'**
+  String get newFolder;
+
+  /// No description provided for @savedEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved universities yet'**
+  String get savedEmptyTitle;
+
+  /// No description provided for @savedEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the bookmark on any university to build your shortlist.'**
+  String get savedEmptyMessage;
+
+  /// No description provided for @exploreUniversities.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore universities'**
+  String get exploreUniversities;
+
+  /// No description provided for @folderEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No items in this folder'**
+  String get folderEmptyTitle;
+
+  /// No description provided for @aboutThisUniversity.
+  ///
+  /// In en, this message translates to:
+  /// **'About this university'**
+  String get aboutThisUniversity;
+
+  /// No description provided for @programsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Programs'**
+  String get programsTitle;
+
+  /// No description provided for @locationSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get locationSection;
+
+  /// No description provided for @mapNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Map preview not available'**
+  String get mapNotAvailable;
+
+  /// No description provided for @studentsAlsoViewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Students like you also viewed'**
+  String get studentsAlsoViewed;
+
+  /// No description provided for @lockedAlsoViewedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Pro or Premium to unlock peer insights.'**
+  String get lockedAlsoViewedMessage;
+
+  /// No description provided for @bookCounselorSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a counselor session about this university'**
+  String get bookCounselorSession;
+
+  /// No description provided for @counselorBookingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselor booking'**
+  String get counselorBookingTitle;
+
+  /// No description provided for @counselorBookingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking is part of a separate module coming soon.'**
+  String get counselorBookingMessage;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotIt;
+
+  /// No description provided for @compareStubMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Full side-by-side comparison is coming soon. Here are your selected programs.'**
+  String get compareStubMessage;
+
+  /// No description provided for @sortRelevance.
+  ///
+  /// In en, this message translates to:
+  /// **'Relevance'**
+  String get sortRelevance;
+
+  /// No description provided for @sortFeeAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Fee: low to high'**
+  String get sortFeeAsc;
+
+  /// No description provided for @sortAlphabetical.
+  ///
+  /// In en, this message translates to:
+  /// **'University A–Z'**
+  String get sortAlphabetical;
+
+  /// No description provided for @couldNotUpdateSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not update saved universities: {error}'**
+  String couldNotUpdateSaved(String error);
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:

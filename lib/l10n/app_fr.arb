@@ -1,6 +1,61 @@
 {
   "@@locale": "fr",
 
+  "tabSaved": "Enregistrés",
+  "discoverTitle": "Découvrir",
+  "recommendedForYou": "Recommandé pour vous",
+  "refresh": "Actualiser",
+  "offlineShowingCached": "Vous êtes hors ligne — affichage des derniers résultats enregistrés",
+  "completeProfileCtaTitle": "Complétez votre profil",
+  "completeProfileCtaMessage": "Complétez votre profil pour recevoir des recommandations personnalisées",
+  "completeProfileButton": "Compléter le profil",
+  "couldNotLoadRecommendations": "Impossible de charger les recommandations",
+  "upgradeToSeeAllRecommendations": "Passez à l'offre supérieure pour voir toutes les recommandations",
+  "filterCountry": "Pays / Région",
+  "filterDegreeLevel": "Niveau du diplôme",
+  "filterFeeRange": "Frais annuels",
+  "filterFieldOfStudy": "Domaine d'études",
+  "filterLanguage": "Langue d'enseignement",
+  "fieldsShort": "domaines",
+  "clearFilters": "Effacer les filtres",
+  "compare": "Comparer",
+  "compareSelectedCount": "{count} sélectionné(s)",
+  "@compareSelectedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
+  "upgradeToSeeAllMatches": "Passez à l'offre supérieure pour voir toutes les correspondances",
+  "applyFilters": "Appliquer les filtres",
+  "currencyLabel": "Devise",
+  "savedTitle": "Enregistrés",
+  "newFolder": "Nouveau dossier",
+  "savedEmptyTitle": "Aucune université enregistrée",
+  "savedEmptyMessage": "Appuyez sur le signet d'une université pour créer votre liste.",
+  "exploreUniversities": "Explorer les universités",
+  "folderEmptyTitle": "Aucun élément dans ce dossier",
+  "aboutThisUniversity": "À propos de cette université",
+  "programsTitle": "Programmes",
+  "locationSection": "Localisation",
+  "mapNotAvailable": "Aperçu de la carte indisponible",
+  "studentsAlsoViewed": "Les étudiants comme vous ont aussi consulté",
+  "lockedAlsoViewedMessage": "Passez à Pro ou Premium pour découvrir ce que des étudiants comme vous ont consulté.",
+  "bookCounselorSession": "Réserver une séance avec un conseiller sur cette université",
+  "counselorBookingTitle": "Réservation de conseiller",
+  "counselorBookingMessage": "La réservation fait partie d'un module séparé à venir.",
+  "gotIt": "Compris",
+  "compareStubMessage": "La comparaison côte à côte arrive bientôt. Voici vos programmes sélectionnés.",
+  "sortRelevance": "Pertinence",
+  "sortFeeAsc": "Frais : croissants",
+  "sortAlphabetical": "Université A–Z",
+  "couldNotUpdateSaved": "Impossible de mettre à jour les universités enregistrées : {error}",
+  "@couldNotUpdateSaved": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
   "cancel": "Annuler",
   "save": "Enregistrer",
   "delete": "Supprimer",

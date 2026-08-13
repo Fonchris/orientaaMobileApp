@@ -1,6 +1,61 @@
 {
   "@@locale": "en",
 
+  "tabSaved": "Saved",
+  "discoverTitle": "Discover",
+  "recommendedForYou": "Recommended for you",
+  "refresh": "Refresh",
+  "offlineShowingCached": "You're offline — showing your last saved matches",
+  "completeProfileCtaTitle": "Complete your profile",
+  "completeProfileCtaMessage": "Complete your profile to get personalized recommendations",
+  "completeProfileButton": "Complete profile",
+  "couldNotLoadRecommendations": "Couldn't load recommendations",
+  "upgradeToSeeAllRecommendations": "Upgrade to see all recommendations",
+  "filterCountry": "Country / Region",
+  "filterDegreeLevel": "Degree level",
+  "filterFeeRange": "Annual fee range",
+  "filterFieldOfStudy": "Field of study",
+  "filterLanguage": "Language of instruction",
+  "fieldsShort": "fields",
+  "clearFilters": "Clear filters",
+  "compare": "Compare",
+  "compareSelectedCount": "{count} selected",
+  "@compareSelectedCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tryAdjustingFilters": "Try adjusting your filters",
+  "upgradeToSeeAllMatches": "Upgrade to see all matches",
+  "applyFilters": "Apply filters",
+  "currencyLabel": "Currency",
+  "savedTitle": "Saved",
+  "newFolder": "New folder",
+  "savedEmptyTitle": "No saved universities yet",
+  "savedEmptyMessage": "Tap the bookmark on any university to build your shortlist.",
+  "exploreUniversities": "Explore universities",
+  "folderEmptyTitle": "No items in this folder",
+  "aboutThisUniversity": "About this university",
+  "programsTitle": "Programs",
+  "locationSection": "Location",
+  "mapNotAvailable": "Map preview not available",
+  "studentsAlsoViewed": "Students like you also viewed",
+  "lockedAlsoViewedMessage": "Upgrade to Pro or Premium to unlock peer insights.",
+  "bookCounselorSession": "Book a counselor session about this university",
+  "counselorBookingTitle": "Counselor booking",
+  "counselorBookingMessage": "Booking is part of a separate module coming soon.",
+  "gotIt": "Got it",
+  "compareStubMessage": "Full side-by-side comparison is coming soon. Here are your selected programs.",
+  "sortRelevance": "Relevance",
+  "sortFeeAsc": "Fee: low to high",
+  "sortAlphabetical": "University A–Z",
+  "couldNotUpdateSaved": "Could not update saved universities: {error}",
+  "@couldNotUpdateSaved": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+
   "cancel": "Cancel",
   "save": "Save",
   "delete": "Delete",

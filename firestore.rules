@@ -89,6 +89,33 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow write: if false;
     }
+
+    // ── Saved universities (owner-only) ──────────────────────────────────
+    // Each user owns their saved items and folders under
+    // `saved_universities/{uid}`. Saving is available to all tiers and
+    // unlimited — these rules do not gate by subscription tier.
+    match /saved_universities/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      match /items/{programId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+
+      match /folders/{folderId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    // ── User interaction events (owner-only, for the recommendation engine)
+    match /user_interactions/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if request.auth != null && request.auth.uid == uid;
+
+      match /events/{eventId} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
     match /classrooms/{docId} {
       allow read: if request.auth != null;
       allow write: if false;
