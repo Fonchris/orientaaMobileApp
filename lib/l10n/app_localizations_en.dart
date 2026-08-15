@@ -1097,4 +1097,444 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetEmailSent => 'Password reset email sent. Check your inbox.';
+
+  @override
+  String get tabCounselors => 'Counselors';
+
+  @override
+  String get counselorDirectoryTitle => 'Counselors';
+
+  @override
+  String get counselorSearchHint => 'Search counselors by name or specialty…';
+
+  @override
+  String get perSession => 'per session';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get noCounselorsMatch =>
+      'No counselors match these filters — try widening your search.';
+
+  @override
+  String get counselorSearchNameNote =>
+      'Name search narrows the results already loaded.';
+
+  @override
+  String get resetFilters => 'Reset filters';
+
+  @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get sortRecommended => 'Recommended';
+
+  @override
+  String get sortPriceLowToHigh => 'Price: low to high';
+
+  @override
+  String get sortRatingHighToLow => 'Rating: high to low';
+
+  @override
+  String get filterOnlineOnly => 'Online only';
+
+  @override
+  String get filterPriceRange => 'Price range';
+
+  @override
+  String get filterLanguageLabel => 'Language';
+
+  @override
+  String get filterSpecialtyLabel => 'Specialty';
+
+  @override
+  String get allLanguages => 'Any language';
+
+  @override
+  String reviewsCount(int count) {
+    return '$count reviews';
+  }
+
+  @override
+  String get counselorVerifiedBadge => 'Verified';
+
+  @override
+  String get credentialsVerified => 'Credentials verified ✓';
+
+  @override
+  String get credentialsNote =>
+      'This counselor\'s qualifications were reviewed by our team.';
+
+  @override
+  String get specialtiesTitle => 'Specialties';
+
+  @override
+  String get languagesTitle => 'Languages';
+
+  @override
+  String get reviewsTitle => 'Reviews';
+
+  @override
+  String get noReviewsYet => 'No reviews yet';
+
+  @override
+  String get nextAvailability => 'Next available sessions';
+
+  @override
+  String get noAvailability => 'No upcoming availability right now';
+
+  @override
+  String bookSessionCta(String price) {
+    return 'Book Session — $price for 60 min';
+  }
+
+  @override
+  String get sessionLengthLabel => '60 minutes';
+
+  @override
+  String get sessionFeeLabel => 'Session fee';
+
+  @override
+  String get platformCommissionLabel => 'Platform commission (10%)';
+
+  @override
+  String get commissionNote =>
+      'This commission is deducted from the counselor\'s payout — the price you see is all you pay.';
+
+  @override
+  String get confirmSlot => 'Confirm slot';
+
+  @override
+  String get selectDate => 'Select a date';
+
+  @override
+  String get selectTimeSlot => 'Select a time';
+
+  @override
+  String get selectSlotHint => 'Pick an available 60-minute slot';
+
+  @override
+  String get noSlotsForDate =>
+      'No available slots on this date — try another day.';
+
+  @override
+  String get bookingSummary => 'Booking summary';
+
+  @override
+  String get payNow => 'Pay now';
+
+  @override
+  String get paymentProcessing => 'Processing payment…';
+
+  @override
+  String get paymentFailedTitle => 'Payment failed';
+
+  @override
+  String get paymentFailedMessage =>
+      'Your payment didn\'t go through. Your slot is still reserved — you can retry.';
+
+  @override
+  String get retryPayment => 'Retry payment';
+
+  @override
+  String get bookingConfirmedTitle => 'Booking confirmed!';
+
+  @override
+  String get bookingConfirmedMessage =>
+      'A reminder will be sent 15 minutes before your session starts.';
+
+  @override
+  String get addToCalendar => 'Add to Calendar';
+
+  @override
+  String get goToMySessions => 'Go to My Sessions';
+
+  @override
+  String get mySessions => 'My Sessions';
+
+  @override
+  String sessionStartsAt(String time) {
+    return 'This session starts at $time';
+  }
+
+  @override
+  String get sessionHasEnded => 'This session has ended';
+
+  @override
+  String get sessionChatHint => 'Chat with your counselor about this session.';
+
+  @override
+  String get joinSessionChat => 'Join session chat';
+
+  @override
+  String get checkPaymentStatus => 'I\'ve paid — check status';
+
+  @override
+  String get reportIssue => 'Report an issue';
+
+  @override
+  String get reportIssueStub =>
+      'Thanks for letting us know — our support team will reach out about this session.';
+
+  @override
+  String get sessionUpcomingBadge => 'Upcoming';
+
+  @override
+  String get sessionLiveBadge => 'Live now';
+
+  @override
+  String get sessionEndedBadge => 'Ended';
+
+  @override
+  String get sessionCancelled => 'This session was cancelled';
+
+  @override
+  String get sessionRefunded => 'This session was refunded';
+
+  @override
+  String get didSessionHappen => 'Did this session happen as scheduled?';
+
+  @override
+  String get yesItHappened => 'Yes, it happened';
+
+  @override
+  String get noReportProblem => 'No, something went wrong';
+
+  @override
+  String get rateYourSession => 'How was your session?';
+
+  @override
+  String get rateHint => 'Tap a star to rate';
+
+  @override
+  String get reviewOptionalHint => 'Write a review (optional)';
+
+  @override
+  String get submitRating => 'Submit rating';
+
+  @override
+  String get thanksForRating => 'Thanks for your feedback!';
+
+  @override
+  String get rateLater => 'Maybe later';
+
+  @override
+  String get whatWentWrong => 'Tell us what happened';
+
+  @override
+  String get disputeReasonHint =>
+      'Briefly describe the problem — our team will review it.';
+
+  @override
+  String get submitDispute => 'Submit report';
+
+  @override
+  String get disputeSubmitted => 'Thanks — our team will review this shortly.';
+
+  @override
+  String get confirmSessionTitle => 'Did the session happen?';
+
+  @override
+  String get confirmSessionAction => 'Confirm session';
+
+  @override
+  String get sessionConfirmed =>
+      'Session confirmed. The counselor\'s payout is being processed.';
+
+  @override
+  String get bookingStatusRequested => 'Requested';
+
+  @override
+  String get bookingStatusPaymentPending => 'Payment pending';
+
+  @override
+  String get bookingStatusConfirmed => 'Confirmed';
+
+  @override
+  String get bookingStatusInProgress => 'In progress';
+
+  @override
+  String get bookingStatusCompleted => 'Completed';
+
+  @override
+  String get bookingStatusCancelled => 'Cancelled';
+
+  @override
+  String get bookingStatusDisputed => 'Disputed';
+
+  @override
+  String get bookingStatusRefunded => 'Refunded';
+
+  @override
+  String get bookingStatusPaidOut => 'Paid out';
+
+  @override
+  String get emptySessions =>
+      'No sessions yet. Browse counselors to book your first one.';
+
+  @override
+  String get emptySessionsCounselor =>
+      'No sessions yet. Once students book you, they\'ll show up here.';
+
+  @override
+  String get browseCounselors => 'Browse counselors';
+
+  @override
+  String get becomeCounselor => 'Become a counselor';
+
+  @override
+  String get becomeCounselorSubtitle =>
+      'Offer 1:1 sessions and get paid for your expertise.';
+
+  @override
+  String get setUpCounselorProfile => 'Set up your counselor profile';
+
+  @override
+  String get viewProfile => 'View profile';
+
+  @override
+  String get counselorDashboard => 'Counselor workspace';
+
+  @override
+  String get dashboardCounselorsTitle => 'Counselors';
+
+  @override
+  String get dashboardCounselorsSubtitle =>
+      'Book 1:1 sessions with verified experts';
+
+  @override
+  String get dashboardNextSession => 'Your next session';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get dateLabel => 'Date';
+
+  @override
+  String get timeLabel => 'Time';
+
+  @override
+  String get durationLabel => 'Duration';
+
+  @override
+  String get totalToPay => 'Total to pay';
+
+  @override
+  String get currencyNote =>
+      'Your bank or mobile-money provider may apply a conversion rate — the amount above is what you pay.';
+
+  @override
+  String get chargedAmount => 'Charged amount';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String withCounselor(String name) {
+    return 'Session with $name';
+  }
+
+  @override
+  String get messageSendFailed => 'Couldn\'t send message';
+
+  @override
+  String get viewBooking => 'View booking';
+
+  @override
+  String get counselorSetupTitle => 'Counselor profile';
+
+  @override
+  String hourlyRateLabel(String currency) {
+    return 'Session price ($currency)';
+  }
+
+  @override
+  String get bioLabel => 'Bio';
+
+  @override
+  String get availabilityLabel => 'Weekly availability';
+
+  @override
+  String get addAvailabilitySlot => 'Add availability';
+
+  @override
+  String get removeAvailabilitySlot => 'Remove';
+
+  @override
+  String get dayMonday => 'Monday';
+
+  @override
+  String get dayTuesday => 'Tuesday';
+
+  @override
+  String get dayWednesday => 'Wednesday';
+
+  @override
+  String get dayThursday => 'Thursday';
+
+  @override
+  String get dayFriday => 'Friday';
+
+  @override
+  String get daySaturday => 'Saturday';
+
+  @override
+  String get daySunday => 'Sunday';
+
+  @override
+  String get startTimeLabel => 'Start';
+
+  @override
+  String get endTimeLabel => 'End';
+
+  @override
+  String get specialtiesHint => 'e.g. Scholarships, Study abroad';
+
+  @override
+  String get languagesHint => 'e.g. English, French';
+
+  @override
+  String get saveProfile => 'Save profile';
+
+  @override
+  String get profileSaved => 'Profile saved.';
+
+  @override
+  String get uploadCredentials => 'Upload credentials (PDF or image)';
+
+  @override
+  String get credentialsUploadHint =>
+      'Diploma, certificate or license — shown only to our review team.';
+
+  @override
+  String get credentialsSubmitted =>
+      'Credentials submitted — we\'ll review them soon.';
+
+  @override
+  String get verificationPendingNote =>
+      'Your profile is under review. Students can\'t book you yet.';
+
+  @override
+  String get verificationRejectedNote =>
+      'Your verification was rejected. Please re-upload valid credentials.';
+
+  @override
+  String get reuploadCredentials => 'Re-upload credentials';
+
+  @override
+  String get getAvailableSlotsError =>
+      'Couldn\'t load available slots. Please try again.';
+
+  @override
+  String get bookingCreationError =>
+      'Couldn\'t create the booking. Please try again.';
+
+  @override
+  String get paymentError =>
+      'Something went wrong with the payment. Please try again.';
 }

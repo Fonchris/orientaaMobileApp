@@ -1090,4 +1090,437 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get resetEmailSent =>
       'تم إرسال بريد إعادة التعيين. تحقق من صندوق الوارد.';
+
+  @override
+  String get tabCounselors => 'المستشارون';
+
+  @override
+  String get counselorDirectoryTitle => 'المستشارون';
+
+  @override
+  String get counselorSearchHint => 'ابحث عن مستشار بالاسم أو التخصص…';
+
+  @override
+  String get perSession => 'للجلسة';
+
+  @override
+  String get online => 'متصل';
+
+  @override
+  String get offline => 'غير متصل';
+
+  @override
+  String get noCounselorsMatch =>
+      'لا يوجد مستشارون يطابقون هذه الفلاتر — حاول توسيع نطاق البحث.';
+
+  @override
+  String get counselorSearchNameNote =>
+      'البحث بالاسم يضيّق النتائج المحمّلة بالفعل.';
+
+  @override
+  String get resetFilters => 'إعادة تعيين الفلاتر';
+
+  @override
+  String get sortBy => 'ترتيب حسب';
+
+  @override
+  String get sortRecommended => 'موصى به';
+
+  @override
+  String get sortPriceLowToHigh => 'السعر: من الأقل إلى الأعلى';
+
+  @override
+  String get sortRatingHighToLow => 'التقييم: من الأعلى إلى الأقل';
+
+  @override
+  String get filterOnlineOnly => 'متصل الآن فقط';
+
+  @override
+  String get filterPriceRange => 'نطاق السعر';
+
+  @override
+  String get filterLanguageLabel => 'اللغة';
+
+  @override
+  String get filterSpecialtyLabel => 'التخصص';
+
+  @override
+  String get allLanguages => 'أي لغة';
+
+  @override
+  String reviewsCount(int count) {
+    return '$count تقييم';
+  }
+
+  @override
+  String get counselorVerifiedBadge => 'موثّق';
+
+  @override
+  String get credentialsVerified => 'تم التحقق من المؤهلات ✓';
+
+  @override
+  String get credentialsNote => 'تمت مراجعة مؤهلات هذا المستشار من قبل فريقنا.';
+
+  @override
+  String get specialtiesTitle => 'التخصصات';
+
+  @override
+  String get languagesTitle => 'اللغات';
+
+  @override
+  String get reviewsTitle => 'التقييمات';
+
+  @override
+  String get noReviewsYet => 'لا توجد تقييمات بعد';
+
+  @override
+  String get nextAvailability => 'الجلسات المتاحة التالية';
+
+  @override
+  String get noAvailability => 'لا توجد مواعيد متاحة حالياً';
+
+  @override
+  String bookSessionCta(String price) {
+    return 'احجز جلسة — $price لمدة 60 دقيقة';
+  }
+
+  @override
+  String get sessionLengthLabel => '60 دقيقة';
+
+  @override
+  String get sessionFeeLabel => 'رسوم الجلسة';
+
+  @override
+  String get platformCommissionLabel => 'عمولة المنصة (10%)';
+
+  @override
+  String get commissionNote =>
+      'تُخصم هذه العمولة من أرباح المستشار — السعر المعروض هو كل ما تدفعه.';
+
+  @override
+  String get confirmSlot => 'تأكيد الموعد';
+
+  @override
+  String get selectDate => 'اختر التاريخ';
+
+  @override
+  String get selectTimeSlot => 'اختر الوقت';
+
+  @override
+  String get selectSlotHint => 'اختر موعداً متاحاً لمدة 60 دقيقة';
+
+  @override
+  String get noSlotsForDate =>
+      'لا توجد مواعيد متاحة في هذا التاريخ — جرّب يوماً آخر.';
+
+  @override
+  String get bookingSummary => 'ملخص الحجز';
+
+  @override
+  String get payNow => 'ادفع الآن';
+
+  @override
+  String get paymentProcessing => 'جارٍ معالجة الدفع…';
+
+  @override
+  String get paymentFailedTitle => 'فشل الدفع';
+
+  @override
+  String get paymentFailedMessage =>
+      'لم يكتمل الدفع. لا يزال موعدك محجوزاً — يمكنك إعادة المحاولة.';
+
+  @override
+  String get retryPayment => 'إعادة محاولة الدفع';
+
+  @override
+  String get bookingConfirmedTitle => 'تم تأكيد الحجز!';
+
+  @override
+  String get bookingConfirmedMessage =>
+      'سيتم إرسال تذكير قبل 15 دقيقة من بدء جلستك.';
+
+  @override
+  String get addToCalendar => 'أضف إلى التقويم';
+
+  @override
+  String get goToMySessions => 'انتقل إلى جلساتي';
+
+  @override
+  String get mySessions => 'جلساتي';
+
+  @override
+  String sessionStartsAt(String time) {
+    return 'تبدأ هذه الجلسة في $time';
+  }
+
+  @override
+  String get sessionHasEnded => 'انتهت هذه الجلسة';
+
+  @override
+  String get sessionChatHint => 'تحدث مع مستشارك حول هذه الجلسة.';
+
+  @override
+  String get joinSessionChat => 'الانضمام إلى محادثة الجلسة';
+
+  @override
+  String get checkPaymentStatus => 'لقد دفعت — تحقق من الحالة';
+
+  @override
+  String get reportIssue => 'الإبلاغ عن مشكلة';
+
+  @override
+  String get reportIssueStub =>
+      'شكراً لإخبارنا — سيتواصل معك فريق الدعم حول هذه الجلسة.';
+
+  @override
+  String get sessionUpcomingBadge => 'قادمة';
+
+  @override
+  String get sessionLiveBadge => 'مباشرة الآن';
+
+  @override
+  String get sessionEndedBadge => 'انتهت';
+
+  @override
+  String get sessionCancelled => 'تم إلغاء هذه الجلسة';
+
+  @override
+  String get sessionRefunded => 'تم استرداد أموال هذه الجلسة';
+
+  @override
+  String get didSessionHappen => 'هل حدثت الجلسة كما هو مخطط؟';
+
+  @override
+  String get yesItHappened => 'نعم، حدثت';
+
+  @override
+  String get noReportProblem => 'لا، حدثت مشكلة';
+
+  @override
+  String get rateYourSession => 'كيف كانت جلستك؟';
+
+  @override
+  String get rateHint => 'اضغط على نجمة للتقييم';
+
+  @override
+  String get reviewOptionalHint => 'اكتب مراجعة (اختياري)';
+
+  @override
+  String get submitRating => 'إرسال التقييم';
+
+  @override
+  String get thanksForRating => 'شكراً لملاحظاتك!';
+
+  @override
+  String get rateLater => 'ربما لاحقاً';
+
+  @override
+  String get whatWentWrong => 'أخبرنا بما حدث';
+
+  @override
+  String get disputeReasonHint => 'صف المشكلة بإيجاز — سيراجعها فريقنا.';
+
+  @override
+  String get submitDispute => 'إرسال البلاغ';
+
+  @override
+  String get disputeSubmitted => 'شكراً — سيراجع فريقنا هذا قريباً.';
+
+  @override
+  String get confirmSessionTitle => 'هل حدثت الجلسة؟';
+
+  @override
+  String get confirmSessionAction => 'تأكيد الجلسة';
+
+  @override
+  String get sessionConfirmed => 'تم تأكيد الجلسة. يتم معالجة أرباح المستشار.';
+
+  @override
+  String get bookingStatusRequested => 'مطلوبة';
+
+  @override
+  String get bookingStatusPaymentPending => 'الدفع معلق';
+
+  @override
+  String get bookingStatusConfirmed => 'مؤكدة';
+
+  @override
+  String get bookingStatusInProgress => 'قيد التنفيذ';
+
+  @override
+  String get bookingStatusCompleted => 'مكتملة';
+
+  @override
+  String get bookingStatusCancelled => 'ملغاة';
+
+  @override
+  String get bookingStatusDisputed => 'متنازع عليها';
+
+  @override
+  String get bookingStatusRefunded => 'تم الاسترداد';
+
+  @override
+  String get bookingStatusPaidOut => 'تم الدفع';
+
+  @override
+  String get emptySessions =>
+      'لا توجد جلسات بعد. تصفح المستشارين لحجز جلستك الأولى.';
+
+  @override
+  String get emptySessionsCounselor =>
+      'لا توجد جلسات بعد. بمجرد أن يحجز الطلاب معك، ستظهر هنا.';
+
+  @override
+  String get browseCounselors => 'تصفح المستشارين';
+
+  @override
+  String get becomeCounselor => 'كن مستشاراً';
+
+  @override
+  String get becomeCounselorSubtitle =>
+      'قدّم جلسات فردية واحصل على أجر مقابل خبرتك.';
+
+  @override
+  String get setUpCounselorProfile => 'أعد ملفك الشخصي كمستشار';
+
+  @override
+  String get viewProfile => 'عرض الملف الشخصي';
+
+  @override
+  String get counselorDashboard => 'مساحة عمل المستشار';
+
+  @override
+  String get dashboardCounselorsTitle => 'المستشارون';
+
+  @override
+  String get dashboardCounselorsSubtitle => 'احجز جلسات فردية مع خبراء موثّقين';
+
+  @override
+  String get dashboardNextSession => 'جلستك القادمة';
+
+  @override
+  String get today => 'اليوم';
+
+  @override
+  String get dateLabel => 'التاريخ';
+
+  @override
+  String get timeLabel => 'الوقت';
+
+  @override
+  String get durationLabel => 'المدة';
+
+  @override
+  String get totalToPay => 'الإجمالي للدفع';
+
+  @override
+  String get currencyNote =>
+      'قد يطبّق بنكك أو مزود الأموال عبر الهاتف سعر صرف — المبلغ أعلاه هو ما تدفعه.';
+
+  @override
+  String get chargedAmount => 'المبلغ المفوتر';
+
+  @override
+  String get statusLabel => 'الحالة';
+
+  @override
+  String withCounselor(String name) {
+    return 'جلسة مع $name';
+  }
+
+  @override
+  String get messageSendFailed => 'تعذّر إرسال الرسالة';
+
+  @override
+  String get viewBooking => 'عرض الحجز';
+
+  @override
+  String get counselorSetupTitle => 'ملف المستشار';
+
+  @override
+  String hourlyRateLabel(String currency) {
+    return 'سعر الجلسة ($currency)';
+  }
+
+  @override
+  String get bioLabel => 'Bio';
+
+  @override
+  String get availabilityLabel => 'التوفر الأسبوعي';
+
+  @override
+  String get addAvailabilitySlot => 'إضافة موعد';
+
+  @override
+  String get removeAvailabilitySlot => 'إزالة';
+
+  @override
+  String get dayMonday => 'الاثنين';
+
+  @override
+  String get dayTuesday => 'الثلاثاء';
+
+  @override
+  String get dayWednesday => 'الأربعاء';
+
+  @override
+  String get dayThursday => 'الخميس';
+
+  @override
+  String get dayFriday => 'الجمعة';
+
+  @override
+  String get daySaturday => 'السبت';
+
+  @override
+  String get daySunday => 'الأحد';
+
+  @override
+  String get startTimeLabel => 'البداية';
+
+  @override
+  String get endTimeLabel => 'النهاية';
+
+  @override
+  String get specialtiesHint => 'مثال: منح دراسية، دراسة بالخارج';
+
+  @override
+  String get languagesHint => 'مثال: الإنجليزية، الفرنسية';
+
+  @override
+  String get saveProfile => 'حفظ الملف';
+
+  @override
+  String get profileSaved => 'تم حفظ الملف.';
+
+  @override
+  String get uploadCredentials => 'رفع المؤهلات (PDF أو صورة)';
+
+  @override
+  String get credentialsUploadHint =>
+      'شهادة أو ترخيص — تظهر لفريق المراجعة فقط.';
+
+  @override
+  String get credentialsSubmitted => 'تم إرسال المؤهلات — سنراجعها قريباً.';
+
+  @override
+  String get verificationPendingNote =>
+      'ملفك قيد المراجعة. لا يمكن للطلاب حجزك بعد.';
+
+  @override
+  String get verificationRejectedNote =>
+      'تم رفض التحقق. يرجى إعادة رفع مؤهلات صالحة.';
+
+  @override
+  String get reuploadCredentials => 'إعادة رفع المؤهلات';
+
+  @override
+  String get getAvailableSlotsError =>
+      'تعذّر تحميل المواعيد المتاحة. حاول مرة أخرى.';
+
+  @override
+  String get bookingCreationError => 'تعذّر إنشاء الحجز. حاول مرة أخرى.';
+
+  @override
+  String get paymentError => 'حدثت مشكلة في الدفع. حاول مرة أخرى.';
 }

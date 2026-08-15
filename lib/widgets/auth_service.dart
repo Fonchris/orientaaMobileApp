@@ -185,6 +185,13 @@ class AuthService {
   Future<void> signOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
+    // Wipe device-local session state so the next user on this device can
+    // never inherit the previous user's role/onboarding routing (the remote
+    // profile normally wins, but the local fallback must not leak across
+    // accounts if a Firestore read fails during the next sign-in).
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_role');
+    await prefs.remove('onboarding_complete');
   }
 
   /// Sends a new verification email if the current user's email is not verified.

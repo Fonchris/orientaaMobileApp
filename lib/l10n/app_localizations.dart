@@ -2093,6 +2093,822 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password reset email sent. Check your inbox.'**
   String get resetEmailSent;
+
+  /// No description provided for @tabCounselors.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselors'**
+  String get tabCounselors;
+
+  /// No description provided for @counselorDirectoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselors'**
+  String get counselorDirectoryTitle;
+
+  /// No description provided for @counselorSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search counselors by name or specialty…'**
+  String get counselorSearchHint;
+
+  /// No description provided for @perSession.
+  ///
+  /// In en, this message translates to:
+  /// **'per session'**
+  String get perSession;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// No description provided for @noCounselorsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No counselors match these filters — try widening your search.'**
+  String get noCounselorsMatch;
+
+  /// No description provided for @counselorSearchNameNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Name search narrows the results already loaded.'**
+  String get counselorSearchNameNote;
+
+  /// No description provided for @resetFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset filters'**
+  String get resetFilters;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// No description provided for @sortRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get sortRecommended;
+
+  /// No description provided for @sortPriceLowToHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: low to high'**
+  String get sortPriceLowToHigh;
+
+  /// No description provided for @sortRatingHighToLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating: high to low'**
+  String get sortRatingHighToLow;
+
+  /// No description provided for @filterOnlineOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Online only'**
+  String get filterOnlineOnly;
+
+  /// No description provided for @filterPriceRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Price range'**
+  String get filterPriceRange;
+
+  /// No description provided for @filterLanguageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get filterLanguageLabel;
+
+  /// No description provided for @filterSpecialtyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialty'**
+  String get filterSpecialtyLabel;
+
+  /// No description provided for @allLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Any language'**
+  String get allLanguages;
+
+  /// No description provided for @reviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} reviews'**
+  String reviewsCount(int count);
+
+  /// No description provided for @counselorVerifiedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get counselorVerifiedBadge;
+
+  /// No description provided for @credentialsVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials verified ✓'**
+  String get credentialsVerified;
+
+  /// No description provided for @credentialsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This counselor\'s qualifications were reviewed by our team.'**
+  String get credentialsNote;
+
+  /// No description provided for @specialtiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialties'**
+  String get specialtiesTitle;
+
+  /// No description provided for @languagesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get languagesTitle;
+
+  /// No description provided for @reviewsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviewsTitle;
+
+  /// No description provided for @noReviewsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get noReviewsYet;
+
+  /// No description provided for @nextAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'Next available sessions'**
+  String get nextAvailability;
+
+  /// No description provided for @noAvailability.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming availability right now'**
+  String get noAvailability;
+
+  /// No description provided for @bookSessionCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Session — {price} for 60 min'**
+  String bookSessionCta(String price);
+
+  /// No description provided for @sessionLengthLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'60 minutes'**
+  String get sessionLengthLabel;
+
+  /// No description provided for @sessionFeeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Session fee'**
+  String get sessionFeeLabel;
+
+  /// No description provided for @platformCommissionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Platform commission (10%)'**
+  String get platformCommissionLabel;
+
+  /// No description provided for @commissionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This commission is deducted from the counselor\'s payout — the price you see is all you pay.'**
+  String get commissionNote;
+
+  /// No description provided for @confirmSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm slot'**
+  String get confirmSlot;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a date'**
+  String get selectDate;
+
+  /// No description provided for @selectTimeSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a time'**
+  String get selectTimeSlot;
+
+  /// No description provided for @selectSlotHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick an available 60-minute slot'**
+  String get selectSlotHint;
+
+  /// No description provided for @noSlotsForDate.
+  ///
+  /// In en, this message translates to:
+  /// **'No available slots on this date — try another day.'**
+  String get noSlotsForDate;
+
+  /// No description provided for @bookingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking summary'**
+  String get bookingSummary;
+
+  /// No description provided for @payNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay now'**
+  String get payNow;
+
+  /// No description provided for @paymentProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing payment…'**
+  String get paymentProcessing;
+
+  /// No description provided for @paymentFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment failed'**
+  String get paymentFailedTitle;
+
+  /// No description provided for @paymentFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your payment didn\'t go through. Your slot is still reserved — you can retry.'**
+  String get paymentFailedMessage;
+
+  /// No description provided for @retryPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry payment'**
+  String get retryPayment;
+
+  /// No description provided for @bookingConfirmedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking confirmed!'**
+  String get bookingConfirmedTitle;
+
+  /// No description provided for @bookingConfirmedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A reminder will be sent 15 minutes before your session starts.'**
+  String get bookingConfirmedMessage;
+
+  /// No description provided for @addToCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Calendar'**
+  String get addToCalendar;
+
+  /// No description provided for @goToMySessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to My Sessions'**
+  String get goToMySessions;
+
+  /// No description provided for @mySessions.
+  ///
+  /// In en, this message translates to:
+  /// **'My Sessions'**
+  String get mySessions;
+
+  /// No description provided for @sessionStartsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'This session starts at {time}'**
+  String sessionStartsAt(String time);
+
+  /// No description provided for @sessionHasEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'This session has ended'**
+  String get sessionHasEnded;
+
+  /// No description provided for @sessionChatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with your counselor about this session.'**
+  String get sessionChatHint;
+
+  /// No description provided for @joinSessionChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Join session chat'**
+  String get joinSessionChat;
+
+  /// No description provided for @checkPaymentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve paid — check status'**
+  String get checkPaymentStatus;
+
+  /// No description provided for @reportIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Report an issue'**
+  String get reportIssue;
+
+  /// No description provided for @reportIssueStub.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for letting us know — our support team will reach out about this session.'**
+  String get reportIssueStub;
+
+  /// No description provided for @sessionUpcomingBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get sessionUpcomingBadge;
+
+  /// No description provided for @sessionLiveBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Live now'**
+  String get sessionLiveBadge;
+
+  /// No description provided for @sessionEndedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Ended'**
+  String get sessionEndedBadge;
+
+  /// No description provided for @sessionCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'This session was cancelled'**
+  String get sessionCancelled;
+
+  /// No description provided for @sessionRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'This session was refunded'**
+  String get sessionRefunded;
+
+  /// No description provided for @didSessionHappen.
+  ///
+  /// In en, this message translates to:
+  /// **'Did this session happen as scheduled?'**
+  String get didSessionHappen;
+
+  /// No description provided for @yesItHappened.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, it happened'**
+  String get yesItHappened;
+
+  /// No description provided for @noReportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'No, something went wrong'**
+  String get noReportProblem;
+
+  /// No description provided for @rateYourSession.
+  ///
+  /// In en, this message translates to:
+  /// **'How was your session?'**
+  String get rateYourSession;
+
+  /// No description provided for @rateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a star to rate'**
+  String get rateHint;
+
+  /// No description provided for @reviewOptionalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a review (optional)'**
+  String get reviewOptionalHint;
+
+  /// No description provided for @submitRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit rating'**
+  String get submitRating;
+
+  /// No description provided for @thanksForRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for your feedback!'**
+  String get thanksForRating;
+
+  /// No description provided for @rateLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe later'**
+  String get rateLater;
+
+  /// No description provided for @whatWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what happened'**
+  String get whatWentWrong;
+
+  /// No description provided for @disputeReasonHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Briefly describe the problem — our team will review it.'**
+  String get disputeReasonHint;
+
+  /// No description provided for @submitDispute.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit report'**
+  String get submitDispute;
+
+  /// No description provided for @disputeSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks — our team will review this shortly.'**
+  String get disputeSubmitted;
+
+  /// No description provided for @confirmSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Did the session happen?'**
+  String get confirmSessionTitle;
+
+  /// No description provided for @confirmSessionAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm session'**
+  String get confirmSessionAction;
+
+  /// No description provided for @sessionConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Session confirmed. The counselor\'s payout is being processed.'**
+  String get sessionConfirmed;
+
+  /// No description provided for @bookingStatusRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get bookingStatusRequested;
+
+  /// No description provided for @bookingStatusPaymentPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment pending'**
+  String get bookingStatusPaymentPending;
+
+  /// No description provided for @bookingStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get bookingStatusConfirmed;
+
+  /// No description provided for @bookingStatusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get bookingStatusInProgress;
+
+  /// No description provided for @bookingStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get bookingStatusCompleted;
+
+  /// No description provided for @bookingStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get bookingStatusCancelled;
+
+  /// No description provided for @bookingStatusDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputed'**
+  String get bookingStatusDisputed;
+
+  /// No description provided for @bookingStatusRefunded.
+  ///
+  /// In en, this message translates to:
+  /// **'Refunded'**
+  String get bookingStatusRefunded;
+
+  /// No description provided for @bookingStatusPaidOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid out'**
+  String get bookingStatusPaidOut;
+
+  /// No description provided for @emptySessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions yet. Browse counselors to book your first one.'**
+  String get emptySessions;
+
+  /// No description provided for @emptySessionsCounselor.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions yet. Once students book you, they\'ll show up here.'**
+  String get emptySessionsCounselor;
+
+  /// No description provided for @browseCounselors.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse counselors'**
+  String get browseCounselors;
+
+  /// No description provided for @becomeCounselor.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a counselor'**
+  String get becomeCounselor;
+
+  /// No description provided for @becomeCounselorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer 1:1 sessions and get paid for your expertise.'**
+  String get becomeCounselorSubtitle;
+
+  /// No description provided for @setUpCounselorProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your counselor profile'**
+  String get setUpCounselorProfile;
+
+  /// No description provided for @viewProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View profile'**
+  String get viewProfile;
+
+  /// No description provided for @counselorDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselor workspace'**
+  String get counselorDashboard;
+
+  /// No description provided for @dashboardCounselorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselors'**
+  String get dashboardCounselorsTitle;
+
+  /// No description provided for @dashboardCounselorsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book 1:1 sessions with verified experts'**
+  String get dashboardCounselorsSubtitle;
+
+  /// No description provided for @dashboardNextSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Your next session'**
+  String get dashboardNextSession;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @dateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateLabel;
+
+  /// No description provided for @timeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get timeLabel;
+
+  /// No description provided for @durationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get durationLabel;
+
+  /// No description provided for @totalToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Total to pay'**
+  String get totalToPay;
+
+  /// No description provided for @currencyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bank or mobile-money provider may apply a conversion rate — the amount above is what you pay.'**
+  String get currencyNote;
+
+  /// No description provided for @chargedAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Charged amount'**
+  String get chargedAmount;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// No description provided for @withCounselor.
+  ///
+  /// In en, this message translates to:
+  /// **'Session with {name}'**
+  String withCounselor(String name);
+
+  /// No description provided for @messageSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t send message'**
+  String get messageSendFailed;
+
+  /// No description provided for @viewBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'View booking'**
+  String get viewBooking;
+
+  /// No description provided for @counselorSetupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselor profile'**
+  String get counselorSetupTitle;
+
+  /// No description provided for @hourlyRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Session price ({currency})'**
+  String hourlyRateLabel(String currency);
+
+  /// No description provided for @bioLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get bioLabel;
+
+  /// No description provided for @availabilityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly availability'**
+  String get availabilityLabel;
+
+  /// No description provided for @addAvailabilitySlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Add availability'**
+  String get addAvailabilitySlot;
+
+  /// No description provided for @removeAvailabilitySlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeAvailabilitySlot;
+
+  /// No description provided for @dayMonday.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get dayMonday;
+
+  /// No description provided for @dayTuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get dayTuesday;
+
+  /// No description provided for @dayWednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get dayWednesday;
+
+  /// No description provided for @dayThursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get dayThursday;
+
+  /// No description provided for @dayFriday.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get dayFriday;
+
+  /// No description provided for @daySaturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get daySaturday;
+
+  /// No description provided for @daySunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get daySunday;
+
+  /// No description provided for @startTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startTimeLabel;
+
+  /// No description provided for @endTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get endTimeLabel;
+
+  /// No description provided for @specialtiesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Scholarships, Study abroad'**
+  String get specialtiesHint;
+
+  /// No description provided for @languagesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. English, French'**
+  String get languagesHint;
+
+  /// No description provided for @saveProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save profile'**
+  String get saveProfile;
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved.'**
+  String get profileSaved;
+
+  /// No description provided for @uploadCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload credentials (PDF or image)'**
+  String get uploadCredentials;
+
+  /// No description provided for @credentialsUploadHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Diploma, certificate or license — shown only to our review team.'**
+  String get credentialsUploadHint;
+
+  /// No description provided for @credentialsSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Credentials submitted — we\'ll review them soon.'**
+  String get credentialsSubmitted;
+
+  /// No description provided for @verificationPendingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is under review. Students can\'t book you yet.'**
+  String get verificationPendingNote;
+
+  /// No description provided for @verificationRejectedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your verification was rejected. Please re-upload valid credentials.'**
+  String get verificationRejectedNote;
+
+  /// No description provided for @reuploadCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-upload credentials'**
+  String get reuploadCredentials;
+
+  /// No description provided for @getAvailableSlotsError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load available slots. Please try again.'**
+  String get getAvailableSlotsError;
+
+  /// No description provided for @bookingCreationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t create the booking. Please try again.'**
+  String get bookingCreationError;
+
+  /// No description provided for @paymentError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong with the payment. Please try again.'**
+  String get paymentError;
 }
 
 class _AppLocalizationsDelegate

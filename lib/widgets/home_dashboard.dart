@@ -6,6 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
+import 'counselors/models/counselor_models.dart';
+import 'counselors/screens/my_sessions_page.dart';
+import 'counselors/screens/session_detail_page.dart';
+import 'counselors/services/counselor_service.dart';
+import 'counselors/widgets/session_card.dart';
 import 'discovery/screens/recommendations_section.dart';
 import 'google_fonts.dart';
 import 'profile/edit_profile_page.dart';
@@ -21,12 +26,14 @@ import 'student_onboarding/step_ui.dart';
 /// empty state — nothing fake is rendered when collections are empty.
 class HomeDashboard extends StatefulWidget {
   final VoidCallback onOpenSearch;
+  final VoidCallback onOpenCounselors;
   final VoidCallback onOpenDiscover;
   final VoidCallback onOpenProfile;
 
   const HomeDashboard({
     super.key,
     required this.onOpenSearch,
+    required this.onOpenCounselors,
     required this.onOpenDiscover,
     required this.onOpenProfile,
   });
@@ -113,6 +120,8 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       _sessionsSection(context, uid),
                     ] else ...[
                       _recommendationsSection(context),
+                      const SizedBox(height: 14),
+                      _counselorsSection(context),
                       const SizedBox(height: 14),
                       _sessionsSection(context, uid),
                       const SizedBox(height: 14),
@@ -417,28 +426,28 @@ class _HomeDashboardState extends State<HomeDashboard> {
     );
   }
 
+  /// Next session from the new `bookings` collection (the Counselors module).
   Widget _sessionsSection(BuildContext context, String uid) {
     final l10n = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader(context, title: l10n.counsellorSession),
+        _sectionHeader(
+          context,
+          title: _role == 'counsellor' ? l10n.dashboardNextSession : l10n.counsellorSession,
+          actionLabel: l10n.mySessions,
+          onAction: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const MySessionsPage()),
+          ),
+        ),
         const SizedBox(height: 10),
-        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: _role == 'counsellor'
-              ? FirebaseFirestore.instance
-                  .collection('sessions')
-                  .where('counsellorId', isEqualTo: uid)
-                  .limit(1)
-                  .snapshots()
-              : FirebaseFirestore.instance
-                  .collection('sessions')
-                  .where('studentId', isEqualTo: uid)
-                  .limit(1)
-                  .snapshots(),
+        StreamBuilder<Booking?>(
+          stream: CounselorService().watchNextBooking(
+            uid,
+            counselor: _role == 'counsellor',
+          ),
           builder: (context, snapshot) {
-            final docs = snapshot.data?.docs ?? const [];
-            if (docs.isEmpty) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return _emptyCard(
                 context,
                 icon: FontAwesomeIcons.calendarCheck,
@@ -450,70 +459,111 @@ class _HomeDashboardState extends State<HomeDashboard> {
                     : l10n.sessionsStudentEmpty,
               );
             }
-            final data = docs.first.data();
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: AppTheme.brandYellow,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
+            final booking = snapshot.data;
+            if (booking == null) {
+              return _emptyCard(
+                context,
+                icon: FontAwesomeIcons.calendarCheck,
+                title: _role == 'counsellor'
+                    ? l10n.noSessionsScheduled
+                    : l10n.noUpcomingSessions,
+                message: _role == 'counsellor'
+                    ? l10n.sessionsCounsellorEmpty
+                    : l10n.sessionsStudentEmpty,
+              );
+            }
+            return _NextSessionTile(booking: booking, isCounselor: _role == 'counsellor');
+          },
+        ),
+      ],
+    );
+  }
+
+  /// Counsellors marketplace entry (students only): "Book 1:1 sessions".
+  Widget _counselorsSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader(
+          context,
+          title: l10n.dashboardCounselorsTitle,
+          actionLabel: l10n.seeAll,
+          onAction: widget.onOpenCounselors,
+        ),
+        const SizedBox(height: 10),
+        StepReveal(
+          child: Material(
+            color: isDark ? AppTheme.brandSurface : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTap: widget.onOpenCounselors,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.07)
+                        : AppTheme.brandYellow.withValues(alpha: 0.35),
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black.withValues(alpha: 0.12),
-                    ),
-                    child: const Center(
-                      child: FaIcon(
-                        FontAwesomeIcons.video,
-                        size: 17,
-                        color: AppTheme.brandInk,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 46,
+                      height: 46,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppTheme.brandYellow,
+                      ),
+                      child: const Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.userTie,
+                          size: 18,
+                          color: AppTheme.brandInk,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          data['title'] as String? ?? 'Counsellor session',
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w700,
-                            color: AppTheme.brandInk,
+                    const SizedBox(width: 13),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.dashboardCounselorsTitle,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? Colors.white : AppTheme.brandInk,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${data['dateLabel'] ?? l10n.upcoming} · ${data['status'] ?? l10n.booked}',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            color: AppTheme.brandInk.withValues(alpha: 0.7),
+                          const SizedBox(height: 3),
+                          Text(
+                            l10n.dashboardCounselorsSubtitle,
+                            style: GoogleFonts.inter(
+                              fontSize: 12.5,
+                              height: 1.35,
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.55)
+                                  : AppTheme.brandInk.withValues(alpha: 0.55),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const FaIcon(
-                    FontAwesomeIcons.chevronRight,
-                    size: 13,
-                    color: AppTheme.brandInk,
-                  ),
-                ],
+                    const FaIcon(
+                      FontAwesomeIcons.chevronRight,
+                      size: 13,
+                      color: AppTheme.brandAmber,
+                    ),
+                  ],
+                ),
               ),
-            );
-          },
+            ),
+          ),
         ),
       ],
     );
@@ -695,63 +745,78 @@ class _HomeDashboardState extends State<HomeDashboard> {
 
   Widget _counsellorCard(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context);
     return StepReveal(
-      child: Container(
-        padding: const EdgeInsets.all(18),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: isDark ? AppTheme.brandSurface : Colors.white,
-          border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.06)
-                : AppTheme.brandLightOutline,
+      child: Material(
+        color: isDark ? AppTheme.brandSurface : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(builder: (_) => const MySessionsPage()),
           ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppTheme.brandYellow,
+          child: Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.06)
+                    : AppTheme.brandLightOutline,
               ),
-              child: const Center(
-                child: FaIcon(
-                  FontAwesomeIcons.userTie,
-                  color: AppTheme.brandInk,
-                  size: 20,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppTheme.brandYellow,
+                  ),
+                  child: const Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.userTie,
+                      color: AppTheme.brandInk,
+                      size: 20,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Counsellor workspace',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 15.5,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.white : AppTheme.brandInk,
-                    ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.counselorDashboard,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? Colors.white : AppTheme.brandInk,
+                        ),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        l10n.sessionsCounsellorEmpty,
+                        style: GoogleFonts.inter(
+                          fontSize: 12.5,
+                          height: 1.35,
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.55)
+                              : AppTheme.brandInk.withValues(alpha: 0.55),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    'Student booking and guidance tools are coming soon.',
-                    style: GoogleFonts.inter(
-                      fontSize: 12.5,
-                      height: 1.35,
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.55)
-                          : AppTheme.brandInk.withValues(alpha: 0.55),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                const FaIcon(
+                  FontAwesomeIcons.chevronRight,
+                  size: 13,
+                  color: AppTheme.brandAmber,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -815,6 +880,81 @@ class _HomeDashboardState extends State<HomeDashboard> {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Resolves the peer's name/photo for the dashboard's next-session card and
+/// renders a tappable [SessionCard] that opens the session detail page.
+class _NextSessionTile extends StatefulWidget {
+  final Booking booking;
+  final bool isCounselor;
+
+  const _NextSessionTile({required this.booking, required this.isCounselor});
+
+  @override
+  State<_NextSessionTile> createState() => _NextSessionTileState();
+}
+
+class _NextSessionTileState extends State<_NextSessionTile> {
+  late final Future<({String name, String? photo})> _peer = _resolve();
+
+  Future<({String name, String? photo})> _resolve() async {
+    final db = FirebaseFirestore.instance;
+    final otherUid = widget.isCounselor
+        ? widget.booking.studentUid
+        : widget.booking.counselorUid;
+    try {
+      final snap = await (widget.isCounselor
+              ? db.collection('users').doc(otherUid)
+              : db.collection('counselorProfiles').doc(otherUid))
+          .get();
+      final d = snap.data() ?? const <String, dynamic>{};
+      final name = (d['displayName'] as String?)?.trim().isNotEmpty == true
+          ? d['displayName'] as String
+          : (widget.isCounselor ? 'Student' : 'Counselor');
+      return (name: name, photo: d['photoUrl'] as String?);
+    } catch (_) {
+      return (
+        name: widget.isCounselor ? 'Student' : 'Counselor',
+        photo: null,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<({String name, String? photo})>(
+      future: _peer,
+      builder: (context, snapshot) {
+        final peer = snapshot.data;
+        if (peer == null) {
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(
+              child: SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2.5),
+              ),
+            ),
+          );
+        }
+        return SessionCard(
+          booking: widget.booking,
+          otherName: peer.name,
+          otherPhotoUrl: peer.photo,
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => SessionDetailPage(
+                bookingId: widget.booking.id,
+                otherName: peer.name,
+                otherPhotoUrl: peer.photo,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

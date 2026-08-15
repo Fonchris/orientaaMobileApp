@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../app_theme.dart';
+import '../../counselors/screens/counselor_directory_page.dart';
 import '../../google_fonts.dart';
 import '../models/tier_policy.dart';
 import '../models/university_models.dart';
@@ -634,8 +635,11 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
         borderRadius: BorderRadius.circular(18),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          // TODO: navigate to the counselor booking module once it exists.
-          onTap: () => _showBookingStub(context),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => const CounselorDirectoryPage(),
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -673,72 +677,6 @@ class _UniversityDetailPageState extends State<UniversityDetailPage> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showBookingStub(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: isDark ? AppTheme.brandSurface : Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 20, 24, 28),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppTheme.brandYellow,
-                ),
-                child: const Center(
-                  child: FaIcon(
-                    FontAwesomeIcons.calendarCheck,
-                    size: 22,
-                    color: AppTheme.brandInk,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.counselorBookingTitle,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? Colors.white : AppTheme.brandInk,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.counselorBookingMessage,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  height: 1.4,
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.6)
-                      : AppTheme.brandInk.withValues(alpha: 0.6),
-                ),
-              ),
-              const SizedBox(height: 18),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: Text(l10n.gotIt),
-                ),
-              ),
-            ],
           ),
         ),
       ),

@@ -4,20 +4,24 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'l10n/app_localizations.dart';
-import 'widgets/app_theme.dart';
 import 'widgets/app_shell.dart';
+import 'widgets/app_theme.dart';
+import 'widgets/counselors/services/push_notifications.dart';
 import 'widgets/google_fonts.dart';
+import 'widgets/locale_provider.dart';
 import 'widgets/login_page.dart';
 import 'widgets/onboarding_page.dart';
-import 'widgets/signup_page.dart';
 import 'widgets/reset_password_page.dart';
+import 'widgets/signup_page.dart';
 import 'widgets/student_onboarding/student_onboarding_page.dart';
 import 'widgets/theme_provider.dart';
-import 'widgets/locale_provider.dart';
 import 'widgets/welcome_page.dart';
 
 final ThemeProvider themeProvider = ThemeProvider();
 final LocaleProvider localeProvider = LocaleProvider();
+
+/// Lets the FCM handler show in-app SnackBars without a BuildContext.
+final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +29,22 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final hasSeenWelcome = prefs.getBool('hasSeenWelcome') ?? false;
   await Future.wait([themeProvider.load(), localeProvider.load()]);
+
+  PushNotifications.instance.onForeground = (data) {
+    final messenger = appNavigatorKey.currentState?.context;
+    if (messenger == null) return;
+    final title = data['title'] as String?;
+    final body = data['body'] as String?;
+    if (title == null || body == null) return;
+    ScaffoldMessenger.of(messenger).showSnackBar(
+      SnackBar(
+        content: Text('$title\n$body', maxLines: 2, overflow: TextOverflow.ellipsis),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  };
+  await PushNotifications.instance.init();
+
   runApp(OrientaaApp(initialRoute: hasSeenWelcome ? '/login' : '/welcome'));
 }
 
@@ -70,6 +90,7 @@ class _OrientaaAppState extends State<OrientaaApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Orientaa',
+      navigatorKey: appNavigatorKey,
       themeMode: themeProvider.themeMode,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import 'app_theme.dart';
+import 'counselors/screens/counselor_directory_page.dart';
 import 'discovery/screens/saved_universities_page.dart';
 import 'discovery/screens/university_list_page.dart';
 import 'home_dashboard.dart';
@@ -58,14 +59,16 @@ class _AppShellState extends State<AppShell> {
           index: _index,
           children: [
             HomeDashboard(
-              onOpenSearch: () => _goTo(1),
+              onOpenSearch: () => _goTo(2),
+              onOpenCounselors: () => _goTo(1),
               onOpenDiscover: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const UniversityListPage(),
                 ),
               ),
-              onOpenProfile: () => _goTo(4),
+              onOpenProfile: () => _goTo(5),
             ),
+            const CounselorDirectoryPage(),
             const SearchPage(),
             const SavedUniversitiesPage(),
             const MessagesPage(),
@@ -90,6 +93,15 @@ class _AppShellState extends State<AppShell> {
               color: scheme.primary,
             ),
             label: l10n.tabHome,
+          ),
+          NavigationDestination(
+            icon: const FaIcon(FontAwesomeIcons.userTie, size: 17),
+            selectedIcon: FaIcon(
+              FontAwesomeIcons.userTie,
+              size: 17,
+              color: scheme.primary,
+            ),
+            label: l10n.tabCounselors,
           ),
           NavigationDestination(
             icon: const FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),

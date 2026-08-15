@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../l10n/app_localizations.dart';
 import '../app_theme.dart';
 import '../google_fonts.dart';
+import 'chat_widgets.dart';
 import 'messaging_service.dart';
 import 'profile_avatar.dart';
 import 'profile_models.dart';
@@ -166,7 +167,11 @@ class _ChatPageState extends State<ChatPage> {
                   itemCount: messages.length,
                   itemBuilder: (context, i) {
                     final msg = messages[messages.length - 1 - i];
-                    return _bubble(msg);
+                    return ChatBubble(
+                      text: msg.text,
+                      isMine: msg.senderId == widget.currentUid,
+                      sentAt: msg.createdAt,
+                    );
                   },
                 );
               },
@@ -219,139 +224,12 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _bubble(ChatMessage msg) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final mine = msg.senderId == widget.currentUid;
-
-    return Align(
-      alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.74,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(18),
-            topRight: const Radius.circular(18),
-            bottomLeft: Radius.circular(mine ? 18 : 4),
-            bottomRight: Radius.circular(mine ? 4 : 18),
-          ),
-          color: mine
-              ? AppTheme.brandYellow
-              : isDark
-                  ? AppTheme.brandSurface
-                  : const Color(0xFFF1F1EE),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              msg.text,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                height: 1.35,
-                color: mine
-                    ? AppTheme.brandInk
-                    : (isDark ? Colors.white : AppTheme.brandInk),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              relativeTime(msg.createdAt),
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                color: mine
-                    ? AppTheme.brandInk.withValues(alpha: 0.6)
-                    : isDark
-                        ? Colors.white.withValues(alpha: 0.35)
-                        : AppTheme.brandInk.withValues(alpha: 0.35),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _composerBar() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        12,
-        8,
-        12,
-        8 + MediaQuery.of(context).padding.bottom,
-      ),
-      decoration: BoxDecoration(
-        color: isDark ? AppTheme.brandDark : Colors.white,
-        border: Border(
-          top: BorderSide(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : AppTheme.brandInk.withValues(alpha: 0.1),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _composer,
-              textCapitalization: TextCapitalization.sentences,
-              minLines: 1,
-              maxLines: 4,
-              onSubmitted: (_) => _send(),
-              style: GoogleFonts.inter(fontSize: 14.5),
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).writeMessage,
-                filled: true,
-                fillColor: isDark
-                    ? Colors.white.withValues(alpha: 0.05)
-                    : const Color(0xFFF2F2EF),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          _sending
-              ? const Padding(
-                  padding: EdgeInsets.all(12),
-                  child: SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: AppTheme.brandBlue,
-                    ),
-                  ),
-                )
-              : Material(
-                  color: AppTheme.brandYellow,
-                  borderRadius: BorderRadius.circular(24),
-                  child: InkWell(
-                    onTap: _send,
-                    customBorder: const CircleBorder(),
-                    child: const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: FaIcon(
-                        FontAwesomeIcons.paperPlane,
-                        size: 15,
-                        color: AppTheme.brandInk,
-                      ),
-                    ),
-                  ),
-                ),
-        ],
-      ),
+    return ChatComposer(
+      controller: _composer,
+      sending: _sending,
+      onSend: _send,
+      hintText: AppLocalizations.of(context).writeMessage,
     );
   }
 }

@@ -43,6 +43,13 @@ service cloud.firestore {
         allow read: if request.auth != null && request.auth.uid == uid;
         allow write: if request.auth != null && request.auth.uid == uid;
       }
+
+      // Push device tokens: owner-only. The parent user document is readable
+      // by all signed-in users (search/connections), so the FCM token must
+      // never live on it — it lives here where only the owner can see it.
+      match /devices/{deviceId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
     }
 
     // ── Posts ────────────────────────────────────────────────────────────
@@ -77,8 +84,11 @@ service cloud.firestore {
       match /messages/{messageId} {
         allow read: if request.auth != null
             && get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantIds.hasAny([request.auth.uid]);
+        // Participants may only send as themselves and only inside a
+        // conversation they belong to.
         allow create: if request.auth != null
-            && request.resource.data.senderId == request.auth.uid;
+            && request.resource.data.senderId == request.auth.uid
+            && get(/databases/$(database)/documents/conversations/$(conversationId)).data.participantIds.hasAny([request.auth.uid]);
         allow update: if false;
         allow delete: if false;
       }
@@ -130,6 +140,91 @@ service cloud.firestore {
           && (resource.data.studentId == request.auth.uid
               || resource.data.counsellorId == request.auth.uid);
       allow delete: if false;
+    }
+
+    // ── Counselors module ────────────────────────────────────────────────
+    // Marketplace profile: public once approved; the owner may always read
+    // and edit their own. Approval (verificationStatus), aggregates
+    // (ratingAverage/ratingCount) and presence (isOnline/lastActiveAt) are
+    // only ever written by Cloud Functions via the Admin SDK, which bypasses
+    // these rules — the owner's write is limited to their own public fields.
+    match /counselorProfiles/{uid} {
+      allow read: if request.auth != null
+          && (request.auth.uid == uid
+              || resource.data.verificationStatus == 'approved');
+      // The owner may only write their own PUBLIC fields. verificationStatus,
+      // ratingAverage/ratingCount, isOnline/lastActiveAt and recommendedScore
+      // are written exclusively by Cloud Functions (Admin SDK, bypasses these
+      // rules) — a client can never self-approve or fake its ratings.
+      allow create: if request.auth != null
+          && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly([
+              'uid', 'displayName', 'photoUrl', 'bio', 'specialties',
+              'languages', 'hourlyRate', 'currency', 'availability',
+              'createdAt', 'updatedAt',
+          ]);
+      allow update: if request.auth != null
+          && request.auth.uid == uid
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'displayName', 'photoUrl', 'bio', 'specialties',
+              'languages', 'hourlyRate', 'currency', 'availability',
+              'updatedAt',
+          ]);
+      allow delete: if false;
+    }
+
+    // Private per-counselor document: credentials document URL + Flutterwave
+    // payout target. Owner-only (admins operate via the Admin SDK, which
+    // bypasses rules) — never readable by students browsing the directory.
+    match /counselorPrivate/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Bookings: participants may read; ALL state changes (create, payment,
+    // confirmation, dispute, payout) go through Cloud Functions, so clients
+    // cannot write booking documents at all. Messages are readable/writable
+    // by participants, with read-receipt-only updates.
+    match /bookings/{bookingId} {
+      allow read: if request.auth != null
+          && (resource.data.studentUid == request.auth.uid
+              || resource.data.counselorUid == request.auth.uid);
+      allow create, update, delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if request.auth != null
+            && (get(/databases/$(database)/documents/bookings/$(bookingId)).data.studentUid == request.auth.uid
+                || get(/databases/$(database)/documents/bookings/$(bookingId)).data.counselorUid == request.auth.uid);
+        // Session chat is only writable during the live window: participant
+        // AND sender must be the caller AND the booking is confirmed/
+        // in_progress AND we're inside [start - 10min, end + 30min grace].
+        // The client also gates the input; these rules enforce it server-side.
+        allow create: if request.auth != null
+            && request.resource.data.senderUid == request.auth.uid
+            && (get(/databases/$(database)/documents/bookings/$(bookingId)).data.studentUid == request.auth.uid
+                || get(/databases/$(database)/documents/bookings/$(bookingId)).data.counselorUid == request.auth.uid)
+            && get(/databases/$(database)/documents/bookings/$(bookingId)).data.status in ['confirmed', 'in_progress']
+            && request.time >= get(/databases/$(database)/documents/bookings/$(bookingId)).data.scheduledStart - duration(10, 'minutes')
+            && request.time <= get(/databases/$(database)/documents/bookings/$(bookingId)).data.scheduledEnd + duration(30, 'minutes');
+        allow update: if request.auth != null
+            && request.resource.data.diff(resource.data).affectedKeys()
+                .hasOnly(['readAt']);
+        allow delete: if false;
+      }
+    }
+
+    // Ratings: publicly readable (first name only is stored); written only
+    // by the submitRating Cloud Function.
+    match /ratings/{bookingId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Admin dispute queue: readable only by users holding the `admin` custom
+    // claim (Firebase console -> Authentication -> custom claims). Written
+    // exclusively by Cloud Functions.
+    match /adminDisputeQueue/{bookingId} {
+      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow write: if false;
     }
   }
 }
