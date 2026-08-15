@@ -577,7 +577,7 @@ class _BookingFlowPageState extends State<BookingFlowPage> {
           _summaryRow(
             context,
             FontAwesomeIcons.wallet,
-            '${l10n.sessionFeeLabel}: ${widget.currency} ${_amount(widget.rate)}',
+            '${l10n.sessionFeeLabel}: ${widget.currency} ${formatAmount(widget.rate)}',
           ),
           _summaryRow(
             context,
@@ -599,7 +599,7 @@ class _BookingFlowPageState extends State<BookingFlowPage> {
                 ),
               ),
               Text(
-                '${widget.currency} ${_amount(widget.rate)}',
+                '${widget.currency} ${formatAmount(widget.rate)}',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
@@ -738,7 +738,7 @@ class _BookingFlowPageState extends State<BookingFlowPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              '${l10n.chargedAmount}: $_currency ${_amount(_fee)}',
+              '${l10n.chargedAmount}: $_currency ${formatAmount(_fee)}',
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -918,7 +918,7 @@ class _BookingFlowPageState extends State<BookingFlowPage> {
                     _summaryRow(
                       context,
                       FontAwesomeIcons.wallet,
-                      '$_currency ${_amount(_fee)} ${l10n.perSession}',
+                      '$_currency ${formatAmount(_fee)} ${l10n.perSession}',
                     ),
                   ],
                 ),
@@ -977,6 +977,4 @@ class _BookingFlowPageState extends State<BookingFlowPage> {
     );
   }
 
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }

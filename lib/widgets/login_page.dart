@@ -52,10 +52,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  bool _isValidEmail(String value) {
-    return value.contains('@') && value.contains('.');
-  }
-
   Future<void> _initializeEmailLinkHandling() async {
     final initialUri = await _appLinks.getInitialLink();
     if (initialUri != null) {
@@ -149,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _sendEmailSignInLink() async {
     final email = _emailController.text.trim();
-    if (!_isValidEmail(email)) {
+    if (!isValidEmail(email)) {
       setState(() {
         _errorMessage = AppLocalizations.of(context).enterValidEmailForLink;
       });
@@ -428,7 +424,7 @@ class _LoginPageState extends State<LoginPage> {
                                     if (value == null || value.trim().isEmpty) {
                                       return l10n.enterYourEmail;
                                     }
-                                    if (!value.contains('@')) {
+                                    if (!isValidEmail(value)) {
                                       return l10n.enterValidEmail;
                                     }
                                     return null;

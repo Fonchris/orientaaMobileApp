@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -90,14 +89,11 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
   Future<void> _loadProfile() async {
     // Public fields come from the marketplace profile; the credentials URL,
     // government ID and payout target come from the owner-only
-    // `counselorPrivate/{uid}` document (students never see those fields).
-    final results = await Future.wait([
-      _service.fetchProfile(widget.counselorUid),
-      _service.fetchPrivateProfile(widget.counselorUid),
-    ]);
-    final profile = results[0] as CounselorProfile?;
-    final private = results[1] as Map<String, dynamic>?;
+    // `counselorPrivate/{uid}` document (students never see those fields) —
+    // all fetched by the shared CounselorService.fetchCounselorDraft.
+    final draft = await _service.fetchCounselorDraft(widget.counselorUid);
     if (!mounted) return;
+    final profile = draft.profile;
     setState(() {
       _loaded = true;
       if (profile != null) {
@@ -120,17 +116,11 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
         _availability.addAll(profile.availability);
         _verificationStatus = profile.verificationStatus;
       }
-      final privateData = private ?? const <String, dynamic>{};
-      _credentialsUrl = privateData['credentialsUrl'] as String?;
-      _idDocumentUrl = privateData['idDocumentUrl'] as String?;
-      final payout =
-          (privateData['payoutAccountDetails'] as Map?)?.cast<String, dynamic>() ??
-              const <String, dynamic>{};
-      if (payout.isNotEmpty) {
-        _payoutProvider = (payout['provider'] as String?) ?? 'mobile_money';
-        _accountName.text = (payout['accountName'] as String?) ?? '';
-        _accountNumber.text = (payout['accountNumber'] as String?) ?? '';
-      }
+      _credentialsUrl = draft.credentialsUrl;
+      _idDocumentUrl = draft.idDocumentUrl;
+      _payoutProvider = draft.payoutProvider;
+      _accountName.text = draft.accountName;
+      _accountNumber.text = draft.accountNumber;
     });
   }
 
@@ -166,15 +156,12 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
     }
   }
 
-  Future<String> _uploadCredential(File file) async {
-    final ext = file.path.split('.').last.toLowerCase();
-    final safeExt =
-        const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext) ? ext : 'jpg';
-    final ref = FirebaseStorage.instance.ref(
-      'counselor_credentials/${widget.counselorUid}/document.$safeExt',
+  Future<String> _uploadCredential(File file) {
+    return _media.uploadCounselorDocument(
+      uid: widget.counselorUid,
+      folder: 'counselor_credentials',
+      file: file,
     );
-    await ref.putFile(file);
-    return ref.getDownloadURL();
   }
 
   Future<void> _save() async {
@@ -270,7 +257,7 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
           Center(
             child: ProfileAvatar(
               photoUrl: _photoUrl,
-              initials: _initials(_name.text),
+              initials: counselorInitials(_name.text),
               size: 92,
               showEditBadge: true,
               onTap: _pickPhoto,
@@ -450,11 +437,4 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
     );
   }
 
-  String _initials(String name) {
-    final raw = name.trim();
-    if (raw.isEmpty) return 'O';
-    final parts = raw.split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? 'O' : letters;
-  }
 }

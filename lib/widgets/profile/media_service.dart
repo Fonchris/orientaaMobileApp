@@ -51,21 +51,12 @@ class MediaService {
     required String uid,
     required File file,
     void Function(double progress)? onProgress,
-  }) async {
-    final ref = _storage.ref('profile_photos/$uid.jpg');
-    final task = ref.putFile(file);
-    if (onProgress != null) {
-      final sub = task.snapshotEvents.listen((snap) {
-        if (snap.totalBytes > 0) {
-          onProgress(snap.bytesTransferred / snap.totalBytes);
-        }
-      });
-      await task;
-      await sub.cancel();
-    } else {
-      await task;
-    }
-    return ref.getDownloadURL();
+  }) {
+    return uploadFile(
+      storagePath: 'profile_photos/$uid.jpg',
+      file: file,
+      onProgress: onProgress,
+    );
   }
 
   /// Uploads a post image for [uid] under a unique path and returns the
@@ -74,8 +65,46 @@ class MediaService {
     required String uid,
     required File file,
     void Function(double progress)? onProgress,
+  }) {
+    return uploadFile(
+      storagePath:
+          'post_images/$uid/${DateTime.now().millisecondsSinceEpoch}.jpg',
+      file: file,
+      onProgress: onProgress,
+    );
+  }
+
+  /// Uploads a sensitive verification document (government ID or professional
+  /// credentials) to the private `counselor_ids/<uid>/` or
+  /// `counselor_credentials/<uid>/` Storage path and returns the download
+  /// URL. The uid lives in its own path segment so the Storage rules can bind
+  /// it directly to `request.auth.uid` (owner-write, owner-or-admin-read).
+  Future<String> uploadCounselorDocument({
+    required String uid,
+    required String folder,
+    required File file,
   }) async {
-    final ref = _storage.ref('post_images/$uid/${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final ext = file.path.split('.').last.toLowerCase();
+    final safeExt =
+        const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext)
+            ? ext
+            : 'jpg';
+    return uploadFile(
+      storagePath: '$folder/$uid/document.$safeExt',
+      file: file,
+    );
+  }
+
+  /// Generic upload: writes [file] to [storagePath], reports optional
+  /// progress and returns the public download URL. Every other upload in the
+  /// app (profile photos, post images, counselor documents) goes through this
+  /// so the putFile + progress + URL mechanics live in one place.
+  Future<String> uploadFile({
+    required String storagePath,
+    required File file,
+    void Function(double progress)? onProgress,
+  }) async {
+    final ref = _storage.ref(storagePath);
     final task = ref.putFile(file);
     if (onProgress != null) {
       final sub = task.snapshotEvents.listen((snap) {

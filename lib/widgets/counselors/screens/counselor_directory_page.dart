@@ -772,7 +772,7 @@ class _CounselorCard extends StatelessWidget {
                 children: [
                   ProfileAvatar(
                     photoUrl: c.photoUrl,
-                    initials: _initials(c.displayName),
+                    initials: counselorInitials(c.displayName, fallback: '?'),
                     size: 56,
                   ),
                   Positioned(
@@ -853,7 +853,7 @@ class _CounselorCard extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '${c.currency} ${_amount(c.hourlyRate)}',
+                          '${c.currency} ${formatAmount(c.hourlyRate)}',
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
@@ -920,14 +920,6 @@ class _CounselorCard extends StatelessWidget {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }
 
 class _CounselorCardSkeleton extends StatelessWidget {

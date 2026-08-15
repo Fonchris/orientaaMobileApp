@@ -7,6 +7,7 @@ import '../../app_theme.dart';
 import '../../google_fonts.dart';
 import '../../profile/profile_avatar.dart';
 import '../../profile/profile_models.dart' show relativeTime;
+import '../counselor_constants.dart';
 import '../models/counselor_models.dart';
 import '../services/counselor_functions.dart';
 import '../services/counselor_service.dart';
@@ -363,7 +364,7 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
                 children: [
                   ProfileAvatar(
                     photoUrl: p.photoUrl,
-                    initials: _initials(p.displayName),
+                    initials: counselorInitials(p.displayName, fallback: '?'),
                     size: 44,
                   ),
                   const SizedBox(width: 12),
@@ -437,7 +438,7 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
               _detailRow(
                 context,
                 l10n.sessionFeeLabel,
-                '${p.currency} ${_amount(p.hourlyRate)} ${l10n.perSession}',
+                '${p.currency} ${formatAmount(p.hourlyRate)} ${l10n.perSession}',
               ),
               _detailRow(
                 context,
@@ -685,14 +686,6 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }
 
 /// A directory-style application card: avatar, name, status badge, submitted
@@ -739,7 +732,7 @@ class _ApplicationCard extends StatelessWidget {
             children: [
               ProfileAvatar(
                 photoUrl: p.photoUrl,
-                initials: _initials(p.displayName),
+                initials: counselorInitials(p.displayName, fallback: '?'),
                 size: 44,
               ),
               const SizedBox(width: 12),
@@ -783,7 +776,7 @@ class _ApplicationCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '${p.currency} ${_amount(p.hourlyRate)} ${l10n.perSession}'
+                      '${p.currency} ${formatAmount(p.hourlyRate)} ${l10n.perSession}'
                       '${p.specialties.isNotEmpty ? ' • ${p.specialties.length} ${l10n.specialtiesTitle}' : ''}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -843,12 +836,4 @@ class _ApplicationCard extends StatelessWidget {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }

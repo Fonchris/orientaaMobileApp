@@ -198,6 +198,31 @@ class CounselorService {
     return s.exists ? s.data() : null;
   }
 
+  /// Loads the public profile + owner-only private document in one shot and
+  /// unpacks the document URLs and payout target. This is the shared prefill
+  /// for the onboarding wizard and the setup editor — both pages used to
+  /// duplicate this exact Future.wait + parse block.
+  Future<CounselorDraft> fetchCounselorDraft(String uid) async {
+    final results = await Future.wait([
+      fetchProfile(uid),
+      fetchPrivateProfile(uid),
+    ]);
+    final profile = results[0] as CounselorProfile?;
+    final private = results[1] as Map<String, dynamic>?;
+    final privateData = private ?? const <String, dynamic>{};
+    final payout =
+        (privateData['payoutAccountDetails'] as Map?)?.cast<String, dynamic>() ??
+            const <String, dynamic>{};
+    return CounselorDraft(
+      profile: profile,
+      credentialsUrl: privateData['credentialsUrl'] as String?,
+      idDocumentUrl: privateData['idDocumentUrl'] as String?,
+      payoutProvider: (payout['provider'] as String?) ?? 'mobile_money',
+      accountName: (payout['accountName'] as String?) ?? '',
+      accountNumber: (payout['accountNumber'] as String?) ?? '',
+    );
+  }
+
   // ── Bookings ───────────────────────────────────────────────────────────
 
   Stream<Booking?> watchBooking(String bookingId) =>

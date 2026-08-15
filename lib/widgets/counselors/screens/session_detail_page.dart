@@ -215,7 +215,7 @@ class _SessionDetailPageState extends State<SessionDetailPage> {
             children: [
               ProfileAvatar(
                 photoUrl: widget.otherPhotoUrl,
-                initials: _initials(widget.otherName),
+                initials: counselorInitials(widget.otherName, fallback: '?'),
                 size: 44,
               ),
               const SizedBox(width: 12),
@@ -245,7 +245,7 @@ class _SessionDetailPageState extends State<SessionDetailPage> {
           const SizedBox(height: 12),
           _factRow(context, FontAwesomeIcons.calendarDay, '${l10n.dateLabel}: ${DateFormat('EEE, MMM d').format(b.scheduledStart)}'),
           _factRow(context, FontAwesomeIcons.clock, '${l10n.timeLabel}: ${DateFormat('h:mm a').format(b.scheduledStart)} · ${l10n.sessionLengthLabel}'),
-          _factRow(context, FontAwesomeIcons.wallet, '${l10n.sessionFeeLabel}: ${b.currency} ${_amount(b.feeAmount)}'),
+          _factRow(context, FontAwesomeIcons.wallet, '${l10n.sessionFeeLabel}: ${b.currency} ${formatAmount(b.feeAmount)}'),
           _factRow(context, FontAwesomeIcons.percent, l10n.platformCommissionLabel),
           _factRow(context, FontAwesomeIcons.moneyBillWave, '${l10n.statusLabel}: ${_paidStatus(l10n, b)}'),
         ],
@@ -281,7 +281,7 @@ class _SessionDetailPageState extends State<SessionDetailPage> {
   String _paidStatus(AppLocalizations l10n, Booking b) {
     switch (b.status) {
       case BookingStatus.paidOut:
-        return '${l10n.bookingStatusPaidOut} · ${b.currency} ${_amount(b.counselorPayoutAmount)}';
+        return '${l10n.bookingStatusPaidOut} · ${b.currency} ${formatAmount(b.counselorPayoutAmount)}';
       case BookingStatus.refunded:
         return l10n.bookingStatusRefunded;
       case BookingStatus.completed:
@@ -634,12 +634,4 @@ class _SessionDetailPageState extends State<SessionDetailPage> {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }

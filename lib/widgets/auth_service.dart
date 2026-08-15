@@ -43,6 +43,11 @@ String friendlyAuthError(AppLocalizations l10n, Object error) {
   }
 }
 
+/// Lightweight client-side email check shared by the login, signup and
+/// reset-password forms (each used to carry its own inline copy).
+bool isValidEmail(String value) =>
+    value.contains('@') && value.contains('.');
+
 class AuthService {
   static const String _pendingEmailKey = 'pending_email_link_sign_in';
   static const String _emailLinkContinueUrl =

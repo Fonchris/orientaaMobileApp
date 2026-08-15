@@ -434,6 +434,29 @@ class DisputeEntry {
   }
 }
 
+/// Everything needed to prefill the counselor forms: the public profile plus
+/// the owner-only private-document fields (credentials URL, government ID,
+/// payout target) unpacked for direct controller assignment. Produced by
+/// [CounselorService.fetchCounselorDraft] and shared by the onboarding
+/// wizard and the setup editor.
+class CounselorDraft {
+  final CounselorProfile? profile;
+  final String? credentialsUrl;
+  final String? idDocumentUrl;
+  final String payoutProvider;
+  final String accountName;
+  final String accountNumber;
+
+  const CounselorDraft({
+    this.profile,
+    this.credentialsUrl,
+    this.idDocumentUrl,
+    this.payoutProvider = 'mobile_money',
+    this.accountName = '',
+    this.accountNumber = '',
+  });
+}
+
 /// A rating from `ratings/{bookingId}`.
 class CounselorRating {
   final String bookingId;

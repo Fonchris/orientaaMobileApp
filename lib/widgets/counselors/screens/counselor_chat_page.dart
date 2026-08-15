@@ -145,7 +145,7 @@ class _CounselorChatPageState extends State<CounselorChatPage> {
           children: [
             ProfileAvatar(
               photoUrl: widget.otherPhotoUrl,
-              initials: _initials(widget.otherName),
+              initials: counselorInitials(widget.otherName, fallback: '?'),
               size: 36,
             ),
             const SizedBox(width: 10),
@@ -460,9 +460,4 @@ class _CounselorChatPageState extends State<CounselorChatPage> {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
 }

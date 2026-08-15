@@ -189,7 +189,7 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
                   Center(
                     child: ProfileAvatar(
                       photoUrl: c.photoUrl,
-                      initials: _initials(c.displayName),
+                      initials: counselorInitials(c.displayName, fallback: '?'),
                       size: 108,
                     ),
                   ),
@@ -369,7 +369,7 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
             ),
             const Spacer(),
             Text(
-              '${c.currency} ${_amount(c.hourlyRate)} ${l10n.perSession}',
+              '${c.currency} ${formatAmount(c.hourlyRate)} ${l10n.perSession}',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
@@ -785,12 +785,4 @@ class _CounselorProfilePageState extends State<CounselorProfilePage> {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }

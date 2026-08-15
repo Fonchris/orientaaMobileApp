@@ -216,7 +216,7 @@ class _SignupPageState extends State<SignupPage> {
                                     if (value == null || value.trim().isEmpty) {
                                       return l10n.enterYourEmail;
                                     }
-                                    if (!value.contains('@')) {
+                                    if (!isValidEmail(value)) {
                                       return l10n.enterValidEmail;
                                     }
                                     return null;

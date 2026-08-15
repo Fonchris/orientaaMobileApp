@@ -1,8 +1,9 @@
-/// Fixed business rules for the Counselors module.
+/// Fixed business rules for the Counselors module, plus the small shared UI
+/// helpers (initials, amount formatting) used across the counselor screens.
 ///
-/// These are deliberately hardcoded here (not user-configurable) so they are
-/// trivial to change later. The Cloud Functions side keeps the exact same
-/// values in `functions/src/config.ts` — keep the two in sync.
+/// The business rules are deliberately hardcoded here (not user-configurable)
+/// so they are trivial to change later. The Cloud Functions side keeps the
+/// exact same values in `functions/src/config.ts` — keep the two in sync.
 library;
 
 /// Every session is exactly this long (minutes). The counselor's
@@ -94,3 +95,24 @@ const List<String> counselorSpecialtyPresets = [
   'Financial aid',
   'Language tests (IELTS/TOEFL)',
 ];
+
+/// Up-to-two-letter initials for an avatar, from the first two words of
+/// [name]. Used by the directory cards, admin screens and the counselor
+/// forms (previously each screen carried its own copy).
+String counselorInitials(String name, {String fallback = 'O'}) {
+  final raw = name.trim();
+  if (raw.isEmpty) return fallback;
+  final parts = raw.split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
+  final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
+  return letters.isEmpty ? fallback : letters;
+}
+
+/// Compact amount formatting shared by every counselor screen: whole amounts
+/// render without decimals, otherwise two places. Named `formatAmount` (not
+/// `formatMoney`) to avoid clashing with the discovery module's
+/// `formatMoney(amount, currency)` which adds currency symbols/thousands
+/// separators.
+String formatAmount(double amount) =>
+    amount == amount.roundToDouble()
+        ? amount.toStringAsFixed(0)
+        : amount.toStringAsFixed(2);

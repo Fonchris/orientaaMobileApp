@@ -7,6 +7,7 @@ import '../../app_theme.dart';
 import '../../google_fonts.dart';
 import '../../profile/profile_avatar.dart';
 import '../../profile/profile_models.dart' show relativeTime;
+import '../counselor_constants.dart';
 import '../models/counselor_models.dart';
 import '../services/counselor_functions.dart';
 import '../services/counselor_service.dart';
@@ -256,7 +257,7 @@ class _AdminDisputesPageState extends State<AdminDisputesPage> {
               _detailRow(
                 context,
                 '${entry.counselorName} ↔ ${entry.studentName}',
-                '${entry.currency} ${_amount(entry.feeAmount)}',
+                '${entry.currency} ${formatAmount(entry.feeAmount)}',
               ),
               const SizedBox(height: 16),
               if (entry.isOpen) ...[
@@ -410,8 +411,6 @@ class _AdminDisputesPageState extends State<AdminDisputesPage> {
     }
   }
 
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }
 
 class _DisputeCard extends StatelessWidget {
@@ -461,7 +460,7 @@ class _DisputeCard extends StatelessWidget {
             children: [
               ProfileAvatar(
                 photoUrl: entry.counselorPhotoUrl,
-                initials: _initials(entry.counselorName),
+                initials: counselorInitials(entry.counselorName, fallback: '?'),
                 size: 44,
               ),
               const SizedBox(width: 12),
@@ -505,7 +504,7 @@ class _DisputeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      '${entry.currency} ${_amount(entry.feeAmount)} • '
+                      '${entry.currency} ${formatAmount(entry.feeAmount)} • '
                       '${entry.studentName}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -578,12 +577,4 @@ class _DisputeCard extends StatelessWidget {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }

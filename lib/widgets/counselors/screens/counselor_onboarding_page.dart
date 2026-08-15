@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -99,14 +98,11 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
 
   Future<void> _loadExisting() async {
     // Prefill from a partial profile (re-entry) — public fields from the
-    // profile doc, credentials + ID + payout from the owner-only private doc.
-    final results = await Future.wait([
-      _service.fetchProfile(widget.counselorUid),
-      _service.fetchPrivateProfile(widget.counselorUid),
-    ]);
-    final profile = results[0] as CounselorProfile?;
-    final private = results[1] as Map<String, dynamic>?;
+    // profile doc, credentials + ID + payout from the owner-only private doc
+    // (all fetched by the shared CounselorService.fetchCounselorDraft).
+    final draft = await _service.fetchCounselorDraft(widget.counselorUid);
     if (!mounted) return;
+    final profile = draft.profile;
     setState(() {
       _loaded = true;
       if (profile != null) {
@@ -128,17 +124,11 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         _currency = profile.currency;
         _availability.addAll(profile.availability);
       }
-      final privateData = private ?? const <String, dynamic>{};
-      _credentialsUrl = privateData['credentialsUrl'] as String?;
-      _idDocumentUrl = privateData['idDocumentUrl'] as String?;
-      final payout =
-          (privateData['payoutAccountDetails'] as Map?)?.cast<String, dynamic>() ??
-              const <String, dynamic>{};
-      if (payout.isNotEmpty) {
-        _payoutProvider = (payout['provider'] as String?) ?? 'mobile_money';
-        _accountName.text = (payout['accountName'] as String?) ?? '';
-        _accountNumber.text = (payout['accountNumber'] as String?) ?? '';
-      }
+      _credentialsUrl = draft.credentialsUrl;
+      _idDocumentUrl = draft.idDocumentUrl;
+      _payoutProvider = draft.payoutProvider;
+      _accountName.text = draft.accountName;
+      _accountNumber.text = draft.accountNumber;
     });
   }
 
@@ -167,19 +157,17 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
     if (mounted) setState(() => _photoUrl = url);
   }
 
-  /// Uploads a sensitive document (ID or credentials) to a private Storage
-  /// path. Images and PDFs are both supported (the native file picker
-  /// restricts the extensions). The uid lives in its own path segment so the
-  /// Storage rules can bind it directly to `request.auth.uid` — the rules
-  /// only let the owner write and the owner/admin read.
-  Future<String> _uploadDocument(File file, String folder) async {
-    final ext = file.path.split('.').last.toLowerCase();
-    final safeExt =
-        const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext) ? ext : 'jpg';
-    final ref = FirebaseStorage.instance
-        .ref('$folder/${widget.counselorUid}/document.$safeExt');
-    await ref.putFile(file);
-    return ref.getDownloadURL();
+  /// Uploads a sensitive document (ID or credentials) to the private Storage
+  /// path under `counselor_ids/<uid>/` or `counselor_credentials/<uid>/`
+  /// (see [MediaService.uploadCounselorDocument]). Images and PDFs are both
+  /// supported; the Storage rules only let the owner write and the
+  /// owner/admin read.
+  Future<String> _uploadDocument(File file, String folder) {
+    return _media.uploadCounselorDocument(
+      uid: widget.counselorUid,
+      folder: folder,
+      file: file,
+    );
   }
 
   Future<void> _pickId() async {
@@ -439,7 +427,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
           child: Center(
             child: ProfileAvatar(
               photoUrl: _photoUrl,
-              initials: _initials(_name.text),
+              initials: counselorInitials(_name.text),
               size: 96,
               showEditBadge: true,
               onTap: _pickPhoto,
@@ -829,11 +817,4 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
     });
   }
 
-  String _initials(String name) {
-    final raw = name.trim();
-    if (raw.isEmpty) return 'O';
-    final parts = raw.split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? 'O' : letters;
-  }
 }

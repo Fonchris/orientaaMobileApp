@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../app_theme.dart';
 import '../../google_fonts.dart';
 import '../../profile/profile_avatar.dart';
+import '../counselor_constants.dart';
 import '../models/counselor_models.dart';
 import 'booking_status_badge.dart';
 
@@ -52,7 +53,7 @@ class SessionCard extends StatelessWidget {
             children: [
               ProfileAvatar(
                 photoUrl: otherPhotoUrl,
-                initials: _initials(otherName),
+                initials: counselorInitials(otherName, fallback: '?'),
                 size: 46,
               ),
               const SizedBox(width: 12),
@@ -96,7 +97,7 @@ class SessionCard extends StatelessWidget {
                         BookingStatusBadge(status: booking.status, compact: true),
                         const SizedBox(width: 8),
                         Text(
-                          '${booking.currency} ${_amount(booking.feeAmount)}',
+                          '${booking.currency} ${formatAmount(booking.feeAmount)}',
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -122,12 +123,4 @@ class SessionCard extends StatelessWidget {
     );
   }
 
-  String _initials(String name) {
-    final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
-    final letters = parts.take(2).map((p) => p[0].toUpperCase()).join();
-    return letters.isEmpty ? '?' : letters;
-  }
-
-  String _amount(double amount) =>
-      amount == amount.roundToDouble() ? amount.toStringAsFixed(0) : amount.toStringAsFixed(2);
 }
