@@ -84,6 +84,9 @@ class CounselorService {
   CollectionReference<Map<String, dynamic>> get _profiles =>
       FirebaseFirestore.instance.collection(profilesCollection);
 
+  CollectionReference<Map<String, dynamic>> get _private =>
+      FirebaseFirestore.instance.collection(privateCollection);
+
   CollectionReference<Map<String, dynamic>> get _bookings =>
       FirebaseFirestore.instance.collection(bookingsCollection);
 
@@ -166,18 +169,30 @@ class CounselorService {
             (s) => s.exists ? CounselorProfile.fromSnapshot(s) : null,
           );
 
-  /// Applications awaiting (or that failed) admin review. Readable only by
-  /// admins (rules). Sorted client-side by createdAt to avoid a composite
-  /// index on (verificationStatus, createdAt).
-  Stream<List<CounselorProfile>> watchApplications() => _profiles
+  /// Applications awaiting (or that failed) admin review, each carrying its
+  /// owner/admin-only private doc (verification documents + AI screening
+  /// result). Readable only by admins (rules). `needs_attention` applications
+  /// are surfaced first, then newest-first — so flagged applications land at
+  /// the top of the queue instead of being buried by recency.
+  Stream<List<CounselorApplication>> watchApplications() => _profiles
       .where('verificationStatus', whereIn: ['pending', 'rejected'])
       .snapshots()
-      .map((snap) {
-        final list = snap.docs.map(CounselorProfile.fromSnapshot).toList();
-        list.sort((a, b) =>
-            (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
-                .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)));
-        return list;
+      .asyncMap((snap) async {
+        final profiles = snap.docs.map(CounselorProfile.fromSnapshot).toList();
+        final privateMap =
+            await fetchPrivateProfiles(profiles.map((p) => p.uid).toList());
+        final apps = profiles
+            .map((p) =>
+                CounselorApplication(profile: p, private: privateMap[p.uid]))
+            .toList();
+        final epoch = DateTime.fromMillisecondsSinceEpoch(0);
+        apps.sort((a, b) {
+          final aiA = a.needsAttention ? 0 : 1;
+          final aiB = b.needsAttention ? 0 : 1;
+          if (aiA != aiB) return aiA.compareTo(aiB);
+          return (b.createdAt ?? epoch).compareTo(a.createdAt ?? epoch);
+        });
+        return apps;
       });
 
   Future<CounselorProfile?> fetchProfile(String uid) async {
@@ -191,11 +206,21 @@ class CounselorService {
   /// payout target. Readable only by the owner (rules); used by the setup
   /// page to prefill payout details and show uploaded credentials.
   Future<Map<String, dynamic>?> fetchPrivateProfile(String uid) async {
-    final s = await FirebaseFirestore.instance
-        .collection(privateCollection)
-        .doc(uid)
-        .get();
+    final s = await _private.doc(uid).get();
     return s.exists ? s.data() : null;
+  }
+
+  /// Batch fetch of private docs for a list of uids (admin screens: the
+  /// application list needs each applicant's AI screening + documents).
+  Future<Map<String, Map<String, dynamic>>> fetchPrivateProfiles(
+      List<String> uids) async {
+    final docs = await Future.wait(uids.map((u) => _private.doc(u).get()));
+    final out = <String, Map<String, dynamic>>{};
+    for (var i = 0; i < uids.length; i++) {
+      final s = docs[i];
+      if (s.exists) out[uids[i]] = s.data() ?? const {};
+    }
+    return out;
   }
 
   /// Loads the public profile + owner-only private document in one shot and

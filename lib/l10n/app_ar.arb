@@ -601,5 +601,21 @@
   "adminApproveAction": "موافقة",
   "adminRejectAction": "رفض",
   "adminReviewSuccess": "تمت مراجعة الطلب",
-  "adminReviewError": "تعذرت مراجعة الطلب. حاول مرة أخرى."
+  "adminReviewError": "تعذرت مراجعة الطلب. حاول مرة أخرى.",
+  "socialLinksTitle": "الملفات الاجتماعية",
+  "socialLinksSubtitle": "أضف روابط يمكن للطلاب استخدامها للتحقق منك — مطلوب رابط واحد على الأقل.",
+  "socialLinksRequiredError": "أضف رابط ملف اجتماعي واحدًا على الأقل للمتابعة.",
+  "linkedinLabel": "رابط لينكد إن",
+  "xLabel": "رابط إكس (تويتر)",
+  "instagramLabel": "رابط إنستغرام",
+  "tiktokLabel": "رابط تيك توك",
+  "reviewSlaMessage": "عادةً ما تتم مراجعة الطلبات خلال 48 ساعة.",
+  "aiScreeningTitle": "الفحص المسبق بالذكاء الاصطناعي",
+  "aiStatusLooksComplete": "يبدو مكتملًا",
+  "aiStatusNeedsAttention": "يتطلب انتباهًا",
+  "aiStatusNotChecked": "لم يتم فحصه",
+  "aiStatusOverdue": "متأخر",
+  "aiNoIssues": "لا توجد مشكلات مكتشفة.",
+  "adminSocialLinksTitle": "الملفات الاجتماعية",
+  "adminSocialNoLinks": "لم يتم تقديم ملفات اجتماعية"
 }

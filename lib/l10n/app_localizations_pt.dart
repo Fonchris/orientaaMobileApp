@@ -1792,4 +1792,55 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get adminReviewError =>
       'Não foi possível revisar a inscrição. Tente novamente.';
+
+  @override
+  String get socialLinksTitle => 'Redes sociais';
+
+  @override
+  String get socialLinksSubtitle =>
+      'Adicione links que os estudantes possam usar para verificar você — pelo menos um é obrigatório.';
+
+  @override
+  String get socialLinksRequiredError =>
+      'Adicione pelo menos um link de rede social para continuar.';
+
+  @override
+  String get linkedinLabel => 'URL do LinkedIn';
+
+  @override
+  String get xLabel => 'URL do X (Twitter)';
+
+  @override
+  String get instagramLabel => 'URL do Instagram';
+
+  @override
+  String get tiktokLabel => 'URL do TikTok';
+
+  @override
+  String get reviewSlaMessage =>
+      'As inscrições geralmente são analisadas em até 48 horas.';
+
+  @override
+  String get aiScreeningTitle => 'Pré-triagem por IA';
+
+  @override
+  String get aiStatusLooksComplete => 'Parece completo';
+
+  @override
+  String get aiStatusNeedsAttention => 'Requer atenção';
+
+  @override
+  String get aiStatusNotChecked => 'Não verificado';
+
+  @override
+  String get aiStatusOverdue => 'Atrasado';
+
+  @override
+  String get aiNoIssues => 'Nenhum problema detectado.';
+
+  @override
+  String get adminSocialLinksTitle => 'Redes sociais';
+
+  @override
+  String get adminSocialNoLinks => 'Nenhuma rede social enviada';
 }

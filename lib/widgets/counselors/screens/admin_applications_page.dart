@@ -69,7 +69,7 @@ class _AdminApplicationsPageState extends State<AdminApplicationsPage> {
             ),
           ),
           Expanded(
-            child: StreamBuilder<List<CounselorProfile>>(
+            child: StreamBuilder<List<CounselorApplication>>(
               stream: _service.watchApplications(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -90,10 +90,14 @@ class _AdminApplicationsPageState extends State<AdminApplicationsPage> {
                     l10n.adminOnlyError,
                   );
                 }
-                final all = snapshot.data ?? const <CounselorProfile>[];
+                final all = snapshot.data ?? const <CounselorApplication>[];
                 final list = _pending
-                    ? all.where((p) => p.verificationStatus == 'pending').toList()
-                    : all.where((p) => p.verificationStatus == 'rejected').toList();
+                    ? all
+                        .where((a) => a.profile.verificationStatus == 'pending')
+                        .toList()
+                    : all
+                        .where((a) => a.profile.verificationStatus == 'rejected')
+                        .toList();
                 if (list.isEmpty) {
                   return _centered(
                     context,
@@ -113,8 +117,8 @@ class _AdminApplicationsPageState extends State<AdminApplicationsPage> {
                   itemBuilder: (context, i) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
                     child: _ApplicationCard(
-                      profile: list[i],
-                      reviewing: _reviewingUid == list[i].uid,
+                      application: list[i],
+                      reviewing: _reviewingUid == list[i].profile.uid,
                       onTap: () => _openDetail(context, list[i]),
                     ),
                   ),
@@ -197,7 +201,8 @@ class _AdminApplicationsPageState extends State<AdminApplicationsPage> {
     );
   }
 
-  Future<void> _openDetail(BuildContext context, CounselorProfile profile) async {
+  Future<void> _openDetail(
+      BuildContext context, CounselorApplication application) async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     await showModalBottomSheet<void>(
       context: context,
@@ -207,7 +212,7 @@ class _AdminApplicationsPageState extends State<AdminApplicationsPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) => _ApplicationDetailSheet(
-        profile: profile,
+        application: application,
         functions: _functions,
         onReviewStart: (uid) {
           if (mounted) setState(() => _reviewingUid = uid);
@@ -223,13 +228,13 @@ class _AdminApplicationsPageState extends State<AdminApplicationsPage> {
 /// The application detail sheet: identity, experience, pricing/availability
 /// and the sensitive verification documents, with Approve / Reject actions.
 class _ApplicationDetailSheet extends StatefulWidget {
-  final CounselorProfile profile;
+  final CounselorApplication application;
   final CounselorFunctions functions;
   final ValueChanged<String> onReviewStart;
   final VoidCallback onReviewDone;
 
   const _ApplicationDetailSheet({
-    required this.profile,
+    required this.application,
     required this.functions,
     required this.onReviewStart,
     required this.onReviewDone,
@@ -248,12 +253,16 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
   @override
   void initState() {
     super.initState();
+    // Seed from the list fetch so the AI screening section renders instantly,
+    // then refresh for freshness.
+    _private = widget.application.private;
     _loadPrivate();
   }
 
   Future<void> _loadPrivate() async {
     try {
-      final data = await _service.fetchPrivateProfile(widget.profile.uid);
+      final data =
+          await _service.fetchPrivateProfile(widget.application.profile.uid);
       if (mounted) setState(() => _private = data);
     } catch (_) {
       // Documents simply show as unavailable — the profile itself is enough
@@ -315,10 +324,10 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
     if (confirmed != true || !mounted) return;
 
     setState(() => _busy = true);
-    widget.onReviewStart(widget.profile.uid);
+    widget.onReviewStart(widget.application.profile.uid);
     try {
       await widget.functions.reviewApplication(
-        uid: widget.profile.uid,
+        uid: widget.application.profile.uid,
         action: action,
       );
       widget.onReviewDone();
@@ -342,7 +351,7 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final p = widget.profile;
+    final p = widget.application.profile;
     final pending = p.verificationStatus == 'pending';
     final statusColor = pending ? AppTheme.brandAmber : AppTheme.danger;
     final statusLabel = pending
@@ -479,6 +488,14 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
                 )
               else
                 _documents(context),
+              const SizedBox(height: 16),
+              _sectionTitle(l10n.aiScreeningTitle, isDark),
+              const SizedBox(height: 8),
+              _aiScreeningSection(context),
+              const SizedBox(height: 16),
+              _sectionTitle(l10n.adminSocialLinksTitle, isDark),
+              const SizedBox(height: 8),
+              _socialLinksSection(context),
               const SizedBox(height: 20),
               if (pending) ...[
                 SizedBox(
@@ -547,6 +564,184 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Map<String, dynamic>? get _aiScreening =>
+      _private?['aiScreeningResult'] as Map<String, dynamic>?;
+
+  Widget _aiScreeningSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final status = (_aiScreening?['status'] as String?) ?? '';
+    final issues = ((_aiScreening?['issues'] as List?) ?? const []).cast<String>();
+    final (String label, Color color) = switch (status) {
+      'looks_complete' => (l10n.aiStatusLooksComplete, AppTheme.success),
+      'needs_attention' => (l10n.aiStatusNeedsAttention, AppTheme.brandAmber),
+      _ => (
+          l10n.aiStatusNotChecked,
+          isDark
+              ? Colors.white.withValues(alpha: 0.5)
+              : AppTheme.brandInk.withValues(alpha: 0.5),
+        ),
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            color: color.withValues(alpha: 0.12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FaIcon(
+                status == 'needs_attention'
+                    ? FontAwesomeIcons.triangleExclamation
+                    : status == 'looks_complete'
+                        ? FontAwesomeIcons.solidCircleCheck
+                        : FontAwesomeIcons.circleQuestion,
+                size: 11,
+                color: color,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (issues.isEmpty)
+          Text(
+            l10n.aiNoIssues,
+            style: GoogleFonts.inter(
+              fontSize: 12.5,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.55)
+                  : AppTheme.brandInk.withValues(alpha: 0.55),
+            ),
+          )
+        else
+          ...issues.map(
+            (i) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const FaIcon(
+                    FontAwesomeIcons.circleExclamation,
+                    size: 11,
+                    color: AppTheme.brandAmber,
+                  ),
+                  const SizedBox(width: 7),
+                  Expanded(
+                    child: Text(
+                      i,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        height: 1.4,
+                        color: isDark ? Colors.white : AppTheme.brandInk,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _socialLinksSection(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final links = widget.application.profile.socialLinks;
+    if (!links.hasAny) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: isDark ? AppTheme.brandCard : AppTheme.brandLight,
+        ),
+        child: Text(
+          l10n.adminSocialNoLinks,
+          style: GoogleFonts.inter(
+            fontSize: 12.5,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.55)
+                : AppTheme.brandInk.withValues(alpha: 0.55),
+          ),
+        ),
+      );
+    }
+    return Column(
+      children: links.entries
+          .map((e) => _socialLinkRow(context, e.$1, e.$2))
+          .toList(),
+    );
+  }
+
+  FaIconData _platformIcon(String platform) => switch (platform) {
+        'linkedin' => FontAwesomeIcons.linkedin,
+        'x' => FontAwesomeIcons.xTwitter,
+        'instagram' => FontAwesomeIcons.instagram,
+        _ => FontAwesomeIcons.tiktok,
+      };
+
+  Widget _socialLinkRow(BuildContext context, String platform, String url) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: isDark ? AppTheme.brandCard : AppTheme.brandLight,
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.08)
+              : AppTheme.brandLightOutline,
+        ),
+      ),
+      child: ListTile(
+        dense: true,
+        leading: FaIcon(_platformIcon(platform),
+            size: 15, color: AppTheme.brandAmber),
+        title: Text(
+          url,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.inter(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w600,
+            color: isDark ? Colors.white : AppTheme.brandInk,
+          ),
+        ),
+        subtitle: Text(
+          platform,
+          style: GoogleFonts.inter(
+            fontSize: 10,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.4)
+                : AppTheme.brandInk.withValues(alpha: 0.4),
+          ),
+        ),
+        trailing: const FaIcon(
+          FontAwesomeIcons.upRightFromSquare,
+          size: 12,
+          color: AppTheme.brandAmber,
+        ),
+        onTap: () => _openDocument(context, url),
       ),
     );
   }
@@ -688,15 +883,17 @@ class _ApplicationDetailSheetState extends State<_ApplicationDetailSheet> {
 
 }
 
-/// A directory-style application card: avatar, name, status badge, submitted
-/// time and a rate/specialty summary line.
+/// A directory-style application card: avatar, name, status badge, AI
+/// screening flag + issues preview, submitted time and a rate/specialty
+/// summary line. Needs-attention applications are surfaced first by the
+/// service; the card also flags ones overdue past the review SLA.
 class _ApplicationCard extends StatelessWidget {
-  final CounselorProfile profile;
+  final CounselorApplication application;
   final bool reviewing;
   final VoidCallback onTap;
 
   const _ApplicationCard({
-    required this.profile,
+    required this.application,
     required this.reviewing,
     required this.onTap,
   });
@@ -705,12 +902,14 @@ class _ApplicationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context);
-    final p = profile;
+    final p = application.profile;
     final pending = p.verificationStatus == 'pending';
     final statusColor = pending ? AppTheme.brandAmber : AppTheme.danger;
     final statusLabel = pending
         ? l10n.adminApplicationsPending
         : l10n.adminApplicationsRejected;
+    final issues = application.aiIssues;
+    final isOverdue = application.isOverdue(DateTime.now());
 
     return Material(
       color: isDark ? AppTheme.brandSurface : Colors.white,
@@ -772,6 +971,11 @@ class _ApplicationCard extends StatelessWidget {
                             ),
                           ),
                         ),
+                        if (application.needsAttention) ...[const SizedBox(width: 6), _miniChip(
+                          FontAwesomeIcons.triangleExclamation,
+                          l10n.aiStatusNeedsAttention,
+                          AppTheme.brandAmber,
+                        )],
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -788,6 +992,28 @@ class _ApplicationCard extends StatelessWidget {
                             : AppTheme.brandInk.withValues(alpha: 0.6),
                       ),
                     ),
+                    if (issues.isNotEmpty) ...[const SizedBox(height: 4), Row(
+                      children: [
+                        const FaIcon(
+                          FontAwesomeIcons.circleExclamation,
+                          size: 10,
+                          color: AppTheme.brandAmber,
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: Text(
+                            issues.first,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.brandAmber,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )],
                     const SizedBox(height: 5),
                     Row(
                       children: [
@@ -808,6 +1034,24 @@ class _ApplicationCard extends StatelessWidget {
                                 : AppTheme.brandInk.withValues(alpha: 0.4),
                           ),
                         ),
+                        if (isOverdue) ...[const SizedBox(width: 8), Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(999),
+                            color: AppTheme.danger.withValues(alpha: 0.12),
+                          ),
+                          child: Text(
+                            l10n.aiStatusOverdue,
+                            style: GoogleFonts.inter(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              color: AppTheme.danger,
+                            ),
+                          ),
+                        )],
                         if (reviewing) ...[
                           const SizedBox(width: 10),
                           const SizedBox(
@@ -836,4 +1080,28 @@ class _ApplicationCard extends StatelessWidget {
     );
   }
 
+  Widget _miniChip(FaIconData icon, String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(999),
+        color: color.withValues(alpha: 0.12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FaIcon(icon, size: 8.5, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 9,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -3353,6 +3353,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t review the application. Please try again.'**
   String get adminReviewError;
+
+  /// No description provided for @socialLinksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Social profiles'**
+  String get socialLinksTitle;
+
+  /// No description provided for @socialLinksSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add links students can use to verify you — at least one is required.'**
+  String get socialLinksSubtitle;
+
+  /// No description provided for @socialLinksRequiredError.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one social profile link to continue.'**
+  String get socialLinksRequiredError;
+
+  /// No description provided for @linkedinLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LinkedIn URL'**
+  String get linkedinLabel;
+
+  /// No description provided for @xLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'X (Twitter) URL'**
+  String get xLabel;
+
+  /// No description provided for @instagramLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Instagram URL'**
+  String get instagramLabel;
+
+  /// No description provided for @tiktokLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'TikTok URL'**
+  String get tiktokLabel;
+
+  /// No description provided for @reviewSlaMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Applications are typically reviewed within 48 hours.'**
+  String get reviewSlaMessage;
+
+  /// No description provided for @aiScreeningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI pre-screening'**
+  String get aiScreeningTitle;
+
+  /// No description provided for @aiStatusLooksComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks complete'**
+  String get aiStatusLooksComplete;
+
+  /// No description provided for @aiStatusNeedsAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs attention'**
+  String get aiStatusNeedsAttention;
+
+  /// No description provided for @aiStatusNotChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked'**
+  String get aiStatusNotChecked;
+
+  /// No description provided for @aiStatusOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get aiStatusOverdue;
+
+  /// No description provided for @aiNoIssues.
+  ///
+  /// In en, this message translates to:
+  /// **'No issues detected.'**
+  String get aiNoIssues;
+
+  /// No description provided for @adminSocialLinksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Social profiles'**
+  String get adminSocialLinksTitle;
+
+  /// No description provided for @adminSocialNoLinks.
+  ///
+  /// In en, this message translates to:
+  /// **'No social profiles submitted'**
+  String get adminSocialNoLinks;
 }
 
 class _AppLocalizationsDelegate

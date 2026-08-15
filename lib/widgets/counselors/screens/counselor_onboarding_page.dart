@@ -68,6 +68,8 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   String? _idDocumentUrl;
   bool _uploadingCredential = false;
   bool _uploadingId = false;
+  SocialLinks _socialLinks = const SocialLinks();
+  bool _socialError = false;
 
   int _step = 0;
   bool _loaded = false;
@@ -129,6 +131,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
       _payoutProvider = draft.payoutProvider;
       _accountName.text = draft.accountName;
       _accountNumber.text = draft.accountNumber;
+      _socialLinks = profile?.socialLinks ?? const SocialLinks();
     });
   }
 
@@ -212,6 +215,15 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
 
   Future<void> _finish() async {
     if (_saving) return;
+    // Defensive: the wizard validates on Step 2, but a re-entry path could
+    // theoretically reach submit without links — bounce back with the error.
+    if (!_socialLinks.hasAny) {
+      setState(() {
+        _socialError = true;
+        _step = 1;
+      });
+      return;
+    }
     setState(() => _saving = true);
     try {
       final rate = double.tryParse(_rate.text.trim()) ?? 0;
@@ -227,6 +239,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         'hourlyRate': rate,
         'currency': _currency,
         'availability': _availability.map((a) => a.toMap()).toList(),
+        'socialLinks': _socialLinks.toMap(),
         'payoutAccountDetails': {
           'provider': _payoutProvider,
           'accountName': _accountName.text.trim(),
@@ -252,6 +265,12 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   }
 
   void _next() {
+    // Step 2 (Experience): at least one social profile link is required.
+    // Block advancement and show the inline error instead of proceeding.
+    if (_step == 1 && !_socialLinks.hasAny) {
+      setState(() => _socialError = true);
+      return;
+    }
     if (_step < _totalSteps - 1) {
       setState(() => _step += 1);
     } else {
@@ -575,6 +594,18 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
             onRemove: (s) => setState(() => _languages.remove(s)),
           ),
         ),
+        const SizedBox(height: 18),
+        StepReveal(
+          delay: const Duration(milliseconds: 220),
+          child: SocialLinksEditor(
+            initial: _socialLinks,
+            error: _socialError,
+            onChanged: (links) => setState(() {
+              _socialLinks = links;
+              if (links.hasAny) _socialError = false;
+            }),
+          ),
+        ),
       ],
     );
   }
@@ -744,6 +775,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
                   _accountNumber.text.trim().isNotEmpty,
                   l10n.onboardingStepPayout,
                 ),
+                _checkRow(l10n, _socialLinks.hasAny, l10n.socialLinksTitle),
               ],
             ),
           ),

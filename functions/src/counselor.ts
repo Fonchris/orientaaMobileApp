@@ -33,6 +33,22 @@ function sanitizePayout(value: unknown): Record<string, string> | null {
   return Object.keys(out).length > 0 ? out : null;
 }
 
+/**
+ * Validates the social-links payload and returns a sanitized copy. Only the
+ * four known platform keys are kept, each trimmed + length-capped, so a
+ * client can't smuggle arbitrary keys into the profile doc.
+ */
+function sanitizeSocialLinks(value: unknown): Record<string, string> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const raw = value as Record<string, unknown>;
+  const out: Record<string, string> = {};
+  for (const k of ['linkedin', 'x', 'instagram', 'tiktok']) {
+    const v = typeof raw[k] === 'string' ? raw[k].trim().slice(0, 300) : '';
+    if (v) out[k] = v;
+  }
+  return out;
+}
+
 /** Computes the marketplace "recommended" score: rating * recency factor. */
 export function recommendedScore(profile: Pick<CounselorProfile, 'ratingAverage' | 'lastActiveAt'>): number {
   const rating = profile.ratingAverage ?? 0;
@@ -86,6 +102,9 @@ export const saveCounselorProfile = onCall(async (request: CallableRequest<Paylo
     hourlyRate: typeof fields.hourlyRate === 'number' && fields.hourlyRate >= 0 ? fields.hourlyRate : undefined,
     currency: typeof fields.currency === 'string' ? fields.currency.slice(0, 3).toUpperCase() : undefined,
     availability: Array.isArray(fields.availability) ? fields.availability.slice(0, 50) : undefined,
+    // Public verification links — at least one is required client-side, but
+    // the function doesn't enforce that (an empty/absent object is fine).
+    socialLinks: sanitizeSocialLinks(fields.socialLinks),
   };
 
   const sanitized = Object.fromEntries(
@@ -113,6 +132,7 @@ export const saveCounselorProfile = onCall(async (request: CallableRequest<Paylo
       ratingAverage: 0,
       ratingCount: 0,
       availability: sanitized.availability ?? [],
+      socialLinks: sanitized.socialLinks ?? {},
       recommendedScore: 0,
       createdAt: now,
       updatedAt: now,
@@ -174,6 +194,11 @@ export const submitVerification = onCall(async (request: CallableRequest<Payload
   }
   await db.collection('counselorProfiles').doc(uid).update({
     verificationStatus: 'pending',
+    // Marks the authoritative submission moment: the AI-screening trigger
+    // only runs once this is set (the profile-create write alone would race
+    // the credentials upload), and the overdue flag counts the 48h SLA from
+    // the latest submission, not the original profile creation.
+    submittedAt: admin.firestore.FieldValue.serverTimestamp(),
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   });
 

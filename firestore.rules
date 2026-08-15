@@ -166,7 +166,7 @@ service cloud.firestore {
               'uid', 'displayName', 'legalName', 'photoUrl', 'bio',
               'institution', 'yearsOfExperience', 'specialties',
               'languages', 'hourlyRate', 'currency', 'availability',
-              'createdAt', 'updatedAt',
+              'socialLinks', 'createdAt', 'updatedAt',
           ]);
       allow update: if request.auth != null
           && request.auth.uid == uid
@@ -174,7 +174,7 @@ service cloud.firestore {
               'displayName', 'legalName', 'photoUrl', 'bio',
               'institution', 'yearsOfExperience', 'specialties',
               'languages', 'hourlyRate', 'currency', 'availability',
-              'updatedAt',
+              'socialLinks', 'updatedAt',
           ]);
       allow delete: if false;
     }
@@ -187,7 +187,14 @@ service cloud.firestore {
     match /counselorPrivate/{uid} {
       allow read: if request.auth != null
           && (request.auth.uid == uid || request.auth.token.admin == true);
-      allow write: if request.auth != null && request.auth.uid == uid;
+      // The owner may only maintain their private fields (documents, payout
+      // target) through the callables. aiScreeningResult is written by the
+      // screening function (Admin SDK bypasses these rules) and a client can
+      // never forge it — the diff check rejects any write touching it.
+      allow write: if request.auth != null
+          && request.auth.uid == uid
+          && !request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['aiScreeningResult']);
     }
 
     // Bookings: participants may read; ALL state changes (create, payment,
@@ -233,6 +240,13 @@ service cloud.firestore {
     // claim (Firebase console -> Authentication -> custom claims). Written
     // exclusively by Cloud Functions.
     match /adminDisputeQueue/{bookingId} {
+      allow read: if request.auth != null && request.auth.token.admin == true;
+      allow write: if false;
+    }
+
+    // Admin alerts (e.g. overdue counselor applications flagged by the
+    // scheduled function): admin-read only, written by Cloud Functions.
+    match /adminAlerts/{alertId} {
       allow read: if request.auth != null && request.auth.token.admin == true;
       allow write: if false;
     }

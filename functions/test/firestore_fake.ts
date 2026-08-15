@@ -16,6 +16,47 @@ export interface DocSnap {
   ref: FakeDocRef;
 }
 
+let autoId = 0;
+
+/**
+ * Minimal equality-query over the fake store: `where(field, '==', value)`
+ * scans documents under a collection prefix and keeps exact matches.
+ */
+export class FakeQuery {
+  constructor(
+    private store: Map<string, any>,
+    private prefix: string,
+    private filters: Array<{ field: string; value: any }>,
+  ) {}
+
+  async get(): Promise<{
+    docs: Array<{ id: string; data: () => any; ref: FakeDocRef }>;
+  }> {
+    const docs: Array<{ id: string; data: () => any; ref: FakeDocRef }> = [];
+    for (const [path, data] of this.store) {
+      if (!path.startsWith(this.prefix + '/')) continue;
+      if (!data || typeof data !== 'object') continue;
+      if (!this.filters.every((f) => data[f.field] === f.value)) continue;
+      const id = path.slice(this.prefix.length + 1);
+      docs.push({ id, data: () => data, ref: new FakeDocRef(this.store, path) });
+    }
+    return { docs };
+  }
+}
+
+function makeCollection(store: Map<string, any>, name: string) {
+  return {
+    doc: (id: string) => new FakeDocRef(store, `${name}/${id}`),
+    where: (field: string, _op: string, value: any) =>
+      new FakeQuery(store, name, [{ field, value }]),
+    add: async (data: Record<string, any>) => {
+      const id = `auto-${(autoId += 1)}`;
+      store.set(`${name}/${id}`, data);
+      return { id };
+    },
+  };
+}
+
 export class FakeDocRef {
   constructor(
     private store: Map<string, any>,
@@ -57,10 +98,8 @@ export class FakeDocRef {
     return Promise.resolve();
   }
 
-  collection(name: string): { doc: (id: string) => FakeDocRef } {
-    return {
-      doc: (id: string) => new FakeDocRef(this.store, `${this.path}/${name}/${id}`),
-    };
+  collection(name: string) {
+    return makeCollection(this.store, `${this.path}/${name}`);
   }
 }
 
@@ -73,10 +112,8 @@ export class FakeFirestore {
     }
   }
 
-  collection(name: string): { doc: (id: string) => FakeDocRef } {
-    return {
-      doc: (id: string) => new FakeDocRef(this.store, `${name}/${id}`),
-    };
+  collection(name: string) {
+    return makeCollection(this.store, name);
   }
 
   runTransaction<T>(cb: (tx: any) => Promise<T>): Promise<T> {

@@ -59,6 +59,7 @@ class CounselorReviewStatusView extends StatelessWidget {
           iconColor: AppTheme.brandAmber,
           title: l10n.underReviewTitle,
           body: l10n.underReviewBody,
+          slaNote: l10n.reviewSlaMessage,
         );
     }
   }
@@ -71,6 +72,7 @@ class CounselorReviewStatusView extends StatelessWidget {
     required String body,
     String? buttonLabel,
     VoidCallback? onPressed,
+    String? slaNote,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
@@ -111,6 +113,39 @@ class CounselorReviewStatusView extends StatelessWidget {
                     : AppTheme.brandInk.withValues(alpha: 0.6),
               ),
             ),
+            if (slaNote != null) ...[
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: AppTheme.brandYellow.withValues(alpha: 0.1),
+                  border: Border.all(
+                    color: AppTheme.brandYellow.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const FaIcon(FontAwesomeIcons.clock,
+                        size: 12, color: AppTheme.brandAmber),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        slaNote,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.brandAmber,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             if (buttonLabel != null && onPressed != null) ...[
               const SizedBox(height: 26),
               SizedBox(

@@ -444,6 +444,134 @@ class CounselorPayoutCard extends StatelessWidget {
   }
 }
 
+/// Social profile URL editor (LinkedIn, X, Instagram, TikTok) for the
+/// onboarding wizard. Each field is optional individually; the parent shows
+/// the [error] message inline when none are filled and the applicant tries
+/// to proceed (the wizard blocks advancement until at least one is set).
+class SocialLinksEditor extends StatefulWidget {
+  final SocialLinks initial;
+  final bool error;
+  final ValueChanged<SocialLinks> onChanged;
+
+  const SocialLinksEditor({
+    super.key,
+    this.initial = const SocialLinks(),
+    this.error = false,
+    required this.onChanged,
+  });
+
+  @override
+  State<SocialLinksEditor> createState() => _SocialLinksEditorState();
+}
+
+class _SocialLinksEditorState extends State<SocialLinksEditor> {
+  late final TextEditingController _linkedin =
+      TextEditingController(text: widget.initial.linkedin);
+  late final TextEditingController _x =
+      TextEditingController(text: widget.initial.x);
+  late final TextEditingController _instagram =
+      TextEditingController(text: widget.initial.instagram);
+  late final TextEditingController _tiktok =
+      TextEditingController(text: widget.initial.tiktok);
+
+  @override
+  void dispose() {
+    _linkedin.dispose();
+    _x.dispose();
+    _instagram.dispose();
+    _tiktok.dispose();
+    super.dispose();
+  }
+
+  SocialLinks _value() => SocialLinks(
+        linkedin: _linkedin.text,
+        x: _x.text,
+        instagram: _instagram.text,
+        tiktok: _tiktok.text,
+      );
+
+  void _changed() {
+    setState(() {});
+    widget.onChanged(_value());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CounselorFieldLabel(l10n.socialLinksTitle),
+        const SizedBox(height: 6),
+        Text(
+          l10n.socialLinksSubtitle,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            height: 1.4,
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.55)
+                : AppTheme.brandInk.withValues(alpha: 0.55),
+          ),
+        ),
+        const SizedBox(height: 12),
+        _field(_linkedin, l10n.linkedinLabel, FontAwesomeIcons.linkedin),
+        const SizedBox(height: 10),
+        _field(_x, l10n.xLabel, FontAwesomeIcons.xTwitter),
+        const SizedBox(height: 10),
+        _field(_instagram, l10n.instagramLabel, FontAwesomeIcons.instagram),
+        const SizedBox(height: 10),
+        _field(_tiktok, l10n.tiktokLabel, FontAwesomeIcons.tiktok),
+        if (widget.error) ...[const SizedBox(height: 10), _errorRow(l10n)],
+      ],
+    );
+  }
+
+  Widget _field(TextEditingController controller, String label, FaIconData icon) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.url,
+      style: GoogleFonts.inter(fontSize: 13.5),
+      onChanged: (_) => _changed(),
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: FaIcon(icon, size: 14, color: AppTheme.brandAmber),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      ),
+    );
+  }
+
+  Widget _errorRow(AppLocalizations l10n) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: AppTheme.danger.withValues(alpha: 0.08),
+        border: Border.all(color: AppTheme.danger.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          const FaIcon(FontAwesomeIcons.triangleExclamation,
+              size: 13, color: AppTheme.danger),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              l10n.socialLinksRequiredError,
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.danger,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 /// Upload card for sensitive documents (government ID, professional
 /// credentials). Uploaded state renders a success tint + re-upload action.
 class CounselorUploadCard extends StatelessWidget {

@@ -601,5 +601,21 @@
   "adminApproveAction": "Approuver",
   "adminRejectAction": "Rejeter",
   "adminReviewSuccess": "Candidature examinée",
-  "adminReviewError": "Impossible d'examiner la candidature. Veuillez réessayer."
+  "adminReviewError": "Impossible d'examiner la candidature. Veuillez réessayer.",
+  "socialLinksTitle": "Réseaux sociaux",
+  "socialLinksSubtitle": "Ajoutez des liens que les étudiants peuvent consulter pour vous vérifier — au moins un est requis.",
+  "socialLinksRequiredError": "Ajoutez au moins un lien de profil social pour continuer.",
+  "linkedinLabel": "URL LinkedIn",
+  "xLabel": "URL X (Twitter)",
+  "instagramLabel": "URL Instagram",
+  "tiktokLabel": "URL TikTok",
+  "reviewSlaMessage": "Les candidatures sont généralement examinées sous 48 heures.",
+  "aiScreeningTitle": "Pré-vérification IA",
+  "aiStatusLooksComplete": "Semble complet",
+  "aiStatusNeedsAttention": "Nécessite une attention",
+  "aiStatusNotChecked": "Non vérifié",
+  "aiStatusOverdue": "En retard",
+  "aiNoIssues": "Aucun problème détecté.",
+  "adminSocialLinksTitle": "Réseaux sociaux",
+  "adminSocialNoLinks": "Aucun profil social soumis"
 }

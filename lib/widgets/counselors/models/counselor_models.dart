@@ -154,6 +154,52 @@ class AvailableSlot {
   }
 }
 
+/// The counselor's public social profile URLs, stored as
+/// `counselorProfiles/{uid}.socialLinks` (`{ linkedin, x, instagram, tiktok }`).
+/// Each is optional individually; onboarding requires at least one to be
+/// filled in so students can verify the counselor.
+class SocialLinks {
+  final String linkedin;
+  final String x;
+  final String instagram;
+  final String tiktok;
+
+  const SocialLinks({
+    this.linkedin = '',
+    this.x = '',
+    this.instagram = '',
+    this.tiktok = '',
+  });
+
+  bool get hasAny =>
+      linkedin.trim().isNotEmpty ||
+      x.trim().isNotEmpty ||
+      instagram.trim().isNotEmpty ||
+      tiktok.trim().isNotEmpty;
+
+  /// Non-empty links in display order, as (platformKey, url) pairs.
+  List<(String, String)> get entries => [
+        if (linkedin.trim().isNotEmpty) ('linkedin', linkedin.trim()),
+        if (x.trim().isNotEmpty) ('x', x.trim()),
+        if (instagram.trim().isNotEmpty) ('instagram', instagram.trim()),
+        if (tiktok.trim().isNotEmpty) ('tiktok', tiktok.trim()),
+      ];
+
+  Map<String, String> toMap() => {
+        'linkedin': linkedin,
+        'x': x,
+        'instagram': instagram,
+        'tiktok': tiktok,
+      };
+
+  factory SocialLinks.fromMap(Map<String, dynamic>? m) => SocialLinks(
+        linkedin: m?['linkedin'] as String? ?? '',
+        x: m?['x'] as String? ?? '',
+        instagram: m?['instagram'] as String? ?? '',
+        tiktok: m?['tiktok'] as String? ?? '',
+      );
+}
+
 /// Snapshot of a `counselorProfiles/{uid}` document.
 class CounselorProfile {
   final String uid;
@@ -177,6 +223,7 @@ class CounselorProfile {
   final int ratingCount;
   final List<AvailabilityRule> availability;
   final Map<String, dynamic> payoutAccountDetails;
+  final SocialLinks socialLinks;
   final double? recommendedScore;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -201,6 +248,7 @@ class CounselorProfile {
     this.ratingCount = 0,
     this.availability = const [],
     this.payoutAccountDetails = const {},
+    this.socialLinks = const SocialLinks(),
     this.recommendedScore,
     this.createdAt,
     this.updatedAt,
@@ -244,6 +292,8 @@ class CounselorProfile {
           .toList(),
       payoutAccountDetails: (d['payoutAccountDetails'] as Map?)?.cast<String, dynamic>() ??
           const {},
+      socialLinks: SocialLinks.fromMap(
+          (d['socialLinks'] as Map?)?.cast<String, dynamic>()),
       recommendedScore: (d['recommendedScore'] as num?)?.toDouble(),
       createdAt: (d['createdAt'] as Timestamp?)?.toDate(),
       updatedAt: (d['updatedAt'] as Timestamp?)?.toDate(),
@@ -455,6 +505,49 @@ class CounselorDraft {
     this.accountName = '',
     this.accountNumber = '',
   });
+}
+
+/// Admin-facing application: the public profile plus the owner/admin-only
+/// private doc (verification documents + AI screening result). Built by
+/// [CounselorService.watchApplications], which sorts `needs_attention`
+/// applications first so the reviewer's attention lands on flagged ones.
+class CounselorApplication {
+  final CounselorProfile profile;
+  final Map<String, dynamic>? private;
+
+  const CounselorApplication({required this.profile, this.private});
+
+  Map<String, dynamic>? get aiScreening =>
+      private?['aiScreeningResult'] as Map<String, dynamic>?;
+
+  /// looks_complete | needs_attention | not_checked | '' (never ran).
+  String get aiStatus => (aiScreening?['status'] as String?) ?? '';
+
+  List<String> get aiIssues =>
+      ((aiScreening?['issues'] as List?) ?? const []).cast<String>();
+
+  bool get needsAttention => aiStatus == 'needs_attention';
+
+  /// Screening ran and found nothing to flag.
+  bool get looksComplete => aiStatus == 'looks_complete';
+
+  bool get aiNotChecked => aiStatus == 'not_checked' || aiStatus.isEmpty;
+
+  DateTime? get createdAt => profile.createdAt;
+
+  /// The application has been pending past the SLA window (48h).
+  bool pendingOverSla(
+    DateTime now, {
+    int slaHours = applicationReviewSlaHours,
+  }) {
+    final created = createdAt;
+    if (created == null) return false;
+    return now.difference(created).inHours >= slaHours;
+  }
+
+  /// Overdue = AI flagged the application AND it has sat pending past the
+  /// SLA window — mirrors the scheduled `flagOverdueApplications` function.
+  bool isOverdue(DateTime now) => needsAttention && pendingOverSla(now);
 }
 
 /// A rating from `ratings/{bookingId}`.

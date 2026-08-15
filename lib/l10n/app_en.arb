@@ -731,5 +731,21 @@
   "adminApproveAction": "Approve",
   "adminRejectAction": "Reject",
   "adminReviewSuccess": "Application reviewed",
-  "adminReviewError": "Couldn't review the application. Please try again."
+  "adminReviewError": "Couldn't review the application. Please try again.",
+  "socialLinksTitle": "Social profiles",
+  "socialLinksSubtitle": "Add links students can use to verify you — at least one is required.",
+  "socialLinksRequiredError": "Add at least one social profile link to continue.",
+  "linkedinLabel": "LinkedIn URL",
+  "xLabel": "X (Twitter) URL",
+  "instagramLabel": "Instagram URL",
+  "tiktokLabel": "TikTok URL",
+  "reviewSlaMessage": "Applications are typically reviewed within 48 hours.",
+  "aiScreeningTitle": "AI pre-screening",
+  "aiStatusLooksComplete": "Looks complete",
+  "aiStatusNeedsAttention": "Needs attention",
+  "aiStatusNotChecked": "Not checked",
+  "aiStatusOverdue": "Overdue",
+  "aiNoIssues": "No issues detected.",
+  "adminSocialLinksTitle": "Social profiles",
+  "adminSocialNoLinks": "No social profiles submitted"
 }

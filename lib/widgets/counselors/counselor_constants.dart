@@ -53,6 +53,11 @@ const int availabilityWindowDays = 14;
 /// offline by the scheduled maintenance function.
 const Duration onlineStaleAfter = Duration(minutes: 10);
 
+/// Target review window shown to applicants on the under-review screen and
+/// used by the scheduled overdue-flagging function: applications should be
+/// reviewed within this many hours.
+const int applicationReviewSlaHours = 48;
+
 /// Recommended-score recency decay: the recency bonus is halved every N
 /// days since `lastActiveAt` (simple activity factor used by the
 /// "Recommended" sort).

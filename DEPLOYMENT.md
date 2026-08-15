@@ -33,6 +33,7 @@ encrypted and injected at deploy time:
 cd functions
 firebase functions:secrets:set FLUTTERWAVE_SECRET_KEY
 firebase functions:secrets:set FLUTTERWAVE_WEBHOOK_HASH
+firebase functions:secrets:set GEMINI_API_KEY
 # Optional: override the API base URL (defaults to https://api.flutterwave.com/v3)
 firebase functions:secrets:set FLUTTERWAVE_BASE_URL
 ```
@@ -41,6 +42,7 @@ firebase functions:secrets:set FLUTTERWAVE_BASE_URL
 |----------|----------|---------|
 | `FLUTTERWAVE_SECRET_KEY` | ✅ | Server-side Flutterwave API (verify payments, transfers, refunds). Never shipped to the app. |
 | `FLUTTERWAVE_WEBHOOK_HASH` | ✅ | Must equal the **Verif Hash** set in the Flutterwave dashboard; the webhook 401s without it. |
+| `GEMINI_API_KEY` | ✅ | Google AI Studio key for the AI pre-screening function (`screenCounselorApplication`). Get one at https://aistudio.google.com/apikey — the free tier is enough. |
 | `FLUTTERWAVE_BASE_URL` | ❌ | Override for sandbox/testing (e.g. `https://api.flutterwave.com/v3`). |
 
 > Local emulation: export the same names in the shell or a `functions/.env`
@@ -57,7 +59,8 @@ firebase deploy --only firestore:rules,firestore:indexes,storage
 
 - `firestore.rules` — participants-only bookings, field-whitelisted counselor
   profiles, owner-only `counselorPrivate/{uid}` and `users/{uid}/devices`,
-  time-windowed session chat, admin-only `adminDisputeQueue` reads.
+  time-windowed session chat, admin-only `adminDisputeQueue` reads, and the
+  admin-only `adminAlerts` collection (overdue-application flags).
 - `firestore.indexes.json` — composite indexes for the directory sorts, the
   scheduled jobs, and the ratings feed.
 - `storage.rules` — owner-scoped uploads (profile photos, posts, credentials).
@@ -89,6 +92,8 @@ Exported functions:
 | `resolveDispute` | callable | **Admin-only** (custom claim `admin: true`): pay counselor or refund student |
 | `saveCounselorProfile` / `submitVerification` / `heartbeat` | callable | Profile editor, credentials submission (private doc), presence |
 | `completeSessions` / `sendConfirmReminders` / `autoConfirmAndPayOut` / `presenceMaintenance` | scheduled | Completion at end+30min, 24h reminder, 48h auto-confirm+payout, offline sweep |
+| `screenCounselorApplication` | firestore trigger | AI pre-screening on submission: Gemini verifies ID/credentials documents (image/PDF) + social-link URL/name checks → `counselorPrivate/{uid}.aiScreeningResult` (informational only — never approves/rejects) |
+| `flagOverdueApplications` | scheduled (hourly) | Flags `needs_attention` applications pending > 48h into the admin-only `adminAlerts` queue |
 
 Verify deploys succeeded:
 
@@ -121,6 +126,13 @@ firebase functions:log
 ---
 
 ## 6. Admins (dispute resolution)
+
+> AI pre-screening results (`aiScreeningResult`) are written by the screening
+> trigger to the owner+admin-only `counselorPrivate/{uid}` doc and are shown
+> in the admin **Applications** review screen (flagged applications sort
+> first). They are **informational only**: `verificationStatus` always stays
+> `pending` until a human admin approves/rejects, and the result is never
+> shown to the applicant.
 
 `resolveDispute` only runs for users holding the custom claim `admin: true`.
 

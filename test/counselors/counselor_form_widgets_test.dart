@@ -174,4 +174,49 @@ void main() {
       expect(picked, 1);
     });
   });
+
+  group('SocialLinksEditor', () {
+    testWidgets('shows the inline error when no link is filled', (tester) async {
+      await tester.pumpWidget(wrap(SocialLinksEditor(
+        error: true,
+        onChanged: (_) {},
+      )));
+      expect(
+        find.text('Add at least one social profile link to continue.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('no error row unless error is true', (tester) async {
+      await tester.pumpWidget(wrap(SocialLinksEditor(onChanged: (_) {})));
+      expect(
+        find.text('Add at least one social profile link to continue.'),
+        findsNothing,
+      );
+    });
+
+    testWidgets('typing a link reports it through onChanged', (tester) async {
+      final links = <SocialLinks>[];
+      await tester.pumpWidget(wrap(SocialLinksEditor(
+        error: true,
+        onChanged: links.add,
+      )));
+
+      await tester.enterText(
+        find.byType(TextField).first,
+        'https://www.linkedin.com/in/aminayusuf',
+      );
+      expect(links, hasLength(1));
+      expect(links.last.linkedin, 'https://www.linkedin.com/in/aminayusuf');
+      expect(links.last.hasAny, isTrue);
+    });
+
+    testWidgets('prefills the submitted links on re-entry', (tester) async {
+      await tester.pumpWidget(wrap(SocialLinksEditor(
+        initial: const SocialLinks(tiktok: 'https://tiktok.com/@aminayusuf'),
+        onChanged: (_) {},
+      )));
+      expect(find.text('https://tiktok.com/@aminayusuf'), findsOneWidget);
+    });
+  });
 }

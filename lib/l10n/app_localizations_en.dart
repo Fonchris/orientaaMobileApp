@@ -1777,4 +1777,55 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get adminReviewError =>
       'Couldn\'t review the application. Please try again.';
+
+  @override
+  String get socialLinksTitle => 'Social profiles';
+
+  @override
+  String get socialLinksSubtitle =>
+      'Add links students can use to verify you — at least one is required.';
+
+  @override
+  String get socialLinksRequiredError =>
+      'Add at least one social profile link to continue.';
+
+  @override
+  String get linkedinLabel => 'LinkedIn URL';
+
+  @override
+  String get xLabel => 'X (Twitter) URL';
+
+  @override
+  String get instagramLabel => 'Instagram URL';
+
+  @override
+  String get tiktokLabel => 'TikTok URL';
+
+  @override
+  String get reviewSlaMessage =>
+      'Applications are typically reviewed within 48 hours.';
+
+  @override
+  String get aiScreeningTitle => 'AI pre-screening';
+
+  @override
+  String get aiStatusLooksComplete => 'Looks complete';
+
+  @override
+  String get aiStatusNeedsAttention => 'Needs attention';
+
+  @override
+  String get aiStatusNotChecked => 'Not checked';
+
+  @override
+  String get aiStatusOverdue => 'Overdue';
+
+  @override
+  String get aiNoIssues => 'No issues detected.';
+
+  @override
+  String get adminSocialLinksTitle => 'Social profiles';
+
+  @override
+  String get adminSocialNoLinks => 'No social profiles submitted';
 }

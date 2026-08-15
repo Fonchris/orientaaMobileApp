@@ -601,5 +601,21 @@
   "adminApproveAction": "Aprovar",
   "adminRejectAction": "Rejeitar",
   "adminReviewSuccess": "Inscrição revisada",
-  "adminReviewError": "Não foi possível revisar a inscrição. Tente novamente."
+  "adminReviewError": "Não foi possível revisar a inscrição. Tente novamente.",
+  "socialLinksTitle": "Redes sociais",
+  "socialLinksSubtitle": "Adicione links que os estudantes possam usar para verificar você — pelo menos um é obrigatório.",
+  "socialLinksRequiredError": "Adicione pelo menos um link de rede social para continuar.",
+  "linkedinLabel": "URL do LinkedIn",
+  "xLabel": "URL do X (Twitter)",
+  "instagramLabel": "URL do Instagram",
+  "tiktokLabel": "URL do TikTok",
+  "reviewSlaMessage": "As inscrições geralmente são analisadas em até 48 horas.",
+  "aiScreeningTitle": "Pré-triagem por IA",
+  "aiStatusLooksComplete": "Parece completo",
+  "aiStatusNeedsAttention": "Requer atenção",
+  "aiStatusNotChecked": "Não verificado",
+  "aiStatusOverdue": "Atrasado",
+  "aiNoIssues": "Nenhum problema detectado.",
+  "adminSocialLinksTitle": "Redes sociais",
+  "adminSocialNoLinks": "Nenhuma rede social enviada"
 }

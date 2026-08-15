@@ -1756,4 +1756,54 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adminReviewError => 'تعذرت مراجعة الطلب. حاول مرة أخرى.';
+
+  @override
+  String get socialLinksTitle => 'الملفات الاجتماعية';
+
+  @override
+  String get socialLinksSubtitle =>
+      'أضف روابط يمكن للطلاب استخدامها للتحقق منك — مطلوب رابط واحد على الأقل.';
+
+  @override
+  String get socialLinksRequiredError =>
+      'أضف رابط ملف اجتماعي واحدًا على الأقل للمتابعة.';
+
+  @override
+  String get linkedinLabel => 'رابط لينكد إن';
+
+  @override
+  String get xLabel => 'رابط إكس (تويتر)';
+
+  @override
+  String get instagramLabel => 'رابط إنستغرام';
+
+  @override
+  String get tiktokLabel => 'رابط تيك توك';
+
+  @override
+  String get reviewSlaMessage => 'عادةً ما تتم مراجعة الطلبات خلال 48 ساعة.';
+
+  @override
+  String get aiScreeningTitle => 'الفحص المسبق بالذكاء الاصطناعي';
+
+  @override
+  String get aiStatusLooksComplete => 'يبدو مكتملًا';
+
+  @override
+  String get aiStatusNeedsAttention => 'يتطلب انتباهًا';
+
+  @override
+  String get aiStatusNotChecked => 'لم يتم فحصه';
+
+  @override
+  String get aiStatusOverdue => 'متأخر';
+
+  @override
+  String get aiNoIssues => 'لا توجد مشكلات مكتشفة.';
+
+  @override
+  String get adminSocialLinksTitle => 'الملفات الاجتماعية';
+
+  @override
+  String get adminSocialNoLinks => 'لم يتم تقديم ملفات اجتماعية';
 }

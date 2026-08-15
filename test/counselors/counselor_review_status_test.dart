@@ -22,6 +22,24 @@ void main() {
       expect(find.byType(FilledButton), findsNothing);
     });
 
+    testWidgets('pending card states the 48-hour review SLA', (tester) async {
+      await tester.pumpWidget(
+        wrap(const CounselorReviewStatusView(verificationStatus: 'pending')),
+      );
+      expect(
+        find.text('Applications are typically reviewed within 48 hours.'),
+        findsOneWidget,
+      );
+      // The SLA note is pending-only — rejected/approved cards don't show it.
+      await tester.pumpWidget(
+        wrap(const CounselorReviewStatusView(verificationStatus: 'approved')),
+      );
+      expect(
+        find.text('Applications are typically reviewed within 48 hours.'),
+        findsNothing,
+      );
+    });
+
     testWidgets('rejected shows the rejected card and fires onEdit',
         (tester) async {
       var edited = false;

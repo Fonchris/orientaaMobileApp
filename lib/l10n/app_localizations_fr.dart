@@ -1789,4 +1789,55 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get adminReviewError =>
       'Impossible d\'examiner la candidature. Veuillez réessayer.';
+
+  @override
+  String get socialLinksTitle => 'Réseaux sociaux';
+
+  @override
+  String get socialLinksSubtitle =>
+      'Ajoutez des liens que les étudiants peuvent consulter pour vous vérifier — au moins un est requis.';
+
+  @override
+  String get socialLinksRequiredError =>
+      'Ajoutez au moins un lien de profil social pour continuer.';
+
+  @override
+  String get linkedinLabel => 'URL LinkedIn';
+
+  @override
+  String get xLabel => 'URL X (Twitter)';
+
+  @override
+  String get instagramLabel => 'URL Instagram';
+
+  @override
+  String get tiktokLabel => 'URL TikTok';
+
+  @override
+  String get reviewSlaMessage =>
+      'Les candidatures sont généralement examinées sous 48 heures.';
+
+  @override
+  String get aiScreeningTitle => 'Pré-vérification IA';
+
+  @override
+  String get aiStatusLooksComplete => 'Semble complet';
+
+  @override
+  String get aiStatusNeedsAttention => 'Nécessite une attention';
+
+  @override
+  String get aiStatusNotChecked => 'Non vérifié';
+
+  @override
+  String get aiStatusOverdue => 'En retard';
+
+  @override
+  String get aiNoIssues => 'Aucun problème détecté.';
+
+  @override
+  String get adminSocialLinksTitle => 'Réseaux sociaux';
+
+  @override
+  String get adminSocialNoLinks => 'Aucun profil social soumis';
 }

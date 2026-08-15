@@ -22,6 +22,19 @@ export const SLOT_OCCUPYING_STATUSES = [
 export const MIN_RATING = 1;
 export const MAX_RATING = 5;
 
+// ── Counselor application AI pre-screening ──────────────────────────────
+
+/** Gemini model used for document verification (vision + PDF inline input). */
+export const GEMINI_MODEL = 'gemini-2.0-flash';
+
+/** Target review window: flagged applications are surfaced to admins after
+ * this many hours pending with no admin action (scheduled flag function). */
+export const APPLICATION_REVIEW_SLA_HOURS = 48;
+
+/** Skip AI document verification for files above this size (bytes). The
+ * Storage rules already cap uploads at 10MB; this is a safety net. */
+export const MAX_SCREENING_BYTES = 15 * 1024 * 1024;
+
 // ── Environment (set in Firebase project settings -> service accounts) ───
 
 function requiredEnv(name: string): string {
