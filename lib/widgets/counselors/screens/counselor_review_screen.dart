@@ -10,6 +10,124 @@ import '../models/counselor_models.dart';
 import '../services/counselor_service.dart';
 import 'counselor_onboarding_page.dart';
 
+/// Pure status view for a counselor application: renders the approved,
+/// rejected or pending card given a `verificationStatus` string.
+///
+/// Extracted from [CounselorReviewScreen] so the three states can be widget-
+/// tested without a Firestore connection. The screen keeps the live profile
+/// stream and auto-route; this widget only decides what to show.
+class CounselorReviewStatusView extends StatelessWidget {
+  final String verificationStatus;
+  final VoidCallback? onEdit;
+  final VoidCallback? onGoToDashboard;
+
+  const CounselorReviewStatusView({
+    super.key,
+    required this.verificationStatus,
+    this.onEdit,
+    this.onGoToDashboard,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    switch (verificationStatus) {
+      case 'approved':
+        return _card(
+          context,
+          icon: FontAwesomeIcons.solidCircleCheck,
+          iconColor: AppTheme.success,
+          title: l10n.applicationApprovedTitle,
+          body: l10n.applicationApprovedBody,
+          buttonLabel: l10n.goToDashboard,
+          onPressed: onGoToDashboard,
+        );
+      case 'rejected':
+        return _card(
+          context,
+          icon: FontAwesomeIcons.triangleExclamation,
+          iconColor: AppTheme.danger,
+          title: l10n.applicationRejectedTitle,
+          body: l10n.applicationRejectedBody,
+          buttonLabel: l10n.editApplication,
+          onPressed: onEdit,
+        );
+      default:
+        return _card(
+          context,
+          icon: FontAwesomeIcons.hourglassHalf,
+          iconColor: AppTheme.brandAmber,
+          title: l10n.underReviewTitle,
+          body: l10n.underReviewBody,
+        );
+    }
+  }
+
+  Widget _card(
+    BuildContext context, {
+    required FaIconData icon,
+    required Color iconColor,
+    required String title,
+    required String body,
+    String? buttonLabel,
+    VoidCallback? onPressed,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 84,
+              height: 84,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: iconColor.withValues(alpha: 0.14),
+              ),
+              child: FaIcon(icon, size: 34, color: iconColor),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 23,
+                fontWeight: FontWeight.w800,
+                color: isDark ? Colors.white : AppTheme.brandInk,
+                letterSpacing: -0.3,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              body,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 13.5,
+                height: 1.5,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.6)
+                    : AppTheme.brandInk.withValues(alpha: 0.6),
+              ),
+            ),
+            if (buttonLabel != null && onPressed != null) ...[
+              const SizedBox(height: 26),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: onPressed,
+                  child: Text(buttonLabel),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Post-submission status screen for a counselor whose application is
 /// `pending` (or was `rejected`).
 ///
@@ -82,104 +200,16 @@ class _CounselorReviewScreenState extends State<CounselorReviewScreen> {
               child: CircularProgressIndicator(strokeWidth: 2.5),
             );
           }
-          switch (profile.verificationStatus) {
-            case 'approved':
-              return _card(
-                context,
-                icon: FontAwesomeIcons.solidCircleCheck,
-                iconColor: AppTheme.success,
-                title: l10n.applicationApprovedTitle,
-                body: l10n.applicationApprovedBody,
-                buttonLabel: l10n.goToDashboard,
-                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/counsellor-dashboard',
-                  (route) => false,
-                ),
-              );
-            case 'rejected':
-              return _card(
-                context,
-                icon: FontAwesomeIcons.triangleExclamation,
-                iconColor: AppTheme.danger,
-                title: l10n.applicationRejectedTitle,
-                body: l10n.applicationRejectedBody,
-                buttonLabel: l10n.editApplication,
-                onPressed: _editApplication,
-              );
-            default:
-              return _card(
-                context,
-                icon: FontAwesomeIcons.hourglassHalf,
-                iconColor: AppTheme.brandAmber,
-                title: l10n.underReviewTitle,
-                body: l10n.underReviewBody,
-              );
-          }
+          return CounselorReviewStatusView(
+            verificationStatus: profile.verificationStatus,
+            onEdit: _editApplication,
+            onGoToDashboard: () =>
+                Navigator.of(context).pushNamedAndRemoveUntil(
+              '/counsellor-dashboard',
+              (route) => false,
+            ),
+          );
         },
-      ),
-    );
-  }
-
-  Widget _card(
-    BuildContext context, {
-    required FaIconData icon,
-    required Color iconColor,
-    required String title,
-    required String body,
-    String? buttonLabel,
-    VoidCallback? onPressed,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 84,
-              height: 84,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: iconColor.withValues(alpha: 0.14),
-              ),
-              child: FaIcon(icon, size: 34, color: iconColor),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 23,
-                fontWeight: FontWeight.w800,
-                color: isDark ? Colors.white : AppTheme.brandInk,
-                letterSpacing: -0.3,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              body,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 13.5,
-                height: 1.5,
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.6)
-                    : AppTheme.brandInk.withValues(alpha: 0.6),
-              ),
-            ),
-            if (buttonLabel != null && onPressed != null) ...[
-              const SizedBox(height: 26),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: onPressed,
-                  child: Text(buttonLabel),
-                ),
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }
