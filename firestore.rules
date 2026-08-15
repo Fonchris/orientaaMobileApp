@@ -149,9 +149,13 @@ service cloud.firestore {
     // only ever written by Cloud Functions via the Admin SDK, which bypasses
     // these rules — the owner's write is limited to their own public fields.
     match /counselorProfiles/{uid} {
+      // Everyone signed in can read approved profiles (directory); the owner
+      // reads their own (review screen); admins may read any profile so the
+      // verification queue can list pending/rejected applications.
       allow read: if request.auth != null
           && (request.auth.uid == uid
-              || resource.data.verificationStatus == 'approved');
+              || resource.data.verificationStatus == 'approved'
+              || request.auth.token.admin == true);
       // The owner may only write their own PUBLIC fields. verificationStatus,
       // ratingAverage/ratingCount, isOnline/lastActiveAt and recommendedScore
       // are written exclusively by Cloud Functions (Admin SDK, bypasses these

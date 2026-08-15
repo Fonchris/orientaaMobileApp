@@ -157,4 +157,17 @@ class CounselorFunctions {
       'fields': profileFields,
     });
   }
+
+  /// Admin-only: approves or rejects a counselor application. The function
+  /// verifies the caller's `admin` custom claim and pushes a notification to
+  /// the counselor (their review screen auto-routes on approval).
+  Future<void> reviewApplication({
+    required String uid,
+    required String action, // 'approve' | 'reject'
+  }) async {
+    await _client.call('reviewCounselorApplication', {
+      'uid': uid,
+      'action': action,
+    });
+  }
 }

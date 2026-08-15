@@ -174,13 +174,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabHome => 'Home';
 
   @override
-  String get tabSearch => 'Search';
-
-  @override
   String get tabMessages => 'Messages';
-
-  @override
-  String get tabProfile => 'Profile';
 
   @override
   String get greetingMorning => 'Good morning';
@@ -1619,16 +1613,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingFinish => 'Finish';
 
   @override
-  String get onboardingDoneTitle => 'You\'re all set!';
-
-  @override
-  String get onboardingDoneBody =>
-      'Your profile is under review. We\'ll notify you once you\'re verified and bookable.';
-
-  @override
-  String get goToProfile => 'View my profile';
-
-  @override
   String get errorIncorrectCredentials => 'Incorrect email or password.';
 
   @override
@@ -1733,4 +1717,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get applicationStatus => 'Application status';
+
+  @override
+  String get adminHubTitle => 'Admin hub';
+
+  @override
+  String get adminApplicationsTitle => 'Counselor applications';
+
+  @override
+  String get adminApplicationsEntry => 'Applications';
+
+  @override
+  String get adminApplicationsPending => 'Pending';
+
+  @override
+  String get adminApplicationsRejected => 'Rejected';
+
+  @override
+  String get adminApplicationsEmpty => 'No applications to review right now';
+
+  @override
+  String get adminViewDocuments => 'Verification documents';
+
+  @override
+  String get adminViewIdDocument => 'View ID document';
+
+  @override
+  String get adminViewCredentials => 'View credentials';
+
+  @override
+  String get adminNoDocuments => 'No documents uploaded yet';
+
+  @override
+  String get adminOpenDocumentError => 'Couldn\'t open the document.';
+
+  @override
+  String get adminApproveTitle => 'Approve application?';
+
+  @override
+  String get adminApproveBody =>
+      'This counselor will appear in the directory and can start taking bookings.';
+
+  @override
+  String get adminRejectTitle => 'Reject application?';
+
+  @override
+  String get adminRejectBody =>
+      'The counselor will be notified and can edit and resubmit their application.';
+
+  @override
+  String get adminApproveAction => 'Approve';
+
+  @override
+  String get adminRejectAction => 'Reject';
+
+  @override
+  String get adminReviewSuccess => 'Application reviewed';
+
+  @override
+  String get adminReviewError =>
+      'Couldn\'t review the application. Please try again.';
 }

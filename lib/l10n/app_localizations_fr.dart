@@ -177,13 +177,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tabHome => 'Accueil';
 
   @override
-  String get tabSearch => 'Recherche';
-
-  @override
   String get tabMessages => 'Messages';
-
-  @override
-  String get tabProfile => 'Profil';
 
   @override
   String get greetingMorning => 'Bonjour';
@@ -1630,16 +1624,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onboardingFinish => 'Terminer';
 
   @override
-  String get onboardingDoneTitle => 'C\'est tout bon !';
-
-  @override
-  String get onboardingDoneBody =>
-      'Votre profil est en cours d\'examen. Vous serez notifié dès votre validation.';
-
-  @override
-  String get goToProfile => 'Voir mon profil';
-
-  @override
   String get errorIncorrectCredentials => 'E-mail ou mot de passe incorrect.';
 
   @override
@@ -1744,4 +1728,65 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get applicationStatus => 'Statut de la candidature';
+
+  @override
+  String get adminHubTitle => 'Centre d\'administration';
+
+  @override
+  String get adminApplicationsTitle => 'Candidatures de conseillers';
+
+  @override
+  String get adminApplicationsEntry => 'Candidatures';
+
+  @override
+  String get adminApplicationsPending => 'En attente';
+
+  @override
+  String get adminApplicationsRejected => 'Rejetées';
+
+  @override
+  String get adminApplicationsEmpty =>
+      'Aucune candidature à examiner pour le moment';
+
+  @override
+  String get adminViewDocuments => 'Documents de vérification';
+
+  @override
+  String get adminViewIdDocument => 'Voir la pièce d\'identité';
+
+  @override
+  String get adminViewCredentials => 'Voir les diplômes';
+
+  @override
+  String get adminNoDocuments => 'Aucun document téléversé';
+
+  @override
+  String get adminOpenDocumentError => 'Impossible d\'ouvrir le document.';
+
+  @override
+  String get adminApproveTitle => 'Approuver la candidature ?';
+
+  @override
+  String get adminApproveBody =>
+      'Ce conseiller apparaîtra dans l\'annuaire et pourra accepter des réservations.';
+
+  @override
+  String get adminRejectTitle => 'Rejeter la candidature ?';
+
+  @override
+  String get adminRejectBody =>
+      'Le conseiller sera notifié et pourra modifier et soumettre à nouveau sa candidature.';
+
+  @override
+  String get adminApproveAction => 'Approuver';
+
+  @override
+  String get adminRejectAction => 'Rejeter';
+
+  @override
+  String get adminReviewSuccess => 'Candidature examinée';
+
+  @override
+  String get adminReviewError =>
+      'Impossible d\'examiner la candidature. Veuillez réessayer.';
 }

@@ -7,9 +7,11 @@ import '../../../l10n/app_localizations.dart';
 import '../../app_theme.dart';
 import '../../google_fonts.dart';
 import '../../profile/profile_avatar.dart';
+import '../../search_page.dart';
 import '../counselor_constants.dart';
 import '../models/counselor_models.dart';
 import '../services/counselor_service.dart';
+import 'admin_applications_page.dart';
 import 'admin_disputes_page.dart';
 import 'counselor_onboarding_page.dart';
 import 'counselor_profile_page.dart';
@@ -303,21 +305,29 @@ class _CounselorDirectoryPageState extends State<CounselorDirectoryPage> {
               ),
             ),
           ),
-          if (uid != null && _isAdmin) ...[
+          IconButton(
+            tooltip: l10n.searchTitle,
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const SearchPage()),
+            ),
+            icon: Icon(
+              Icons.search_rounded,
+              size: 20,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.8)
+                  : AppTheme.brandInk.withValues(alpha: 0.8),
+            ),
+          ),
+          if (uid != null && _isAdmin)
             IconButton(
-              tooltip: l10n.adminDisputesEntry,
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder: (_) => const AdminDisputesPage(),
-                ),
-              ),
+              tooltip: l10n.adminHubTitle,
+              onPressed: () => _openAdminHub(context),
               icon: const FaIcon(
                 FontAwesomeIcons.shieldHalved,
                 size: 15,
                 color: AppTheme.brandAmber,
               ),
             ),
-          ],
           if (uid != null)
             TextButton.icon(
               onPressed: () => _openCounselorEntry(uid),
@@ -336,6 +346,132 @@ class _CounselorDirectoryPageState extends State<CounselorDirectoryPage> {
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  /// Admin hub: application review + dispute review, shown only when the ID
+  /// token carries the `admin` claim (rules + server claim both enforce it).
+  Future<void> _openAdminHub(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: isDark ? AppTheme.brandSurface : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 14, 20, 8),
+              child: Row(
+                children: [
+                  const FaIcon(
+                    FontAwesomeIcons.shieldHalved,
+                    size: 15,
+                    color: AppTheme.brandAmber,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    l10n.adminHubTitle,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : AppTheme.brandInk,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const FaIcon(
+                FontAwesomeIcons.clipboardUser,
+                size: 15,
+                color: AppTheme.brandAmber,
+              ),
+              title: Text(
+                l10n.adminApplicationsEntry,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : AppTheme.brandInk,
+                ),
+              ),
+              subtitle: Text(
+                l10n.adminApplicationsTitle,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.5)
+                      : AppTheme.brandInk.withValues(alpha: 0.5),
+                ),
+              ),
+              trailing: const FaIcon(
+                FontAwesomeIcons.chevronRight,
+                size: 12,
+                color: AppTheme.brandAmber,
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const AdminApplicationsPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const FaIcon(
+                FontAwesomeIcons.triangleExclamation,
+                size: 15,
+                color: AppTheme.danger,
+              ),
+              title: Text(
+                l10n.adminDisputesEntry,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : AppTheme.brandInk,
+                ),
+              ),
+              subtitle: Text(
+                l10n.adminDisputesTitle,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.5)
+                      : AppTheme.brandInk.withValues(alpha: 0.5),
+                ),
+              ),
+              trailing: const FaIcon(
+                FontAwesomeIcons.chevronRight,
+                size: 12,
+                color: AppTheme.brandAmber,
+              ),
+              onTap: () {
+                Navigator.pop(ctx);
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const AdminDisputesPage(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

@@ -176,13 +176,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tabHome => 'Início';
 
   @override
-  String get tabSearch => 'Pesquisa';
-
-  @override
   String get tabMessages => 'Mensagens';
-
-  @override
-  String get tabProfile => 'Perfil';
 
   @override
   String get greetingMorning => 'Bom dia';
@@ -1634,16 +1628,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get onboardingFinish => 'Concluir';
 
   @override
-  String get onboardingDoneTitle => 'Está tudo pronto!';
-
-  @override
-  String get onboardingDoneBody =>
-      'Seu perfil está em análise. Avisaremos quando for verificado.';
-
-  @override
-  String get goToProfile => 'Ver meu perfil';
-
-  @override
   String get errorIncorrectCredentials => 'E-mail ou senha incorretos.';
 
   @override
@@ -1747,4 +1731,65 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get applicationStatus => 'Status da inscrição';
+
+  @override
+  String get adminHubTitle => 'Central do administrador';
+
+  @override
+  String get adminApplicationsTitle => 'Inscrições de conselheiros';
+
+  @override
+  String get adminApplicationsEntry => 'Inscrições';
+
+  @override
+  String get adminApplicationsPending => 'Pendentes';
+
+  @override
+  String get adminApplicationsRejected => 'Rejeitadas';
+
+  @override
+  String get adminApplicationsEmpty =>
+      'Nenhuma inscrição para revisar no momento';
+
+  @override
+  String get adminViewDocuments => 'Documentos de verificação';
+
+  @override
+  String get adminViewIdDocument => 'Ver documento de identidade';
+
+  @override
+  String get adminViewCredentials => 'Ver credenciais';
+
+  @override
+  String get adminNoDocuments => 'Nenhum documento enviado ainda';
+
+  @override
+  String get adminOpenDocumentError => 'Não foi possível abrir o documento.';
+
+  @override
+  String get adminApproveTitle => 'Aprovar inscrição?';
+
+  @override
+  String get adminApproveBody =>
+      'Este conselheiro aparecerá no diretório e poderá receber reservas.';
+
+  @override
+  String get adminRejectTitle => 'Rejeitar inscrição?';
+
+  @override
+  String get adminRejectBody =>
+      'O conselheiro será notificado e poderá editar e reenviar a inscrição.';
+
+  @override
+  String get adminApproveAction => 'Aprovar';
+
+  @override
+  String get adminRejectAction => 'Rejeitar';
+
+  @override
+  String get adminReviewSuccess => 'Inscrição revisada';
+
+  @override
+  String get adminReviewError =>
+      'Não foi possível revisar a inscrição. Tente novamente.';
 }

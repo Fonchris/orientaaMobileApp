@@ -170,13 +170,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tabHome => 'الرئيسية';
 
   @override
-  String get tabSearch => 'البحث';
-
-  @override
   String get tabMessages => 'الرسائل';
-
-  @override
-  String get tabProfile => 'الملف الشخصي';
 
   @override
   String get greetingMorning => 'صباح الخير';
@@ -1600,16 +1594,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get onboardingFinish => 'إنهاء';
 
   @override
-  String get onboardingDoneTitle => 'أصبحت جاهزاً!';
-
-  @override
-  String get onboardingDoneBody =>
-      'ملفك قيد المراجعة. سنخطرك بمجرد التحقق من حسابك.';
-
-  @override
-  String get goToProfile => 'عرض ملفي';
-
-  @override
   String get errorIncorrectCredentials =>
       'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
 
@@ -1713,4 +1697,63 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get applicationStatus => 'حالة الطلب';
+
+  @override
+  String get adminHubTitle => 'مركز الإدارة';
+
+  @override
+  String get adminApplicationsTitle => 'طلبات المستشارين';
+
+  @override
+  String get adminApplicationsEntry => 'الطلبات';
+
+  @override
+  String get adminApplicationsPending => 'قيد المراجعة';
+
+  @override
+  String get adminApplicationsRejected => 'مرفوضة';
+
+  @override
+  String get adminApplicationsEmpty => 'لا توجد طلبات للمراجعة حالياً';
+
+  @override
+  String get adminViewDocuments => 'مستندات التحقق';
+
+  @override
+  String get adminViewIdDocument => 'عرض بطاقة الهوية';
+
+  @override
+  String get adminViewCredentials => 'عرض المؤهلات';
+
+  @override
+  String get adminNoDocuments => 'لم يتم رفع أي مستندات بعد';
+
+  @override
+  String get adminOpenDocumentError => 'تعذر فتح المستند.';
+
+  @override
+  String get adminApproveTitle => 'الموافقة على الطلب؟';
+
+  @override
+  String get adminApproveBody =>
+      'سيظهر هذا المستشار في الدليل ويمكنه استقبال الحجوزات.';
+
+  @override
+  String get adminRejectTitle => 'رفض الطلب؟';
+
+  @override
+  String get adminRejectBody =>
+      'سيتم إشعار المستشار ويمكنه تعديل طلبه وإعادة إرساله.';
+
+  @override
+  String get adminApproveAction => 'موافقة';
+
+  @override
+  String get adminRejectAction => 'رفض';
+
+  @override
+  String get adminReviewSuccess => 'تمت مراجعة الطلب';
+
+  @override
+  String get adminReviewError => 'تعذرت مراجعة الطلب. حاول مرة أخرى.';
 }

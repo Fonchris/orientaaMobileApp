@@ -26,7 +26,7 @@ import '../widgets/counselor_form_widgets.dart';
 /// owner-only `counselorPrivate/{uid}` document — never on the public
 /// profile that students read.
 ///
-/// Note: credentials must be an image for now (PDF upload needs `file_picker`).
+/// Credentials can be an image or PDF (see [MediaService.pickDocument]).
 class CounselorSetupPage extends StatefulWidget {
   final String counselorUid;
 
@@ -142,7 +142,7 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
   }
 
   Future<void> _pickCredential() async {
-    final file = await _media.pickImage();
+    final file = await _media.pickDocument();
     if (file == null) return;
     setState(() => _uploadingCredential = true);
     try {
@@ -168,7 +168,8 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
 
   Future<String> _uploadCredential(File file) async {
     final ext = file.path.split('.').last.toLowerCase();
-    final safeExt = const {'jpg', 'jpeg', 'png', 'heic', 'webp'}.contains(ext) ? ext : 'jpg';
+    final safeExt =
+        const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext) ? ext : 'jpg';
     final ref = FirebaseStorage.instance.ref(
       'counselor_credentials/${widget.counselorUid}.$safeExt',
     );

@@ -23,6 +23,7 @@ export {
   saveCounselorProfile,
   submitVerification,
   heartbeat,
+  reviewCounselorApplication,
 } from './counselor';
 
 export {

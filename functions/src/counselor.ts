@@ -2,6 +2,7 @@ import * as admin from 'firebase-admin';
 import { CallableRequest, HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { ONLINE_STALE_AFTER_MIN } from './config';
+import { notifyUser } from './notifications';
 import { CounselorProfile } from './types';
 
 const db = admin.firestore();
@@ -203,6 +204,70 @@ export const heartbeat = onCall(async (request: CallableRequest<Payload>) => {
 
   return { status: 'online' };
 });
+
+/**
+ * Admin-only: approves or rejects a counselor application. Moves
+ * verificationStatus on the public profile (which gates directory
+ * visibility and bookability) and pushes a notification to the counselor —
+ * their client's review screen listens to the profile and auto-routes on
+ * approval, so no re-login is needed.
+ *
+ * The `admin` custom claim must exist on the caller's ID token; the Firestore
+ * rules alone are not enough because this also sends a notification.
+ */
+export const reviewCounselorApplication = onCall(
+  async (request: CallableRequest<Payload>) => {
+    const callerUid = assertAuth(request);
+    if (request.auth?.token?.admin !== true) {
+      throw new HttpsError('permission-denied', 'Admin access required.');
+    }
+
+    const targetUid: string = request.data?.uid ?? '';
+    const action: string = request.data?.action ?? '';
+    if (!targetUid) {
+      throw new HttpsError('invalid-argument', 'uid is required.');
+    }
+    if (action !== 'approve' && action !== 'reject') {
+      throw new HttpsError('invalid-argument', 'action must be approve or reject.');
+    }
+    if (targetUid === callerUid) {
+      throw new HttpsError('invalid-argument', 'An admin cannot review their own application.');
+    }
+
+    const ref = db.collection('counselorProfiles').doc(targetUid);
+    const snap = await ref.get();
+    if (!snap.exists) {
+      throw new HttpsError('not-found', 'No counselor profile for this user.');
+    }
+    const profile = snap.data() as CounselorProfile;
+
+    const status = action === 'approve' ? 'approved' : 'rejected';
+    // Idempotent: a double-tap or stale sheet hitting the same target state
+    // just returns without re-firing the notification or bumping reviewedAt.
+    if (profile.verificationStatus === status) {
+      return { status };
+    }
+    await ref.update({
+      verificationStatus: status,
+      reviewedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    // Best-effort push + in-app notification. The review screen also live-
+    // listens to the profile, so this is a heads-up, not the routing mechanism.
+    const displayName = profile.displayName || 'Counselor';
+    await notifyUser(
+      targetUid,
+      status === 'approved' ? 'Application approved 🎉' : 'Application not approved',
+      status === 'approved'
+        ? `Welcome aboard, ${displayName}! Students can now find you in the directory and book sessions.`
+        : `Hi ${displayName}, our team couldn't approve your application. Open the app to review and resubmit.`,
+      { route: '/counsellor-dashboard' },
+    );
+
+    return { status };
+  },
+);
 
 /** Shared with scheduled.ts: flips stale profiles to offline. */
 export async function markStaleOffline(): Promise<number> {

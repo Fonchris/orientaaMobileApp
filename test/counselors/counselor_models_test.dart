@@ -186,5 +186,31 @@ void main() {
       }, uid: 'c1');
       expect(p.isApproved, isFalse);
     });
+
+    test('parses verification fields (legal name, institution, experience)', () {
+      final p = CounselorProfile.fromMap({
+        'displayName': 'Ada',
+        'legalName': 'Ada Lovelace',
+        'institution': 'University of Cape Town',
+        'yearsOfExperience': 8,
+        'verificationStatus': 'pending',
+        'hourlyRate': 45,
+        'currency': 'GHS',
+      }, uid: 'c1');
+      expect(p.legalName, 'Ada Lovelace');
+      expect(p.institution, 'University of Cape Town');
+      expect(p.yearsOfExperience, 8);
+      expect(p.verificationStatus, 'pending');
+      expect(p.hourlyRate, 45);
+      expect(p.currency, 'GHS');
+    });
+
+    test('defaults when optional verification fields are absent', () {
+      final p = CounselorProfile.fromMap({'displayName': 'Ada'}, uid: 'c1');
+      expect(p.legalName, '');
+      expect(p.institution, isNull);
+      expect(p.yearsOfExperience, 0);
+      expect(p.verificationStatus, 'pending');
+    });
   });
 }

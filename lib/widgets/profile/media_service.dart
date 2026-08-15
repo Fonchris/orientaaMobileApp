@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -28,6 +29,20 @@ class MediaService {
     );
     if (picked == null) return null;
     return File(picked.path);
+  }
+
+  /// Picks a document for identity/credential uploads: images or PDFs (the
+  /// extensions are enforced by the native file picker), or null if the user
+  /// cancels. Web/desktop paths are null, so those platforms are skipped for
+  /// now — uploads are mobile-focused.
+  Future<File?> pickDocument() async {
+    final file = await FilePicker.pickFile(
+      type: FileType.custom,
+      allowedExtensions: const ['jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'],
+    );
+    final path = file?.path;
+    if (path == null) return null;
+    return File(path);
   }
 
   /// Uploads a profile photo for [uid], overwriting any previous upload, and

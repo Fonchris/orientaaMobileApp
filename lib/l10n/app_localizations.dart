@@ -408,23 +408,11 @@ abstract class AppLocalizations {
   /// **'Home'**
   String get tabHome;
 
-  /// No description provided for @tabSearch.
-  ///
-  /// In en, this message translates to:
-  /// **'Search'**
-  String get tabSearch;
-
   /// No description provided for @tabMessages.
   ///
   /// In en, this message translates to:
   /// **'Messages'**
   String get tabMessages;
-
-  /// No description provided for @tabProfile.
-  ///
-  /// In en, this message translates to:
-  /// **'Profile'**
-  String get tabProfile;
 
   /// No description provided for @greetingMorning.
   ///
@@ -3060,24 +3048,6 @@ abstract class AppLocalizations {
   /// **'Finish'**
   String get onboardingFinish;
 
-  /// No description provided for @onboardingDoneTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'You\'re all set!'**
-  String get onboardingDoneTitle;
-
-  /// No description provided for @onboardingDoneBody.
-  ///
-  /// In en, this message translates to:
-  /// **'Your profile is under review. We\'ll notify you once you\'re verified and bookable.'**
-  String get onboardingDoneBody;
-
-  /// No description provided for @goToProfile.
-  ///
-  /// In en, this message translates to:
-  /// **'View my profile'**
-  String get goToProfile;
-
   /// No description provided for @errorIncorrectCredentials.
   ///
   /// In en, this message translates to:
@@ -3269,6 +3239,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Application status'**
   String get applicationStatus;
+
+  /// No description provided for @adminHubTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin hub'**
+  String get adminHubTitle;
+
+  /// No description provided for @adminApplicationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Counselor applications'**
+  String get adminApplicationsTitle;
+
+  /// No description provided for @adminApplicationsEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Applications'**
+  String get adminApplicationsEntry;
+
+  /// No description provided for @adminApplicationsPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get adminApplicationsPending;
+
+  /// No description provided for @adminApplicationsRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get adminApplicationsRejected;
+
+  /// No description provided for @adminApplicationsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No applications to review right now'**
+  String get adminApplicationsEmpty;
+
+  /// No description provided for @adminViewDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification documents'**
+  String get adminViewDocuments;
+
+  /// No description provided for @adminViewIdDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'View ID document'**
+  String get adminViewIdDocument;
+
+  /// No description provided for @adminViewCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'View credentials'**
+  String get adminViewCredentials;
+
+  /// No description provided for @adminNoDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents uploaded yet'**
+  String get adminNoDocuments;
+
+  /// No description provided for @adminOpenDocumentError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the document.'**
+  String get adminOpenDocumentError;
+
+  /// No description provided for @adminApproveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve application?'**
+  String get adminApproveTitle;
+
+  /// No description provided for @adminApproveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This counselor will appear in the directory and can start taking bookings.'**
+  String get adminApproveBody;
+
+  /// No description provided for @adminRejectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject application?'**
+  String get adminRejectTitle;
+
+  /// No description provided for @adminRejectBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The counselor will be notified and can edit and resubmit their application.'**
+  String get adminRejectBody;
+
+  /// No description provided for @adminApproveAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get adminApproveAction;
+
+  /// No description provided for @adminRejectAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get adminRejectAction;
+
+  /// No description provided for @adminReviewSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Application reviewed'**
+  String get adminReviewSuccess;
+
+  /// No description provided for @adminReviewError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t review the application. Please try again.'**
+  String get adminReviewError;
 }
 
 class _AppLocalizationsDelegate

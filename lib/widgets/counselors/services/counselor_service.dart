@@ -166,6 +166,20 @@ class CounselorService {
             (s) => s.exists ? CounselorProfile.fromSnapshot(s) : null,
           );
 
+  /// Applications awaiting (or that failed) admin review. Readable only by
+  /// admins (rules). Sorted client-side by createdAt to avoid a composite
+  /// index on (verificationStatus, createdAt).
+  Stream<List<CounselorProfile>> watchApplications() => _profiles
+      .where('verificationStatus', whereIn: ['pending', 'rejected'])
+      .snapshots()
+      .map((snap) {
+        final list = snap.docs.map(CounselorProfile.fromSnapshot).toList();
+        list.sort((a, b) =>
+            (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+                .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)));
+        return list;
+      });
+
   Future<CounselorProfile?> fetchProfile(String uid) async {
     final s = await _profiles.doc(uid).get();
     return s.exists ? CounselorProfile.fromSnapshot(s) : null;

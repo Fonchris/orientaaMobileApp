@@ -168,17 +168,19 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   }
 
   /// Uploads a sensitive document (ID or credentials) to a private Storage
-  /// path. Image-only for now — PDF upload needs `file_picker`.
+  /// path. Images and PDFs are both supported (the native file picker
+  /// restricts the extensions).
   Future<String> _uploadDocument(File file, String folder) async {
     final ext = file.path.split('.').last.toLowerCase();
-    final safeExt = const {'jpg', 'jpeg', 'png', 'heic', 'webp'}.contains(ext) ? ext : 'jpg';
+    final safeExt =
+        const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext) ? ext : 'jpg';
     final ref = FirebaseStorage.instance.ref('$folder/${widget.counselorUid}.$safeExt');
     await ref.putFile(file);
     return ref.getDownloadURL();
   }
 
   Future<void> _pickId() async {
-    final file = await _media.pickImage();
+    final file = await _media.pickDocument();
     if (file == null) return;
     setState(() => _uploadingId = true);
     try {
@@ -193,7 +195,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   }
 
   Future<void> _pickCredential() async {
-    final file = await _media.pickImage();
+    final file = await _media.pickDocument();
     if (file == null) return;
     setState(() => _uploadingCredential = true);
     try {
