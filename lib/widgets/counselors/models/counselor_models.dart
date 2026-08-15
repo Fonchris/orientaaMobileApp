@@ -368,6 +368,61 @@ class BookingMessage {
   }
 }
 
+/// A row from `adminDisputeQueue/{bookingId}` (admin-only read).
+class DisputeEntry {
+  final String bookingId;
+  final String studentUid;
+  final String studentName;
+  final String counselorUid;
+  final String counselorName;
+  final String? counselorPhotoUrl;
+  final DateTime? scheduledStart;
+  final double feeAmount;
+  final String currency;
+  final String reason;
+  final String status; // open | resolved_paid_out | resolved_refunded
+  final DateTime? createdAt;
+
+  const DisputeEntry({
+    required this.bookingId,
+    required this.studentUid,
+    required this.studentName,
+    required this.counselorUid,
+    required this.counselorName,
+    this.counselorPhotoUrl,
+    this.scheduledStart,
+    this.feeAmount = 0,
+    this.currency = 'USD',
+    this.reason = '',
+    this.status = 'open',
+    this.createdAt,
+  });
+
+  bool get isOpen => status == 'open';
+  bool get resolvedAsPaidOut => status == 'resolved_paid_out';
+  bool get resolvedAsRefunded => status == 'resolved_refunded';
+
+  factory DisputeEntry.fromSnapshot(
+    DocumentSnapshot<Map<String, dynamic>> s,
+  ) {
+    final d = s.data() ?? const <String, dynamic>{};
+    return DisputeEntry(
+      bookingId: s.id,
+      studentUid: d['studentUid'] as String? ?? '',
+      studentName: d['studentName'] as String? ?? 'Student',
+      counselorUid: d['counselorUid'] as String? ?? '',
+      counselorName: d['counselorName'] as String? ?? 'Counselor',
+      counselorPhotoUrl: d['counselorPhotoUrl'] as String?,
+      scheduledStart: (d['scheduledStart'] as Timestamp?)?.toDate(),
+      feeAmount: (d['feeAmount'] as num?)?.toDouble() ?? 0,
+      currency: d['currency'] as String? ?? 'USD',
+      reason: d['reason'] as String? ?? '',
+      status: d['status'] as String? ?? 'open',
+      createdAt: (d['createdAt'] as Timestamp?)?.toDate(),
+    );
+  }
+}
+
 /// A rating from `ratings/{bookingId}`.
 class CounselorRating {
   final String bookingId;

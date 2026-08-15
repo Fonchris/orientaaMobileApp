@@ -2909,6 +2909,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong with the payment. Please try again.'**
   String get paymentError;
+
+  /// No description provided for @adminDisputesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute review'**
+  String get adminDisputesTitle;
+
+  /// No description provided for @adminDisputesOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get adminDisputesOpen;
+
+  /// No description provided for @adminDisputesResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get adminDisputesResolved;
+
+  /// No description provided for @adminDisputesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No disputes to review right now'**
+  String get adminDisputesEmpty;
+
+  /// No description provided for @adminOnlyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin access required'**
+  String get adminOnlyError;
+
+  /// No description provided for @adminDisputesEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Disputes'**
+  String get adminDisputesEntry;
+
+  /// No description provided for @disputeReasonLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported reason'**
+  String get disputeReasonLabel;
+
+  /// No description provided for @disputeScheduledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled'**
+  String get disputeScheduledLabel;
+
+  /// No description provided for @disputeResolveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolve dispute'**
+  String get disputeResolveTitle;
+
+  /// No description provided for @resolvePayCounselor.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the counselor'**
+  String get resolvePayCounselor;
+
+  /// No description provided for @resolveRefundStudent.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund the student'**
+  String get resolveRefundStudent;
+
+  /// No description provided for @resolvePayBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject the dispute and pay the counselor their full payout?'**
+  String get resolvePayBody;
+
+  /// No description provided for @resolveRefundBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Uphold the dispute and refund the student in full?'**
+  String get resolveRefundBody;
+
+  /// No description provided for @resolveSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Dispute resolved'**
+  String get resolveSuccess;
+
+  /// No description provided for @resolveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t resolve the dispute. Please try again.'**
+  String get resolveError;
+
+  /// No description provided for @counselorOnboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a counselor'**
+  String get counselorOnboardingTitle;
+
+  /// No description provided for @onboardingStepIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity'**
+  String get onboardingStepIdentity;
+
+  /// No description provided for @onboardingStepPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get onboardingStepPractice;
+
+  /// No description provided for @onboardingStepPricing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing'**
+  String get onboardingStepPricing;
+
+  /// No description provided for @onboardingStepVerify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get onboardingStepVerify;
+
+  /// No description provided for @onboardingIdentitySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell students who you are'**
+  String get onboardingIdentitySubtitle;
+
+  /// No description provided for @onboardingPracticeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your specialties, languages and bio'**
+  String get onboardingPracticeSubtitle;
+
+  /// No description provided for @onboardingPricingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set your session rate and weekly availability'**
+  String get onboardingPricingSubtitle;
+
+  /// No description provided for @onboardingVerifySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a credential and add your payout account'**
+  String get onboardingVerifySubtitle;
+
+  /// No description provided for @onboardingFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish'**
+  String get onboardingFinish;
+
+  /// No description provided for @onboardingDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all set!'**
+  String get onboardingDoneTitle;
+
+  /// No description provided for @onboardingDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is under review. We\'ll notify you once you\'re verified and bookable.'**
+  String get onboardingDoneBody;
+
+  /// No description provided for @goToProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'View my profile'**
+  String get goToProfile;
 }
 
 class _AppLocalizationsDelegate

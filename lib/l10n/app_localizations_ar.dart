@@ -1523,4 +1523,89 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get paymentError => 'حدثت مشكلة في الدفع. حاول مرة أخرى.';
+
+  @override
+  String get adminDisputesTitle => 'مراجعة النزاعات';
+
+  @override
+  String get adminDisputesOpen => 'مفتوحة';
+
+  @override
+  String get adminDisputesResolved => 'تم حلها';
+
+  @override
+  String get adminDisputesEmpty => 'لا توجد نزاعات للمراجعة حالياً';
+
+  @override
+  String get adminOnlyError => 'يتطلب صلاحيات المشرف';
+
+  @override
+  String get adminDisputesEntry => 'النزاعات';
+
+  @override
+  String get disputeReasonLabel => 'السبب المبلغ عنه';
+
+  @override
+  String get disputeScheduledLabel => 'موعد الجلسة';
+
+  @override
+  String get disputeResolveTitle => 'حل النزاع';
+
+  @override
+  String get resolvePayCounselor => 'دفع للمستشار';
+
+  @override
+  String get resolveRefundStudent => 'استرداد للطالب';
+
+  @override
+  String get resolvePayBody => 'رفض النزاع ودفع للمستشار كامل المستحقات؟';
+
+  @override
+  String get resolveRefundBody => 'تأييد النزاع واسترداد مبلغ الطالب بالكامل؟';
+
+  @override
+  String get resolveSuccess => 'تم حل النزاع';
+
+  @override
+  String get resolveError => 'تعذّر حل النزاع. حاول مرة أخرى.';
+
+  @override
+  String get counselorOnboardingTitle => 'كن مستشاراً';
+
+  @override
+  String get onboardingStepIdentity => 'الهوية';
+
+  @override
+  String get onboardingStepPractice => 'الممارسة';
+
+  @override
+  String get onboardingStepPricing => 'التسعير';
+
+  @override
+  String get onboardingStepVerify => 'التحقق';
+
+  @override
+  String get onboardingIdentitySubtitle => 'عرّف الطلاب بنفسك';
+
+  @override
+  String get onboardingPracticeSubtitle => 'التخصصات واللغات والسيرة الذاتية';
+
+  @override
+  String get onboardingPricingSubtitle => 'سعر الجلسة والمواعيد الأسبوعية';
+
+  @override
+  String get onboardingVerifySubtitle => 'ارفع مستنداً وأضف حساب الدفع';
+
+  @override
+  String get onboardingFinish => 'إنهاء';
+
+  @override
+  String get onboardingDoneTitle => 'أصبحت جاهزاً!';
+
+  @override
+  String get onboardingDoneBody =>
+      'ملفك قيد المراجعة. سنخطرك بمجرد التحقق من حسابك.';
+
+  @override
+  String get goToProfile => 'عرض ملفي';
 }

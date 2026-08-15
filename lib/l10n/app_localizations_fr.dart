@@ -1549,4 +1549,93 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get paymentError =>
       'Un problème est survenu avec le paiement. Réessayez.';
+
+  @override
+  String get adminDisputesTitle => 'Examen des litiges';
+
+  @override
+  String get adminDisputesOpen => 'Ouverts';
+
+  @override
+  String get adminDisputesResolved => 'Résolus';
+
+  @override
+  String get adminDisputesEmpty => 'Aucun litige à examiner';
+
+  @override
+  String get adminOnlyError => 'Accès administrateur requis';
+
+  @override
+  String get adminDisputesEntry => 'Litiges';
+
+  @override
+  String get disputeReasonLabel => 'Motif signalé';
+
+  @override
+  String get disputeScheduledLabel => 'Prévu le';
+
+  @override
+  String get disputeResolveTitle => 'Résoudre le litige';
+
+  @override
+  String get resolvePayCounselor => 'Payer le conseiller';
+
+  @override
+  String get resolveRefundStudent => 'Rembourser l\'étudiant';
+
+  @override
+  String get resolvePayBody =>
+      'Rejeter le litige et verser au conseiller son paiement complet ?';
+
+  @override
+  String get resolveRefundBody =>
+      'Donner raison à l\'étudiant et le rembourser intégralement ?';
+
+  @override
+  String get resolveSuccess => 'Litige résolu';
+
+  @override
+  String get resolveError => 'Impossible de résoudre le litige. Réessayez.';
+
+  @override
+  String get counselorOnboardingTitle => 'Devenir conseiller';
+
+  @override
+  String get onboardingStepIdentity => 'Identité';
+
+  @override
+  String get onboardingStepPractice => 'Activité';
+
+  @override
+  String get onboardingStepPricing => 'Tarifs';
+
+  @override
+  String get onboardingStepVerify => 'Vérification';
+
+  @override
+  String get onboardingIdentitySubtitle => 'Dites aux étudiants qui vous êtes';
+
+  @override
+  String get onboardingPracticeSubtitle => 'Spécialités, langues et biographie';
+
+  @override
+  String get onboardingPricingSubtitle =>
+      'Tarif de la séance et disponibilités';
+
+  @override
+  String get onboardingVerifySubtitle =>
+      'Pièce justificative et compte de paiement';
+
+  @override
+  String get onboardingFinish => 'Terminer';
+
+  @override
+  String get onboardingDoneTitle => 'C\'est tout bon !';
+
+  @override
+  String get onboardingDoneBody =>
+      'Votre profil est en cours d\'examen. Vous serez notifié dès votre validation.';
+
+  @override
+  String get goToProfile => 'Voir mon profil';
 }

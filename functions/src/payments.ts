@@ -62,6 +62,13 @@ export const flutterwaveWebhook = functions.https.onRequest(async (req, res) => 
             return;
           }
           const booking = bookingSnap.data();
+          // Only a booking that is actually awaiting payment can be confirmed
+          // (mirrors the guard on the failure path). confirmPaidBooking also
+          // re-checks, so a stale webhook can never re-confirm a paid session.
+          if (booking?.status !== 'payment_pending') {
+            res.status(200).send('OK');
+            return;
+          }
           const amountMatches =
             booking?.feeAmount !== undefined &&
             Math.abs((verifiedTx.amount ?? 0) - booking.feeAmount) < 0.01;

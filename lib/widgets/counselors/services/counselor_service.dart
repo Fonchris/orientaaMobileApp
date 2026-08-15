@@ -79,6 +79,7 @@ class CounselorService {
   static const String privateCollection = 'counselorPrivate';
   static const String bookingsCollection = 'bookings';
   static const String ratingsCollection = 'ratings';
+  static const String disputesCollection = 'adminDisputeQueue';
 
   CollectionReference<Map<String, dynamic>> get _profiles =>
       FirebaseFirestore.instance.collection(profilesCollection);
@@ -251,6 +252,18 @@ class CounselorService {
       'sentAt': FieldValue.serverTimestamp(),
     });
   }
+
+  // ── Admin dispute queue (admin-only read via rules) ───────────────────
+
+  /// Streams all dispute-queue entries, newest first. The Firestore rules
+  /// only allow users with the `admin` custom claim to read this collection,
+  /// so the admin screen surfaces the permission error for everyone else.
+  Stream<List<DisputeEntry>> watchDisputes() =>
+      FirebaseFirestore.instance
+          .collection(disputesCollection)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snap) => snap.docs.map(DisputeEntry.fromSnapshot).toList());
 
   // ── Ratings / reviews ──────────────────────────────────────────────────
 

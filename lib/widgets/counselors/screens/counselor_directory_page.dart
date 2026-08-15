@@ -10,6 +10,8 @@ import '../../profile/profile_avatar.dart';
 import '../counselor_constants.dart';
 import '../models/counselor_models.dart';
 import '../services/counselor_service.dart';
+import 'admin_disputes_page.dart';
+import 'counselor_onboarding_page.dart';
 import 'counselor_profile_page.dart';
 import 'counselor_setup_page.dart';
 
@@ -47,12 +49,43 @@ class _CounselorDirectoryPageState extends State<CounselorDirectoryPage> {
 
   CounselorFilters _filters = const CounselorFilters();
   String _query = '';
+  bool _isAdmin = false;
 
   @override
   void initState() {
     super.initState();
     _loadFirstPage();
     _scroll.addListener(_onScroll);
+    _checkAdminClaim();
+  }
+
+  /// Reads the `admin` custom claim from the ID token so the dispute-review
+  /// entry only appears for admins (the Firestore rules also enforce it).
+  Future<void> _checkAdminClaim() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    try {
+      final result = await user.getIdTokenResult();
+      if (!mounted) return;
+      setState(() => _isAdmin = result.claims?['admin'] == true);
+    } catch (_) {
+      // Token refresh failures just hide the admin entry.
+    }
+  }
+
+  Future<void> _openCounselorEntry(String uid) async {
+    // New counselors (no profile yet) get the guided onboarding wizard;
+    // existing ones jump straight into the editor.
+    final profile = await _service.fetchProfile(uid);
+    if (!mounted) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => profile == null
+            ? CounselorOnboardingPage(counselorUid: uid)
+            : CounselorSetupPage(counselorUid: uid),
+      ),
+    );
+    if (mounted) await _loadFirstPage();
   }
 
   @override
@@ -264,13 +297,24 @@ class _CounselorDirectoryPageState extends State<CounselorDirectoryPage> {
               ),
             ),
           ),
-          if (uid != null)
-            TextButton.icon(
+          if (uid != null && _isAdmin) ...[
+            IconButton(
+              tooltip: l10n.adminDisputesEntry,
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => CounselorSetupPage(counselorUid: uid),
+                  builder: (_) => const AdminDisputesPage(),
                 ),
               ),
+              icon: const FaIcon(
+                FontAwesomeIcons.shieldHalved,
+                size: 15,
+                color: AppTheme.brandAmber,
+              ),
+            ),
+          ],
+          if (uid != null)
+            TextButton.icon(
+              onPressed: () => _openCounselorEntry(uid),
               icon: const FaIcon(
                 FontAwesomeIcons.userTie,
                 size: 12,

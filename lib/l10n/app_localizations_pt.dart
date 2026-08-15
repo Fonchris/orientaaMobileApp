@@ -1552,4 +1552,94 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get paymentError =>
       'Ocorreu um problema com o pagamento. Tente novamente.';
+
+  @override
+  String get adminDisputesTitle => 'Revisão de disputas';
+
+  @override
+  String get adminDisputesOpen => 'Abertas';
+
+  @override
+  String get adminDisputesResolved => 'Resolvidas';
+
+  @override
+  String get adminDisputesEmpty => 'Nenhuma disputa para revisar agora';
+
+  @override
+  String get adminOnlyError => 'Acesso de administrador necessário';
+
+  @override
+  String get adminDisputesEntry => 'Disputas';
+
+  @override
+  String get disputeReasonLabel => 'Motivo relatado';
+
+  @override
+  String get disputeScheduledLabel => 'Agendada';
+
+  @override
+  String get disputeResolveTitle => 'Resolver disputa';
+
+  @override
+  String get resolvePayCounselor => 'Pagar o conselheiro';
+
+  @override
+  String get resolveRefundStudent => 'Reembolsar o estudante';
+
+  @override
+  String get resolvePayBody =>
+      'Rejeitar a disputa e pagar ao conselheiro o valor integral?';
+
+  @override
+  String get resolveRefundBody =>
+      'Manter a disputa e reembolsar o estudante integralmente?';
+
+  @override
+  String get resolveSuccess => 'Disputa resolvida';
+
+  @override
+  String get resolveError =>
+      'Não foi possível resolver a disputa. Tente novamente.';
+
+  @override
+  String get counselorOnboardingTitle => 'Torne-se um conselheiro';
+
+  @override
+  String get onboardingStepIdentity => 'Identidade';
+
+  @override
+  String get onboardingStepPractice => 'Atuação';
+
+  @override
+  String get onboardingStepPricing => 'Preços';
+
+  @override
+  String get onboardingStepVerify => 'Verificação';
+
+  @override
+  String get onboardingIdentitySubtitle => 'Diga aos estudantes quem você é';
+
+  @override
+  String get onboardingPracticeSubtitle =>
+      'Especialidades, idiomas e biografia';
+
+  @override
+  String get onboardingPricingSubtitle => 'Valor da sessão e disponibilidade';
+
+  @override
+  String get onboardingVerifySubtitle =>
+      'Envie uma credencial e adicione sua conta de pagamento';
+
+  @override
+  String get onboardingFinish => 'Concluir';
+
+  @override
+  String get onboardingDoneTitle => 'Está tudo pronto!';
+
+  @override
+  String get onboardingDoneBody =>
+      'Seu perfil está em análise. Avisaremos quando for verificado.';
+
+  @override
+  String get goToProfile => 'Ver meu perfil';
 }

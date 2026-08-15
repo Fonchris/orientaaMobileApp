@@ -1537,4 +1537,94 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get paymentError =>
       'Something went wrong with the payment. Please try again.';
+
+  @override
+  String get adminDisputesTitle => 'Dispute review';
+
+  @override
+  String get adminDisputesOpen => 'Open';
+
+  @override
+  String get adminDisputesResolved => 'Resolved';
+
+  @override
+  String get adminDisputesEmpty => 'No disputes to review right now';
+
+  @override
+  String get adminOnlyError => 'Admin access required';
+
+  @override
+  String get adminDisputesEntry => 'Disputes';
+
+  @override
+  String get disputeReasonLabel => 'Reported reason';
+
+  @override
+  String get disputeScheduledLabel => 'Scheduled';
+
+  @override
+  String get disputeResolveTitle => 'Resolve dispute';
+
+  @override
+  String get resolvePayCounselor => 'Pay the counselor';
+
+  @override
+  String get resolveRefundStudent => 'Refund the student';
+
+  @override
+  String get resolvePayBody =>
+      'Reject the dispute and pay the counselor their full payout?';
+
+  @override
+  String get resolveRefundBody =>
+      'Uphold the dispute and refund the student in full?';
+
+  @override
+  String get resolveSuccess => 'Dispute resolved';
+
+  @override
+  String get resolveError => 'Couldn\'t resolve the dispute. Please try again.';
+
+  @override
+  String get counselorOnboardingTitle => 'Become a counselor';
+
+  @override
+  String get onboardingStepIdentity => 'Identity';
+
+  @override
+  String get onboardingStepPractice => 'Practice';
+
+  @override
+  String get onboardingStepPricing => 'Pricing';
+
+  @override
+  String get onboardingStepVerify => 'Verify';
+
+  @override
+  String get onboardingIdentitySubtitle => 'Tell students who you are';
+
+  @override
+  String get onboardingPracticeSubtitle =>
+      'Set up your specialties, languages and bio';
+
+  @override
+  String get onboardingPricingSubtitle =>
+      'Set your session rate and weekly availability';
+
+  @override
+  String get onboardingVerifySubtitle =>
+      'Upload a credential and add your payout account';
+
+  @override
+  String get onboardingFinish => 'Finish';
+
+  @override
+  String get onboardingDoneTitle => 'You\'re all set!';
+
+  @override
+  String get onboardingDoneBody =>
+      'Your profile is under review. We\'ll notify you once you\'re verified and bookable.';
+
+  @override
+  String get goToProfile => 'View my profile';
 }

@@ -251,6 +251,8 @@ Tests cover onboarding step navigation, the self-assessment split flow, profile 
 
 ## 🚀 Production Checklist
 
+> Full step-by-step deploy guide: **[`DEPLOYMENT.md`](DEPLOYMENT.md)** — env vars, Flutterwave webhook config, admin claims, FCM, go-live smoke test.
+
 - [ ] Deploy Firestore + Storage rules and Cloud Functions (`firebase deploy`)
 - [ ] Seed `universities`, `classrooms`, `sessions` data
 - [ ] Seed personality questions once (`python scripts/seed_personality_questions.py`)

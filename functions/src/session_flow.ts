@@ -170,6 +170,14 @@ export const raiseDispute = onCall(async (request: CallableRequest<Payload>) => 
     throw new HttpsError('failed-precondition', "This session can't be disputed.");
   }
 
+  // Denormalized display data for the admin UI, fetched BEFORE the
+  // transaction so the status flip + queue entry are written atomically — a
+  // disputed booking must never end up stranded with no review entry.
+  const [studentSnap, counselorSnap] = await Promise.all([
+    db.collection('users').doc(studentUid).get(),
+    db.collection('users').doc(booking.counselorUid).get(),
+  ]);
+
   await db.runTransaction(async (tx) => {
     const ref = db.collection('bookings').doc(bookingId);
     const snap = await tx.get(ref);
@@ -182,17 +190,21 @@ export const raiseDispute = onCall(async (request: CallableRequest<Payload>) => 
       disputeReason: reason,
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-  });
-
-  await db.collection('adminDisputeQueue').doc(bookingId).set({
-    bookingId,
-    studentUid,
-    counselorUid: booking.counselorUid,
-    feeAmount: booking.feeAmount,
-    currency: booking.currency,
-    reason,
-    status: 'open',
-    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    tx.set(db.collection('adminDisputeQueue').doc(bookingId), {
+      bookingId,
+      studentUid,
+      studentName: (studentSnap.data()?.displayName as string) ?? 'Student',
+      counselorUid: booking.counselorUid,
+      counselorName: (counselorSnap.data()?.displayName as string) ?? 'Counselor',
+      counselorPhotoUrl: (counselorSnap.data()?.photoUrl as string) ?? null,
+      scheduledStart: booking.scheduledStart,
+      scheduledEnd: booking.scheduledEnd,
+      feeAmount: booking.feeAmount,
+      currency: booking.currency,
+      reason,
+      status: 'open',
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
   });
 
   await notifyBothParties(
