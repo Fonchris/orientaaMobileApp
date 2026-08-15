@@ -171,7 +171,7 @@ class _CounselorSetupPageState extends State<CounselorSetupPage> {
     final safeExt =
         const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext) ? ext : 'jpg';
     final ref = FirebaseStorage.instance.ref(
-      'counselor_credentials/${widget.counselorUid}.$safeExt',
+      'counselor_credentials/${widget.counselorUid}/document.$safeExt',
     );
     await ref.putFile(file);
     return ref.getDownloadURL();

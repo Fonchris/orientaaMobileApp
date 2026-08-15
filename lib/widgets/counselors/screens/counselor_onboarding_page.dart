@@ -169,12 +169,15 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
 
   /// Uploads a sensitive document (ID or credentials) to a private Storage
   /// path. Images and PDFs are both supported (the native file picker
-  /// restricts the extensions).
+  /// restricts the extensions). The uid lives in its own path segment so the
+  /// Storage rules can bind it directly to `request.auth.uid` — the rules
+  /// only let the owner write and the owner/admin read.
   Future<String> _uploadDocument(File file, String folder) async {
     final ext = file.path.split('.').last.toLowerCase();
     final safeExt =
         const {'jpg', 'jpeg', 'png', 'heic', 'webp', 'pdf'}.contains(ext) ? ext : 'jpg';
-    final ref = FirebaseStorage.instance.ref('$folder/${widget.counselorUid}.$safeExt');
+    final ref = FirebaseStorage.instance
+        .ref('$folder/${widget.counselorUid}/document.$safeExt');
     await ref.putFile(file);
     return ref.getDownloadURL();
   }
