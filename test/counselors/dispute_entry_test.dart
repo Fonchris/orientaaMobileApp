@@ -63,6 +63,8 @@ DocumentSnapshot<Map<String, dynamic>> _snap(Map<String, dynamic> data) {
   return doc as DocumentSnapshot<Map<String, dynamic>>;
 }
 
+// DocumentSnapshot is sealed; a minimal test fake is the standard escape hatch.
+// ignore: subtype_of_sealed_class
 class _FakeDocSnapshot extends DocumentSnapshot<Map<String, dynamic>> {
   _FakeDocSnapshot(this._data);
 

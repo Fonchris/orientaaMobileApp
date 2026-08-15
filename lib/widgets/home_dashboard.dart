@@ -186,6 +186,17 @@ class _HomeDashboardState extends State<HomeDashboard> {
               ],
             ),
           ),
+          IconButton(
+            tooltip: l10n.searchTitle,
+            onPressed: widget.onOpenSearch,
+            icon: FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 15,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.75)
+                  : AppTheme.brandInk.withValues(alpha: 0.75),
+            ),
+          ),
           _notificationBell(context),
         ],
       ),

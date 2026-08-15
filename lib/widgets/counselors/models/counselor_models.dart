@@ -158,10 +158,15 @@ class AvailableSlot {
 class CounselorProfile {
   final String uid;
   final String displayName;
+  /// Full legal name (used by the verification team; separate from the
+  /// public display name).
+  final String legalName;
   final String? photoUrl;
   final String bio;
   final List<String> specialties;
   final List<String> languages;
+  final int yearsOfExperience;
+  final String? institution;
   final double hourlyRate;
   final String currency;
   final String? credentialsUrl;
@@ -179,10 +184,13 @@ class CounselorProfile {
   const CounselorProfile({
     required this.uid,
     required this.displayName,
+    this.legalName = '',
     this.photoUrl,
     this.bio = '',
     this.specialties = const [],
     this.languages = const [],
+    this.yearsOfExperience = 0,
+    this.institution,
     this.hourlyRate = 0,
     this.currency = 'USD',
     this.credentialsUrl,
@@ -215,10 +223,13 @@ class CounselorProfile {
     return CounselorProfile(
       uid: uid,
       displayName: d['displayName'] as String? ?? 'Counselor',
+      legalName: d['legalName'] as String? ?? '',
       photoUrl: d['photoUrl'] as String?,
       bio: d['bio'] as String? ?? '',
       specialties: (d['specialties'] as List?)?.cast<String>() ?? const [],
       languages: (d['languages'] as List?)?.cast<String>() ?? const [],
+      yearsOfExperience: (d['yearsOfExperience'] as num?)?.toInt() ?? 0,
+      institution: d['institution'] as String?,
       hourlyRate: (d['hourlyRate'] as num?)?.toDouble() ?? 0,
       currency: d['currency'] as String? ?? 'USD',
       credentialsUrl: d['credentialsUrl'] as String?,

@@ -1608,4 +1608,109 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get goToProfile => 'عرض ملفي';
+
+  @override
+  String get errorIncorrectCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get errorAccountDisabled => 'تم تعطيل هذا الحساب. تواصل مع الدعم.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'محاولات تسجيل دخول كثيرة. حاول مرة أخرى لاحقاً.';
+
+  @override
+  String get errorNetwork => 'خطأ في الشبكة — تحقق من اتصالك وحاول مرة أخرى.';
+
+  @override
+  String get errorInvalidEmail => 'عنوان البريد الإلكتروني يبدو غير صالح.';
+
+  @override
+  String get errorEmailInUse => 'يوجد حساب بهذا البريد الإلكتروني بالفعل.';
+
+  @override
+  String get errorWeakPassword =>
+      'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.';
+
+  @override
+  String get errorOperationNotAllowed =>
+      'طريقة تسجيل الدخول هذه غير متاحة حالياً.';
+
+  @override
+  String get errorUnexpected => 'حدث خطأ ما. حاول مرة أخرى.';
+
+  @override
+  String get legalNameLabel => 'الاسم القانوني الكامل';
+
+  @override
+  String get legalNameHint => 'كما يظهر في هويتك الرسمية';
+
+  @override
+  String get institutionLabel => 'المؤسسة / المنظمة (اختياري)';
+
+  @override
+  String get institutionHint => 'مثال: جامعة كيب تاون';
+
+  @override
+  String get yearsExperienceLabel => 'سنوات الخبرة';
+
+  @override
+  String get bioGuidance =>
+      'صف خلفيتك وتدريبك والطلاب الذين ساعدتهم — يرى الطلاب هذه السيرة في ملفك.';
+
+  @override
+  String get onboardingStepExperience => 'الخبرة';
+
+  @override
+  String get onboardingStepPayout => 'الدفع';
+
+  @override
+  String get onboardingStepSubmit => 'إرسال';
+
+  @override
+  String get idUploadTitle => 'الهوية الرسمية';
+
+  @override
+  String get idUploadHint =>
+      'ارفع صورة واضحة لهويتك الرسمية (جواز سفر أو بطاقة هوية أو رخصة قيادة). لا يراها إلا فريق المراجعة.';
+
+  @override
+  String get uploadId => 'رفع الهوية';
+
+  @override
+  String get reuploadId => 'إعادة رفع الهوية';
+
+  @override
+  String get idUploaded => 'تم رفع الهوية';
+
+  @override
+  String get underReviewTitle => 'الطلب قيد المراجعة';
+
+  @override
+  String get underReviewBody =>
+      'نحن نتحقق من مؤهلاتك وهويتك. ستتمكن من استقبال الحجوزات فور الموافقة — عادة خلال أيام قليلة.';
+
+  @override
+  String get applicationApprovedTitle => 'تمت الموافقة!';
+
+  @override
+  String get applicationApprovedBody =>
+      'ملفك أصبح متاحاً الآن. يمكن للطلاب العثور عليك في الدليل وحجز الجلسات.';
+
+  @override
+  String get applicationRejectedTitle => 'لم تتم الموافقة على الطلب';
+
+  @override
+  String get applicationRejectedBody =>
+      'لم يتمكن فريقنا من الموافقة على طلبك. راجع بياناتك وصححها وأعد الإرسال.';
+
+  @override
+  String get editApplication => 'تعديل الطلب';
+
+  @override
+  String get goToDashboard => 'الانتقال إلى لوحة التحكم';
+
+  @override
+  String get applicationStatus => 'حالة الطلب';
 }

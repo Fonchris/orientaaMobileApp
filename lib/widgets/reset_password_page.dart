@@ -43,7 +43,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = friendlyAuthError(AppLocalizations.of(context), e);
       });
     } finally {
       if (mounted) {

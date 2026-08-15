@@ -159,25 +159,31 @@ service cloud.firestore {
       allow create: if request.auth != null
           && request.auth.uid == uid
           && request.resource.data.keys().hasOnly([
-              'uid', 'displayName', 'photoUrl', 'bio', 'specialties',
+              'uid', 'displayName', 'legalName', 'photoUrl', 'bio',
+              'institution', 'yearsOfExperience', 'specialties',
               'languages', 'hourlyRate', 'currency', 'availability',
               'createdAt', 'updatedAt',
           ]);
       allow update: if request.auth != null
           && request.auth.uid == uid
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-              'displayName', 'photoUrl', 'bio', 'specialties',
+              'displayName', 'legalName', 'photoUrl', 'bio',
+              'institution', 'yearsOfExperience', 'specialties',
               'languages', 'hourlyRate', 'currency', 'availability',
               'updatedAt',
           ]);
       allow delete: if false;
     }
 
-    // Private per-counselor document: credentials document URL + Flutterwave
-    // payout target. Owner-only (admins operate via the Admin SDK, which
-    // bypasses rules) — never readable by students browsing the directory.
+    // Private per-counselor document: government-ID + credentials document
+    // URLs and the Flutterwave payout target. Readable only by the owner and
+    // users holding the `admin` custom claim — never by students browsing the
+    // directory. Admins write via the Admin SDK (bypasses rules); the owner
+    // writes only through the saveCounselorProfile/submitVerification callables.
     match /counselorPrivate/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read: if request.auth != null
+          && (request.auth.uid == uid || request.auth.token.admin == true);
+      allow write: if request.auth != null && request.auth.uid == uid;
     }
 
     // Bookings: participants may read; ALL state changes (create, payment,

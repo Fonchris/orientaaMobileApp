@@ -1642,4 +1642,109 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get goToProfile => 'Ver meu perfil';
+
+  @override
+  String get errorIncorrectCredentials => 'E-mail ou senha incorretos.';
+
+  @override
+  String get errorAccountDisabled =>
+      'Esta conta foi desativada. Contate o suporte.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Muitas tentativas de login. Tente novamente mais tarde.';
+
+  @override
+  String get errorNetwork =>
+      'Erro de rede — verifique sua conexão e tente novamente.';
+
+  @override
+  String get errorInvalidEmail => 'Esse endereço de e-mail parece inválido.';
+
+  @override
+  String get errorEmailInUse => 'Já existe uma conta com este e-mail.';
+
+  @override
+  String get errorWeakPassword => 'Sua senha deve ter pelo menos 6 caracteres.';
+
+  @override
+  String get errorOperationNotAllowed =>
+      'Este método de login não está disponível no momento.';
+
+  @override
+  String get errorUnexpected => 'Algo deu errado. Tente novamente.';
+
+  @override
+  String get legalNameLabel => 'Nome legal completo';
+
+  @override
+  String get legalNameHint => 'Como aparece no seu documento de identidade';
+
+  @override
+  String get institutionLabel => 'Instituição / organização (opcional)';
+
+  @override
+  String get institutionHint => 'ex.: Universidade da Cidade do Cabo';
+
+  @override
+  String get yearsExperienceLabel => 'Anos de experiência';
+
+  @override
+  String get bioGuidance =>
+      'Descreva sua formação, treinamento e os alunos que você ajudou — os alunos veem esta bio no seu perfil.';
+
+  @override
+  String get onboardingStepExperience => 'Experiência';
+
+  @override
+  String get onboardingStepPayout => 'Pagamento';
+
+  @override
+  String get onboardingStepSubmit => 'Enviar';
+
+  @override
+  String get idUploadTitle => 'Documento de identidade oficial';
+
+  @override
+  String get idUploadHint =>
+      'Envie uma foto nítida do seu documento (passaporte, RG ou carteira de motorista). Somente nossa equipe de revisão pode ver.';
+
+  @override
+  String get uploadId => 'Enviar documento';
+
+  @override
+  String get reuploadId => 'Reenviar documento';
+
+  @override
+  String get idUploaded => 'Documento enviado';
+
+  @override
+  String get underReviewTitle => 'Inscrição em análise';
+
+  @override
+  String get underReviewBody =>
+      'Estamos verificando seus documentos e identidade. Você poderá receber reservas assim que for aprovado — geralmente em alguns dias.';
+
+  @override
+  String get applicationApprovedTitle => 'Você foi aprovado!';
+
+  @override
+  String get applicationApprovedBody =>
+      'Seu perfil já está no ar. Os alunos podem encontrá-lo no diretório e agendar sessões.';
+
+  @override
+  String get applicationRejectedTitle => 'Inscrição não aprovada';
+
+  @override
+  String get applicationRejectedBody =>
+      'Nossa equipe não pôde aprovar sua inscrição. Revise seus dados, corrija e reenvie.';
+
+  @override
+  String get editApplication => 'Editar inscrição';
+
+  @override
+  String get goToDashboard => 'Ir para o painel';
+
+  @override
+  String get applicationStatus => 'Status da inscrição';
 }

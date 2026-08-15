@@ -1627,4 +1627,110 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goToProfile => 'View my profile';
+
+  @override
+  String get errorIncorrectCredentials => 'Incorrect email or password.';
+
+  @override
+  String get errorAccountDisabled =>
+      'This account has been disabled. Contact support.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Too many sign-in attempts. Please try again later.';
+
+  @override
+  String get errorNetwork =>
+      'Network error — check your connection and try again.';
+
+  @override
+  String get errorInvalidEmail => 'That email address looks invalid.';
+
+  @override
+  String get errorEmailInUse => 'An account with this email already exists.';
+
+  @override
+  String get errorWeakPassword =>
+      'Your password must be at least 6 characters.';
+
+  @override
+  String get errorOperationNotAllowed =>
+      'This sign-in method isn\'t available right now.';
+
+  @override
+  String get errorUnexpected => 'Something went wrong. Please try again.';
+
+  @override
+  String get legalNameLabel => 'Full legal name';
+
+  @override
+  String get legalNameHint => 'As it appears on your government ID';
+
+  @override
+  String get institutionLabel => 'Institution / organization (optional)';
+
+  @override
+  String get institutionHint => 'e.g. University of Cape Town';
+
+  @override
+  String get yearsExperienceLabel => 'Years of experience';
+
+  @override
+  String get bioGuidance =>
+      'Describe your background, training and the students you\'ve helped — students see this on your profile.';
+
+  @override
+  String get onboardingStepExperience => 'Experience';
+
+  @override
+  String get onboardingStepPayout => 'Payout';
+
+  @override
+  String get onboardingStepSubmit => 'Submit';
+
+  @override
+  String get idUploadTitle => 'Government-issued ID';
+
+  @override
+  String get idUploadHint =>
+      'Upload a clear photo of your government ID (passport, national ID or driver\'s license). Only our review team can see this.';
+
+  @override
+  String get uploadId => 'Upload ID';
+
+  @override
+  String get reuploadId => 'Re-upload ID';
+
+  @override
+  String get idUploaded => 'ID uploaded';
+
+  @override
+  String get underReviewTitle => 'Application under review';
+
+  @override
+  String get underReviewBody =>
+      'We\'re verifying your credentials and ID. You\'ll be able to take bookings as soon as you\'re approved — usually within a few days.';
+
+  @override
+  String get applicationApprovedTitle => 'You\'re approved!';
+
+  @override
+  String get applicationApprovedBody =>
+      'Your profile is now live. Students can find you in the directory and book sessions.';
+
+  @override
+  String get applicationRejectedTitle => 'Application not approved';
+
+  @override
+  String get applicationRejectedBody =>
+      'Our team couldn\'t approve your application. Review your details, make corrections, and resubmit.';
+
+  @override
+  String get editApplication => 'Edit application';
+
+  @override
+  String get goToDashboard => 'Go to dashboard';
+
+  @override
+  String get applicationStatus => 'Application status';
 }

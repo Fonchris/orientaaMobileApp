@@ -141,10 +141,12 @@ class CounselorFunctions {
   }
 
   /// Starts (or re-submits) counselor verification. `credentialUrl` is the
-  /// Firebase Storage path the client already uploaded.
-  Future<void> submitVerification({required String credentialUrl}) async {
+  /// Firebase Storage URL the client already uploaded; pass null on a
+  /// resubmission that keeps the previously uploaded credential (the function
+  /// then only moves `verificationStatus` back to `pending`).
+  Future<void> submitVerification({String? credentialUrl}) async {
     await _client.call('submitVerification', {
-      'credentialUrl': credentialUrl,
+      'credentialUrl': credentialUrl ?? '',
     });
   }
 

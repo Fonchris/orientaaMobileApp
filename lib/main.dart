@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'widgets/app_shell.dart';
 import 'widgets/app_theme.dart';
+import 'widgets/counselors/screens/counselor_onboarding_page.dart';
 import 'widgets/counselors/services/push_notifications.dart';
 import 'widgets/google_fonts.dart';
 import 'widgets/locale_provider.dart';
@@ -108,6 +110,9 @@ class _OrientaaAppState extends State<OrientaaApp> {
         '/login': (_) => const LoginPage(),
         '/onboarding': (_) => const OnboardingPage(),
         '/student-onboarding': (_) => const StudentOnboardingPage(),
+        '/counselor-onboarding': (_) => CounselorOnboardingPage(
+          counselorUid: FirebaseAuth.instance.currentUser?.uid ?? '',
+        ),
         '/student-dashboard': (_) => const AppShell(),
         '/counsellor-dashboard': (_) => const AppShell(),
         '/signup': (_) => const SignupPage(),

@@ -4,6 +4,45 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
+
+/// Maps raw auth errors to friendly, user-facing copy.
+///
+/// Firebase deliberately merges "no such user" and "wrong password" into a
+/// single `invalid-credential` error (anti-account-enumeration), so both map
+/// to the same "Incorrect email or password." message instead of leaking the
+/// Firebase debug text. Never show `FirebaseAuthException.message` directly.
+String friendlyAuthError(AppLocalizations l10n, Object error) {
+  if (error is! FirebaseAuthException) return l10n.errorUnexpected;
+
+  switch (error.code) {
+    case 'invalid-credential':
+    case 'wrong-password':
+    case 'user-not-found':
+    case 'invalid-login-credentials':
+      return l10n.errorIncorrectCredentials;
+    case 'user-disabled':
+      return l10n.errorAccountDisabled;
+    case 'too-many-requests':
+      return l10n.errorTooManyAttempts;
+    case 'network-request-failed':
+      return l10n.errorNetwork;
+    case 'invalid-email':
+      return l10n.errorInvalidEmail;
+    case 'email-already-in-use':
+      return l10n.errorEmailInUse;
+    case 'weak-password':
+      return l10n.errorWeakPassword;
+    case 'operation-not-allowed':
+      return l10n.errorOperationNotAllowed;
+    case 'google_sign_in_cancelled':
+      // User dismissed the Google sheet — nothing went wrong, so show nothing.
+      return '';
+    default:
+      return l10n.errorUnexpected;
+  }
+}
+
 class AuthService {
   static const String _pendingEmailKey = 'pending_email_link_sign_in';
   static const String _emailLinkContinueUrl =

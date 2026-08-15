@@ -64,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
       Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = friendlyAuthError(AppLocalizations.of(context), e);
       });
     } finally {
       if (mounted) {

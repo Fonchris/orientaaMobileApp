@@ -7,10 +7,14 @@
 export interface CounselorProfile {
   uid: string;
   displayName: string;
+  /** Full legal name — used by the verification team, separate from displayName. */
+  legalName?: string | null;
   photoUrl?: string | null;
   bio: string;
   specialties: string[];
   languages: string[];
+  yearsOfExperience?: number | null;
+  institution?: string | null;
   /** The session rate (sessions are fixed at 60 minutes). */
   hourlyRate: number;
   currency: string;
@@ -29,6 +33,8 @@ export interface CounselorProfile {
 export interface CounselorPrivateProfile {
   /** Firebase Storage URL of the qualification document — admin review only. */
   credentialsUrl?: string | null;
+  /** Firebase Storage URL of the government-issued ID — admin review only. */
+  idDocumentUrl?: string | null;
   /** Flutterwave payout target. */
   payoutAccountDetails?: PayoutAccountDetails | null;
   updatedAt?: FirebaseFirestore.Timestamp;

@@ -1638,4 +1638,110 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get goToProfile => 'Voir mon profil';
+
+  @override
+  String get errorIncorrectCredentials => 'E-mail ou mot de passe incorrect.';
+
+  @override
+  String get errorAccountDisabled =>
+      'Ce compte a été désactivé. Contactez le support.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Trop de tentatives de connexion. Réessayez plus tard.';
+
+  @override
+  String get errorNetwork =>
+      'Erreur réseau — vérifiez votre connexion et réessayez.';
+
+  @override
+  String get errorInvalidEmail => 'Cette adresse e-mail semble invalide.';
+
+  @override
+  String get errorEmailInUse => 'Un compte existe déjà avec cet e-mail.';
+
+  @override
+  String get errorWeakPassword =>
+      'Votre mot de passe doit contenir au moins 6 caractères.';
+
+  @override
+  String get errorOperationNotAllowed =>
+      'Cette méthode de connexion n\'est pas disponible pour le moment.';
+
+  @override
+  String get errorUnexpected => 'Une erreur est survenue. Veuillez réessayer.';
+
+  @override
+  String get legalNameLabel => 'Nom légal complet';
+
+  @override
+  String get legalNameHint => 'Tel qu\'il figure sur votre pièce d\'identité';
+
+  @override
+  String get institutionLabel => 'Institution / organisation (facultatif)';
+
+  @override
+  String get institutionHint => 'p. ex. Université de Cape Town';
+
+  @override
+  String get yearsExperienceLabel => 'Années d\'expérience';
+
+  @override
+  String get bioGuidance =>
+      'Décrivez votre parcours, votre formation et les étudiants que vous avez aidés — les étudiants voient cette bio sur votre profil.';
+
+  @override
+  String get onboardingStepExperience => 'Expérience';
+
+  @override
+  String get onboardingStepPayout => 'Paiement';
+
+  @override
+  String get onboardingStepSubmit => 'Envoyer';
+
+  @override
+  String get idUploadTitle => 'Pièce d\'identité officielle';
+
+  @override
+  String get idUploadHint =>
+      'Téléversez une photo nette de votre pièce d\'identité (passeport, CNI ou permis de conduire). Seule notre équipe de vérification peut la voir.';
+
+  @override
+  String get uploadId => 'Téléverser l\'ID';
+
+  @override
+  String get reuploadId => 'Re-téléverser l\'ID';
+
+  @override
+  String get idUploaded => 'ID téléversé';
+
+  @override
+  String get underReviewTitle => 'Candidature en cours d\'examen';
+
+  @override
+  String get underReviewBody =>
+      'Nous vérifions vos justificatifs et votre identité. Vous pourrez prendre des rendez-vous dès votre approbation — généralement sous quelques jours.';
+
+  @override
+  String get applicationApprovedTitle => 'Vous êtes approuvé !';
+
+  @override
+  String get applicationApprovedBody =>
+      'Votre profil est en ligne. Les étudiants peuvent vous trouver dans l\'annuaire et réserver des séances.';
+
+  @override
+  String get applicationRejectedTitle => 'Candidature non approuvée';
+
+  @override
+  String get applicationRejectedBody =>
+      'Notre équipe n\'a pas pu approuver votre candidature. Vérifiez vos informations, corrigez-les et soumettez à nouveau.';
+
+  @override
+  String get editApplication => 'Modifier la candidature';
+
+  @override
+  String get goToDashboard => 'Aller au tableau de bord';
+
+  @override
+  String get applicationStatus => 'Statut de la candidature';
 }

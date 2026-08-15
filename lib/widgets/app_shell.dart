@@ -15,11 +15,14 @@ import 'profile/profile_page.dart';
 import 'search_page.dart';
 
 /// Post-login app shell with bottom navigation:
-/// Home (dashboard), Search, Saved, Messages and Profile.
+/// Home, Counselors, Messages and Saved.
 ///
-/// The tabs stay alive in an [IndexedStack] so streams (messages,
-/// notifications, profile) keep updating in the background and switching tabs
-/// is instant. The Messages tab shows a live unread badge.
+/// Search and Profile deliberately live in the Home header (a search icon
+/// and the avatar) instead of the bottom bar, keeping the bar to four
+/// destinations so it never looks crowded. The tabs stay alive in an
+/// [IndexedStack] so streams (messages, notifications, profile) keep
+/// updating in the background and switching tabs is instant. The Messages
+/// tab shows a live unread badge.
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
 
@@ -59,20 +62,23 @@ class _AppShellState extends State<AppShell> {
           index: _index,
           children: [
             HomeDashboard(
-              onOpenSearch: () => _goTo(2),
+              // Search + Profile live in the Home header, not the bottom bar.
+              onOpenSearch: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const SearchPage()),
+              ),
               onOpenCounselors: () => _goTo(1),
               onOpenDiscover: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
                   builder: (_) => const UniversityListPage(),
                 ),
               ),
-              onOpenProfile: () => _goTo(5),
+              onOpenProfile: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const ProfilePage()),
+              ),
             ),
             const CounselorDirectoryPage(),
-            const SearchPage(),
-            const SavedUniversitiesPage(),
             const MessagesPage(),
-            const ProfilePage(),
+            const SavedUniversitiesPage(),
           ],
         ),
       ),
@@ -102,14 +108,6 @@ class _AppShellState extends State<AppShell> {
               color: scheme.primary,
             ),
             label: l10n.tabCounselors,
-          ),
-          NavigationDestination(
-            icon: const FaIcon(FontAwesomeIcons.magnifyingGlass, size: 16),
-            selectedIcon: const FaIcon(
-              FontAwesomeIcons.magnifyingGlass,
-              size: 16,
-            ),
-            label: l10n.tabSearch,
           ),
           NavigationDestination(
             icon: StreamBuilder<List<ConversationData>>(
@@ -144,14 +142,6 @@ class _AppShellState extends State<AppShell> {
               color: scheme.primary,
             ),
             label: l10n.tabSaved,
-          ),
-          NavigationDestination(
-            icon: const FaIcon(FontAwesomeIcons.circleUser, size: 18),
-            selectedIcon: const FaIcon(
-              FontAwesomeIcons.circleUser,
-              size: 18,
-            ),
-            label: l10n.tabProfile,
           ),
         ],
       ),

@@ -104,7 +104,12 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).emailLinkSignInFailed(e.toString()))),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)
+                .emailLinkSignInFailed(friendlyAuthError(AppLocalizations.of(context), e)),
+          ),
+        ),
       );
     } finally {
       _isHandlingEmailLink = false;
@@ -166,7 +171,8 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = AppLocalizations.of(context).failedToSendSignInLink(e.toString());
+        _errorMessage = AppLocalizations.of(context)
+            .failedToSendSignInLink(friendlyAuthError(AppLocalizations.of(context), e));
       });
     } finally {
       if (mounted) {
@@ -215,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = friendlyAuthError(AppLocalizations.of(context), e);
       });
     } finally {
       if (mounted) {
@@ -258,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       setState(() {
         _errorMessage = AppLocalizations.of(context)
-            .failedToResendVerification(e.toString());
+            .failedToResendVerification(friendlyAuthError(AppLocalizations.of(context), e));
       });
     } finally {
       if (mounted) {
@@ -285,8 +291,9 @@ class _LoginPageState extends State<LoginPage> {
       await _goToPostLoginDestination();
     } catch (e) {
       if (!mounted) return;
+      final message = friendlyAuthError(AppLocalizations.of(context), e);
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = message.isEmpty ? null : message;
       });
     } finally {
       if (mounted) {

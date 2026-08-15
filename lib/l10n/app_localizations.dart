@@ -3077,6 +3077,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View my profile'**
   String get goToProfile;
+
+  /// No description provided for @errorIncorrectCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password.'**
+  String get errorIncorrectCredentials;
+
+  /// No description provided for @errorAccountDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This account has been disabled. Contact support.'**
+  String get errorAccountDisabled;
+
+  /// No description provided for @errorTooManyAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many sign-in attempts. Please try again later.'**
+  String get errorTooManyAttempts;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error — check your connection and try again.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'That email address looks invalid.'**
+  String get errorInvalidEmail;
+
+  /// No description provided for @errorEmailInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'An account with this email already exists.'**
+  String get errorEmailInUse;
+
+  /// No description provided for @errorWeakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password must be at least 6 characters.'**
+  String get errorWeakPassword;
+
+  /// No description provided for @errorOperationNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'This sign-in method isn\'t available right now.'**
+  String get errorOperationNotAllowed;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get errorUnexpected;
+
+  /// No description provided for @legalNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Full legal name'**
+  String get legalNameLabel;
+
+  /// No description provided for @legalNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'As it appears on your government ID'**
+  String get legalNameHint;
+
+  /// No description provided for @institutionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Institution / organization (optional)'**
+  String get institutionLabel;
+
+  /// No description provided for @institutionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. University of Cape Town'**
+  String get institutionHint;
+
+  /// No description provided for @yearsExperienceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of experience'**
+  String get yearsExperienceLabel;
+
+  /// No description provided for @bioGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your background, training and the students you\'ve helped — students see this on your profile.'**
+  String get bioGuidance;
+
+  /// No description provided for @onboardingStepExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get onboardingStepExperience;
+
+  /// No description provided for @onboardingStepPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout'**
+  String get onboardingStepPayout;
+
+  /// No description provided for @onboardingStepSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get onboardingStepSubmit;
+
+  /// No description provided for @idUploadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Government-issued ID'**
+  String get idUploadTitle;
+
+  /// No description provided for @idUploadHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a clear photo of your government ID (passport, national ID or driver\'s license). Only our review team can see this.'**
+  String get idUploadHint;
+
+  /// No description provided for @uploadId.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload ID'**
+  String get uploadId;
+
+  /// No description provided for @reuploadId.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-upload ID'**
+  String get reuploadId;
+
+  /// No description provided for @idUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'ID uploaded'**
+  String get idUploaded;
+
+  /// No description provided for @underReviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Application under review'**
+  String get underReviewTitle;
+
+  /// No description provided for @underReviewBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re verifying your credentials and ID. You\'ll be able to take bookings as soon as you\'re approved — usually within a few days.'**
+  String get underReviewBody;
+
+  /// No description provided for @applicationApprovedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re approved!'**
+  String get applicationApprovedTitle;
+
+  /// No description provided for @applicationApprovedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is now live. Students can find you in the directory and book sessions.'**
+  String get applicationApprovedBody;
+
+  /// No description provided for @applicationRejectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Application not approved'**
+  String get applicationRejectedTitle;
+
+  /// No description provided for @applicationRejectedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Our team couldn\'t approve your application. Review your details, make corrections, and resubmit.'**
+  String get applicationRejectedBody;
+
+  /// No description provided for @editApplication.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit application'**
+  String get editApplication;
+
+  /// No description provided for @goToDashboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to dashboard'**
+  String get goToDashboard;
+
+  /// No description provided for @applicationStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Application status'**
+  String get applicationStatus;
 }
 
 class _AppLocalizationsDelegate

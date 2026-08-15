@@ -59,13 +59,23 @@ export const saveCounselorProfile = onCall(async (request: CallableRequest<Paylo
   const snap = await ref.get();
   const now = admin.firestore.FieldValue.serverTimestamp();
 
-  // Note: payoutAccountDetails is deliberately NOT part of the profile
-  // payload — it's persisted to the private `counselorPrivate/{uid}` doc so
-  // students (who read approved profiles) can never see the payout target.
+  // Note: payoutAccountDetails and idDocumentUrl are deliberately NOT part of
+  // the profile payload — they're persisted to the private
+  // `counselorPrivate/{uid}` doc so students (who read approved profiles)
+  // can never see the payout target or the government-ID document.
   const allowed: Record<string, unknown> = {
     displayName: typeof fields.displayName === 'string' ? fields.displayName.slice(0, 80) : undefined,
+    legalName: typeof fields.legalName === 'string' ? fields.legalName.slice(0, 120) : undefined,
     photoUrl: typeof fields.photoUrl === 'string' ? fields.photoUrl : undefined,
     bio: typeof fields.bio === 'string' ? fields.bio.slice(0, 2000) : undefined,
+    institution: typeof fields.institution === 'string' ? fields.institution.slice(0, 200) : undefined,
+    yearsOfExperience:
+      typeof fields.yearsOfExperience === 'number' &&
+      Number.isFinite(fields.yearsOfExperience) &&
+      fields.yearsOfExperience >= 0 &&
+      fields.yearsOfExperience <= 100
+        ? Math.floor(fields.yearsOfExperience)
+        : undefined,
     specialties: Array.isArray(fields.specialties)
       ? (fields.specialties as unknown[]).filter((s): s is string => typeof s === 'string').slice(0, 20)
       : undefined,
@@ -87,8 +97,11 @@ export const saveCounselorProfile = onCall(async (request: CallableRequest<Paylo
     await ref.set({
       uid,
       displayName: (sanitized.displayName as string) ?? 'Counselor',
+      legalName: sanitized.legalName ?? '',
       photoUrl: sanitized.photoUrl ?? null,
       bio: sanitized.bio ?? '',
+      institution: sanitized.institution ?? null,
+      yearsOfExperience: sanitized.yearsOfExperience ?? 0,
       specialties: sanitized.specialties ?? [],
       languages: sanitized.languages ?? [],
       hourlyRate: sanitized.hourlyRate ?? 0,
@@ -117,30 +130,47 @@ export const saveCounselorProfile = onCall(async (request: CallableRequest<Paylo
     );
   }
 
+  // Government-issued ID lives on the private doc too (owner + admins only).
+  // Only Firebase Storage URLs are accepted so a client can't stash an
+  // arbitrary link; empty/absent keeps whatever was uploaded before.
+  if ('idDocumentUrl' in fields && fields.idDocumentUrl != null) {
+    const idUrl: string = String(fields.idDocumentUrl);
+    if (idUrl !== '' && !idUrl.startsWith('https://firebasestorage.googleapis.com/')) {
+      throw new HttpsError('invalid-argument', 'idDocumentUrl must be a Firebase Storage URL.');
+    }
+    await db.collection('counselorPrivate').doc(uid).set(
+      { idDocumentUrl: idUrl === '' ? null : idUrl, updatedAt: now },
+      { merge: true },
+    );
+  }
+
   return { status: 'saved' };
 });
 
 /**
- * Owner submits (or re-submits) verification credentials. Only moves
- * verificationStatus to 'pending' — approval happens manually in the
- * Firebase console (or an admin tool later).
+ * Owner submits (or re-submits) verification. A non-empty credentialUrl is
+ * validated and stored on the private doc; an empty one keeps whatever was
+ * uploaded before (a resubmission after rejection must not force a re-upload).
+ * Either way the profile moves to `verificationStatus: 'pending'` — approval
+ * happens manually in the Firebase console (or an admin tool later).
  */
 export const submitVerification = onCall(async (request: CallableRequest<Payload>) => {
   const uid = assertAuth(request);
   const credentialUrl: string = request.data?.credentialUrl ?? '';
-  if (!credentialUrl.startsWith('https://firebasestorage.googleapis.com/')) {
-    throw new HttpsError('invalid-argument', 'credentialsUrl must be a Firebase Storage URL.');
+  if (credentialUrl !== '') {
+    if (!credentialUrl.startsWith('https://firebasestorage.googleapis.com/')) {
+      throw new HttpsError('invalid-argument', 'credentialsUrl must be a Firebase Storage URL.');
+    }
+    // Credentials are sensitive (proof of qualification) — store the URL on
+    // the private doc, not the public profile students read.
+    await db.collection('counselorPrivate').doc(uid).set(
+      {
+        credentialsUrl: credentialUrl,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true },
+    );
   }
-
-  // Credentials are sensitive (proof of qualification) — store the URL on
-  // the private doc, not the public profile students read.
-  await db.collection('counselorPrivate').doc(uid).set(
-    {
-      credentialsUrl: credentialUrl,
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-    },
-    { merge: true },
-  );
   await db.collection('counselorProfiles').doc(uid).update({
     verificationStatus: 'pending',
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),

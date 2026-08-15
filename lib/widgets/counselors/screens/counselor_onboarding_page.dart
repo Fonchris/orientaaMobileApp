@@ -14,15 +14,26 @@ import '../counselor_constants.dart';
 import '../models/counselor_models.dart';
 import '../services/counselor_functions.dart';
 import '../services/counselor_service.dart';
-import 'counselor_profile_page.dart';
+import '../widgets/counselor_form_widgets.dart';
+import 'counselor_review_screen.dart';
 
 /// Guided "Become a counselor" flow for new counselors.
 ///
-/// Four steps: identity -> practice -> pricing & availability ->
-/// verification & payout. Saves through the same server functions the setup
-/// page uses (saveCounselorProfile + submitVerification), so the result is a
-/// profile with `verificationStatus: pending`. Existing data is prefilled if
-/// the user already has a partial profile.
+/// Five steps, in order:
+///   1. Identity & credentials — display name, full legal name, government
+///      ID, professional credentials, institution.
+///   2. Experience & specialty — years of experience, bio, specialties,
+///      languages.
+///   3. Rate & availability — per-session rate + currency, weekly slots.
+///   4. Payout details — Flutterwave payout target.
+///   5. Submit — summary + application submission.
+///
+/// On submit the profile is created with `verificationStatus: pending` and
+/// the user is routed to [CounselorReviewScreen], which listens for approval
+/// and drops them into the normal counselor experience automatically. The
+/// government ID and credentials URLs are stored on the owner-only
+/// `counselorPrivate/{uid}` document — never on the public profile students
+/// read.
 class CounselorOnboardingPage extends StatefulWidget {
   final String counselorUid;
 
@@ -38,6 +49,9 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   final MediaService _media = MediaService();
 
   final TextEditingController _name = TextEditingController();
+  final TextEditingController _legalName = TextEditingController();
+  final TextEditingController _institution = TextEditingController();
+  final TextEditingController _yearsExperience = TextEditingController();
   final TextEditingController _bio = TextEditingController();
   final TextEditingController _specialtyInput = TextEditingController();
   final TextEditingController _languageInput = TextEditingController();
@@ -52,19 +66,15 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   final List<AvailabilityRule> _availability = [];
   String _payoutProvider = 'mobile_money';
   String? _credentialsUrl;
+  String? _idDocumentUrl;
   bool _uploadingCredential = false;
+  bool _uploadingId = false;
 
   int _step = 0;
   bool _loaded = false;
   bool _saving = false;
-  bool _done = false;
 
-  static const List<String> _timeOptions = [
-    '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-    '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
-    '20:00',
-  ];
+  static const int _totalSteps = 5;
 
   @override
   void initState() {
@@ -75,6 +85,9 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   @override
   void dispose() {
     _name.dispose();
+    _legalName.dispose();
+    _institution.dispose();
+    _yearsExperience.dispose();
     _bio.dispose();
     _specialtyInput.dispose();
     _languageInput.dispose();
@@ -86,7 +99,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
 
   Future<void> _loadExisting() async {
     // Prefill from a partial profile (re-entry) — public fields from the
-    // profile doc, credentials + payout from the owner-only private doc.
+    // profile doc, credentials + ID + payout from the owner-only private doc.
     final results = await Future.wait([
       _service.fetchProfile(widget.counselorUid),
       _service.fetchPrivateProfile(widget.counselorUid),
@@ -98,8 +111,13 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
       _loaded = true;
       if (profile != null) {
         _name.text = profile.displayName == 'Counselor' ? '' : profile.displayName;
+        _legalName.text = profile.legalName;
         _bio.text = profile.bio;
         _photoUrl = profile.photoUrl;
+        _institution.text = profile.institution ?? '';
+        _yearsExperience.text = profile.yearsOfExperience == 0
+            ? ''
+            : '${profile.yearsOfExperience}';
         _specialties.addAll(profile.specialties);
         _languages.addAll(profile.languages);
         if (profile.hourlyRate > 0) {
@@ -112,6 +130,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
       }
       final privateData = private ?? const <String, dynamic>{};
       _credentialsUrl = privateData['credentialsUrl'] as String?;
+      _idDocumentUrl = privateData['idDocumentUrl'] as String?;
       final payout =
           (privateData['payoutAccountDetails'] as Map?)?.cast<String, dynamic>() ??
               const <String, dynamic>{};
@@ -126,13 +145,15 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   bool get _canContinue {
     switch (_step) {
       case 0:
-        return _name.text.trim().isNotEmpty;
+        return _name.text.trim().isNotEmpty && _legalName.text.trim().isNotEmpty;
       case 1:
-        return true;
+        return (int.tryParse(_yearsExperience.text.trim()) ?? -1) >= 0;
       case 2:
         final rate = double.tryParse(_rate.text.trim()) ?? 0;
         return rate > 0 && _availability.isNotEmpty;
       case 3:
+        return true;
+      case 4:
         return true;
       default:
         return false;
@@ -146,46 +167,66 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
     if (mounted) setState(() => _photoUrl = url);
   }
 
+  /// Uploads a sensitive document (ID or credentials) to a private Storage
+  /// path. Image-only for now — PDF upload needs `file_picker`.
+  Future<String> _uploadDocument(File file, String folder) async {
+    final ext = file.path.split('.').last.toLowerCase();
+    final safeExt = const {'jpg', 'jpeg', 'png', 'heic', 'webp'}.contains(ext) ? ext : 'jpg';
+    final ref = FirebaseStorage.instance.ref('$folder/${widget.counselorUid}.$safeExt');
+    await ref.putFile(file);
+    return ref.getDownloadURL();
+  }
+
+  Future<void> _pickId() async {
+    final file = await _media.pickImage();
+    if (file == null) return;
+    setState(() => _uploadingId = true);
+    try {
+      final url = await _uploadDocument(file, 'counselor_ids');
+      if (!mounted) return;
+      setState(() => _idDocumentUrl = url);
+    } catch (_) {
+      _showError();
+    } finally {
+      if (mounted) setState(() => _uploadingId = false);
+    }
+  }
+
   Future<void> _pickCredential() async {
     final file = await _media.pickImage();
     if (file == null) return;
     setState(() => _uploadingCredential = true);
     try {
-      final url = await _uploadCredential(file);
+      final url = await _uploadDocument(file, 'counselor_credentials');
       if (!mounted) return;
       setState(() => _credentialsUrl = url);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).credentialsSubmitted)),
       );
     } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).bookingCreationError)),
-        );
-      }
+      _showError();
     } finally {
       if (mounted) setState(() => _uploadingCredential = false);
     }
   }
 
-  Future<String> _uploadCredential(File file) async {
-    final ext = file.path.split('.').last.toLowerCase();
-    final safeExt = const {'jpg', 'jpeg', 'png', 'heic', 'webp'}.contains(ext) ? ext : 'jpg';
-    final ref = FirebaseStorage.instance.ref(
-      'counselor_credentials/${widget.counselorUid}.$safeExt',
+  void _showError() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).bookingCreationError)),
     );
-    await ref.putFile(file);
-    return ref.getDownloadURL();
   }
 
   Future<void> _finish() async {
     if (_saving) return;
     setState(() => _saving = true);
-    final l10n = AppLocalizations.of(context);
     try {
       final rate = double.tryParse(_rate.text.trim()) ?? 0;
       await _functions.saveProfile({
         'displayName': _name.text.trim(),
+        'legalName': _legalName.text.trim(),
+        'institution': _institution.text.trim(),
+        'yearsOfExperience': int.tryParse(_yearsExperience.text.trim()) ?? 0,
         'photoUrl': _photoUrl,
         'bio': _bio.text.trim(),
         'specialties': _specialties,
@@ -198,24 +239,27 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
           'accountName': _accountName.text.trim(),
           'accountNumber': _accountNumber.text.trim(),
         },
+        'idDocumentUrl': _idDocumentUrl,
       });
-      if (_credentialsUrl != null) {
-        await _functions.submitVerification(credentialUrl: _credentialsUrl!);
-      }
+      // Always move the application back to `pending` on submit — including a
+      // resubmission after a rejection where the counselor kept their earlier
+      // credentials (submitVerification accepts a null/empty URL for that).
+      await _functions.submitVerification(credentialUrl: _credentialsUrl);
       if (!mounted) return;
-      setState(() => _done = true);
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.bookingCreationError)),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute<void>(
+          builder: (_) => CounselorReviewScreen(counselorUid: widget.counselorUid),
+        ),
       );
+    } catch (_) {
+      _showError();
     } finally {
       if (mounted) setState(() => _saving = false);
     }
   }
 
   void _next() {
-    if (_step < 3) {
+    if (_step < _totalSteps - 1) {
       setState(() => _step += 1);
     } else {
       _finish();
@@ -225,9 +269,6 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    if (_done) return _doneView(context, l10n, isDark);
 
     return Scaffold(
       appBar: AppBar(
@@ -257,8 +298,8 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
                   onBack: _step > 0 ? () => setState(() => _step -= 1) : null,
                   onNext: _next,
                   nextEnabled: _canContinue,
-                  nextLabel: _step < 3 ? l10n.next : l10n.onboardingFinish,
-                  nextIcon: _step < 3
+                  nextLabel: _step < _totalSteps - 1 ? l10n.next : l10n.onboardingFinish,
+                  nextIcon: _step < _totalSteps - 1
                       ? FontAwesomeIcons.arrowRight
                       : FontAwesomeIcons.solidCircleCheck,
                   loading: _saving,
@@ -266,9 +307,11 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
                       ? null
                       : _step == 0
                           ? l10n.enterYourFullName
-                          : _step == 2
-                              ? '${l10n.availabilityLabel} + ${l10n.hourlyRateLabel(_currency)}'
-                              : null,
+                          : _step == 1
+                              ? l10n.yearsExperienceLabel
+                              : _step == 2
+                                  ? '${l10n.availabilityLabel} + ${l10n.hourlyRateLabel(_currency)}'
+                                  : null,
                 ),
               ],
             ),
@@ -280,9 +323,10 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final labels = [
       l10n.onboardingStepIdentity,
-      l10n.onboardingStepPractice,
+      l10n.onboardingStepExperience,
       l10n.onboardingStepPricing,
-      l10n.onboardingStepVerify,
+      l10n.onboardingStepPayout,
+      l10n.onboardingStepSubmit,
     ];
     final activeColor = AppTheme.brandYellow;
     final inactiveColor = isDark
@@ -290,9 +334,9 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         : AppTheme.brandInk.withValues(alpha: 0.12);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
       child: Row(
-        children: List.generate(4, (i) {
+        children: List.generate(_totalSteps, (i) {
           final done = i < _step;
           final current = i == _step;
           return Expanded(
@@ -338,7 +382,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
                     ],
                   ),
                 ),
-                if (i < 3)
+                if (i < _totalSteps - 1)
                   Container(
                     height: 2,
                     width: 18,
@@ -360,13 +404,17 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
       case 0:
         return _identityStep(context);
       case 1:
-        return _practiceStep(context);
+        return _experienceStep(context);
       case 2:
         return _pricingStep(context);
+      case 3:
+        return _payoutStep(context);
       default:
-        return _verifyStep(context);
+        return _submitStep(context);
     }
   }
+
+  // ── Step 1: Identity & credentials ────────────────────────────────────
 
   Widget _identityStep(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -395,7 +443,7 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         ),
         const SizedBox(height: 20),
         StepReveal(
-          delay: const Duration(milliseconds: 120),
+          delay: const Duration(milliseconds: 100),
           child: BrandTextField(
             controller: _name,
             initialText: _name.text,
@@ -405,11 +453,63 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
             onChanged: (_) => setState(() {}),
           ),
         ),
+        const SizedBox(height: 14),
+        StepReveal(
+          delay: const Duration(milliseconds: 140),
+          child: BrandTextField(
+            controller: _legalName,
+            initialText: _legalName.text,
+            hint: l10n.legalNameHint,
+            label: l10n.legalNameLabel,
+            prefixIcon: FontAwesomeIcons.idCard,
+            onChanged: (_) => setState(() {}),
+          ),
+        ),
+        const SizedBox(height: 14),
+        StepReveal(
+          delay: const Duration(milliseconds: 180),
+          child: BrandTextField(
+            controller: _institution,
+            initialText: _institution.text,
+            hint: l10n.institutionHint,
+            label: l10n.institutionLabel,
+            prefixIcon: FontAwesomeIcons.buildingColumns,
+            onChanged: (_) => setState(() {}),
+          ),
+        ),
+        const SizedBox(height: 18),
+        StepReveal(
+          delay: const Duration(milliseconds: 220),
+          child: CounselorUploadCard(
+            title: l10n.idUploadTitle,
+            hint: l10n.idUploadHint,
+            uploaded: _idDocumentUrl != null,
+            uploading: _uploadingId,
+            buttonLabel: l10n.uploadId,
+            reuploadLabel: l10n.reuploadId,
+            onPick: _pickId,
+          ),
+        ),
+        const SizedBox(height: 12),
+        StepReveal(
+          delay: const Duration(milliseconds: 260),
+          child: CounselorUploadCard(
+            title: l10n.credentialsVerified,
+            hint: l10n.credentialsUploadHint,
+            uploaded: _credentialsUrl != null,
+            uploading: _uploadingCredential,
+            buttonLabel: l10n.uploadCredentials,
+            reuploadLabel: l10n.reuploadCredentials,
+            onPick: _pickCredential,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _practiceStep(BuildContext context) {
+  // ── Step 2: Experience & specialty ────────────────────────────────────
+
+  Widget _experienceStep(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -417,24 +517,37 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         StepReveal(
           child: StepSectionLabel(
             icon: FontAwesomeIcons.suitcaseMedical,
-            label: l10n.onboardingStepPractice,
+            label: l10n.onboardingStepExperience,
             helper: l10n.onboardingPracticeSubtitle,
           ),
         ),
         const SizedBox(height: 18),
         StepReveal(
           delay: const Duration(milliseconds: 60),
+          child: BrandTextField(
+            controller: _yearsExperience,
+            initialText: _yearsExperience.text,
+            hint: '5',
+            label: l10n.yearsExperienceLabel,
+            prefixIcon: FontAwesomeIcons.briefcase,
+            keyboardType: const TextInputType.numberWithOptions(decimal: false),
+            onChanged: (_) => setState(() {}),
+          ),
+        ),
+        const SizedBox(height: 18),
+        StepReveal(
+          delay: const Duration(milliseconds: 100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _label(context, l10n.bioLabel),
+              CounselorFieldLabel(l10n.bioLabel),
               const SizedBox(height: 6),
               TextField(
                 controller: _bio,
                 maxLines: 4,
                 style: GoogleFonts.inter(fontSize: 14),
                 decoration: InputDecoration(
-                  hintText: 'I help students with scholarships and university applications…',
+                  hintText: l10n.bioGuidance,
                   alignLabelWithHint: true,
                 ),
               ),
@@ -443,35 +556,37 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         ),
         const SizedBox(height: 18),
         StepReveal(
-          delay: const Duration(milliseconds: 120),
-          child: _chipEditor(
-            context,
+          delay: const Duration(milliseconds: 140),
+          child: CounselorChipEditor(
             items: _specialties,
             controller: _specialtyInput,
             hint: l10n.specialtiesHint,
             presets: counselorSpecialtyPresets,
-            onAdd: _addSpecialty,
-            onRemove: (s) => setState(() => _specialties.remove(s)),
             label: l10n.filterSpecialtyLabel,
+            onAddValue: _addSpecialtyValue,
+            onRemove: (s) => setState(() => _specialties.remove(s)),
           ),
         ),
         const SizedBox(height: 18),
         StepReveal(
           delay: const Duration(milliseconds: 180),
-          child: _chipEditor(
-            context,
+          child: CounselorChipEditor(
             items: _languages,
             controller: _languageInput,
             hint: l10n.languagesHint,
-            presets: const ['English', 'French', 'Arabic', 'Portuguese', 'Swahili', 'Hausa'],
-            onAdd: _addLanguage,
-            onRemove: (s) => setState(() => _languages.remove(s)),
+            presets: const [
+              'English', 'French', 'Arabic', 'Portuguese', 'Swahili', 'Hausa',
+            ],
             label: l10n.filterLanguageLabel,
+            onAddValue: _addLanguageValue,
+            onRemove: (s) => setState(() => _languages.remove(s)),
           ),
         ),
       ],
     );
   }
+
+  // ── Step 3: Rate & availability ───────────────────────────────────────
 
   Widget _pricingStep(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -548,144 +663,150 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
         const SizedBox(height: 18),
         StepReveal(
           delay: const Duration(milliseconds: 120),
-          child: Row(
-            children: [
-              Expanded(
-                child: _label(context, l10n.availabilityLabel),
-              ),
-              TextButton.icon(
-                onPressed: () => setState(() => _availability.add(
-                      const AvailabilityRule(
-                        dayOfWeek: 1,
-                        startTime: '09:00',
-                        endTime: '17:00',
-                      ),
-                    )),
-                icon: const FaIcon(FontAwesomeIcons.plus, size: 11),
-                label: Text(
-                  l10n.addAvailabilitySlot,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
+          child: AvailabilityListEditor(
+            initial: _availability,
+            onChanged: (rules) => setState(() => _availability
+              ..clear()
+              ..addAll(rules)),
           ),
         ),
-        if (_availability.isEmpty)
-          _emptyAvailability(context)
-        else
-          ..._availability.asMap().entries.map((e) => _availabilityRow(context, e.key)),
       ],
     );
   }
 
-  Widget _verifyStep(BuildContext context) {
+  // ── Step 4: Payout details ────────────────────────────────────────────
+
+  Widget _payoutStep(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
       children: [
         StepReveal(
           child: StepSectionLabel(
-            icon: FontAwesomeIcons.shieldHalved,
-            label: l10n.onboardingStepVerify,
+            icon: FontAwesomeIcons.moneyCheckDollar,
+            label: l10n.onboardingStepPayout,
             helper: l10n.onboardingVerifySubtitle,
           ),
         ),
         const SizedBox(height: 18),
         StepReveal(
           delay: const Duration(milliseconds: 60),
-          child: _credentialsCard(context),
-        ),
-        const SizedBox(height: 18),
-        StepReveal(
-          delay: const Duration(milliseconds: 120),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _label(context, l10n.statusLabel),
-              const SizedBox(height: 6),
-              _payoutCard(context),
-            ],
+          child: CounselorPayoutCard(
+            provider: _payoutProvider,
+            accountName: _accountName,
+            accountNumber: _accountNumber,
+            onProviderChanged: (v) => setState(() => _payoutProvider = v),
           ),
         ),
       ],
     );
   }
 
-  Widget _doneView(BuildContext context, AppLocalizations l10n, bool isDark) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32),
+  // ── Step 5: Submit ─────────────────────────────────────────────────────
+
+  Widget _submitStep(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final rate = double.tryParse(_rate.text.trim()) ?? 0;
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+      children: [
+        StepReveal(
+          child: StepSectionLabel(
+            icon: FontAwesomeIcons.paperPlane,
+            label: l10n.onboardingStepSubmit,
+            helper: l10n.underReviewBody,
+          ),
+        ),
+        const SizedBox(height: 18),
+        StepReveal(
+          delay: const Duration(milliseconds: 60),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: isDark ? AppTheme.brandCard : Colors.white,
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : AppTheme.brandLightOutline,
+              ),
+            ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 84,
-                  height: 84,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppTheme.success,
-                  ),
-                  child: const FaIcon(
-                    FontAwesomeIcons.solidCircleCheck,
-                    size: 38,
-                    color: Colors.white,
-                  ),
+                _checkRow(l10n, _name.text.trim().isNotEmpty, _name.text.trim()),
+                _checkRow(l10n, _legalName.text.trim().isNotEmpty, l10n.legalNameLabel),
+                _checkRow(l10n, _idDocumentUrl != null, l10n.idUploadTitle),
+                _checkRow(l10n, _credentialsUrl != null, l10n.credentialsVerified),
+                _checkRow(
+                  l10n,
+                  int.tryParse(_yearsExperience.text.trim()) != null,
+                  l10n.yearsExperienceLabel,
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  l10n.onboardingDoneTitle,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? Colors.white : AppTheme.brandInk,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  l10n.onboardingDoneBody,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 13.5,
-                    height: 1.45,
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.6)
-                        : AppTheme.brandInk.withValues(alpha: 0.6),
-                  ),
-                ),
-                const SizedBox(height: 26),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute<void>(
-                          builder: (_) =>
-                              CounselorProfilePage(counselorUid: widget.counselorUid),
-                        ),
-                        (route) => route.isFirst,
-                      );
-                    },
-                    child: Text(l10n.goToProfile),
-                  ),
+                _checkRow(l10n, rate > 0, '$_currency $rate ${l10n.perSession}'),
+                _checkRow(l10n, _availability.isNotEmpty, l10n.availabilityLabel),
+                _checkRow(
+                  l10n,
+                  _accountNumber.text.trim().isNotEmpty,
+                  l10n.onboardingStepPayout,
                 ),
               ],
             ),
           ),
         ),
+        const SizedBox(height: 14),
+        StepReveal(
+          delay: const Duration(milliseconds: 100),
+          child: Text(
+            l10n.underReviewBody,
+            style: GoogleFonts.inter(
+              fontSize: 12.5,
+              height: 1.45,
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.55)
+                  : AppTheme.brandInk.withValues(alpha: 0.55),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _checkRow(AppLocalizations l10n, bool ok, String label) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          FaIcon(
+            ok ? FontAwesomeIcons.solidCircleCheck : FontAwesomeIcons.circle,
+            size: 14,
+            color: ok ? AppTheme.success : (isDark ? Colors.white.withValues(alpha: 0.3) : AppTheme.brandInk.withValues(alpha: 0.3)),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              label,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                fontWeight: ok ? FontWeight.w600 : FontWeight.w500,
+                color: ok
+                    ? (isDark ? Colors.white : AppTheme.brandInk)
+                    : (isDark ? Colors.white.withValues(alpha: 0.45) : AppTheme.brandInk.withValues(alpha: 0.45)),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // ── Small form pieces (mirror the setup page's editors) ────────────────
+  // ── Small helpers ─────────────────────────────────────────────────────
 
-  void _addSpecialty() {
-    final v = _specialtyInput.text.trim();
+  /// Adds a specialty from either the free-text input or a tapped preset.
+  void _addSpecialtyValue(String value) {
+    final v = value.trim();
     if (v.isEmpty || _specialties.contains(v)) return;
     setState(() {
       _specialties.add(v);
@@ -693,393 +814,14 @@ class _CounselorOnboardingPageState extends State<CounselorOnboardingPage> {
     });
   }
 
-  void _addLanguage() {
-    final v = _languageInput.text.trim();
+  /// Adds a language from either the free-text input or a tapped preset.
+  void _addLanguageValue(String value) {
+    final v = value.trim();
     if (v.isEmpty || _languages.contains(v)) return;
     setState(() {
       _languages.add(v);
       _languageInput.clear();
     });
-  }
-
-  Widget _label(BuildContext context, String label) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Text(
-      label,
-      style: GoogleFonts.plusJakartaSans(
-        fontSize: 13.5,
-        fontWeight: FontWeight.w800,
-        color: isDark ? Colors.white : AppTheme.brandInk,
-      ),
-    );
-  }
-
-  Widget _chipEditor(
-    BuildContext context, {
-    required List<String> items,
-    required TextEditingController controller,
-    required String hint,
-    required List<String> presets,
-    required VoidCallback onAdd,
-    required ValueChanged<String> onRemove,
-    required String label,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _label(context, label),
-        const SizedBox(height: 8),
-        if (items.isNotEmpty)
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: items
-                .map((s) => InputChip(
-                      label: Text(s),
-                      onDeleted: () => onRemove(s),
-                      backgroundColor: AppTheme.brandYellow.withValues(alpha: 0.12),
-                      side: BorderSide.none,
-                      labelStyle: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? Colors.white : AppTheme.brandInk,
-                      ),
-                      deleteIconColor: AppTheme.brandAmber,
-                    ))
-                .toList(),
-          ),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                onSubmitted: (_) => onAdd(),
-                style: GoogleFonts.inter(fontSize: 14),
-                decoration: InputDecoration(hintText: hint),
-              ),
-            ),
-            const SizedBox(width: 8),
-            IconButton.filled(
-              onPressed: onAdd,
-              icon: const FaIcon(FontAwesomeIcons.plus, size: 13),
-              style: IconButton.styleFrom(backgroundColor: AppTheme.brandYellow),
-              color: AppTheme.brandInk,
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: presets
-              .where((s) => !items.contains(s))
-              .take(6)
-              .map((s) => ActionChip(
-                    label: Text(s),
-                    onPressed: () {
-                      if (!items.contains(s)) {
-                        setState(() => items.add(s));
-                      }
-                    },
-                    backgroundColor: isDark ? AppTheme.brandCard : AppTheme.brandLight,
-                    side: BorderSide.none,
-                  ))
-              .toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _availabilityRow(BuildContext context, int index) {
-    final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final rule = _availability[index];
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        color: isDark ? AppTheme.brandCard : AppTheme.brandLight,
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandLightOutline,
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: DropdownButtonFormField<int>(
-                  initialValue: rule.dayOfWeek,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  ),
-                  dropdownColor: isDark ? AppTheme.brandCard : Colors.white,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    color: isDark ? Colors.white : AppTheme.brandInk,
-                  ),
-                  items: [
-                    for (var d = 1; d <= 7; d++)
-                      DropdownMenuItem(value: d, child: Text(_dayName(l10n, d))),
-                  ],
-                  onChanged: (v) => setState(() => _availability[index] =
-                      _copyRule(rule, dayOfWeek: v ?? 1)),
-                ),
-              ),
-              const SizedBox(width: 8),
-              _timeDropdown(
-                context,
-                value: rule.startTime,
-                onChanged: (v) =>
-                    setState(() => _availability[index] = _copyRule(rule, startTime: v)),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                l10n.endTimeLabel,
-                style: GoogleFonts.inter(fontSize: 11, color: AppTheme.brandAmber),
-              ),
-              const SizedBox(width: 4),
-              _timeDropdown(
-                context,
-                value: rule.endTime,
-                onChanged: (v) =>
-                    setState(() => _availability[index] = _copyRule(rule, endTime: v)),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () => setState(() => _availability.removeAt(index)),
-              icon: const FaIcon(FontAwesomeIcons.trash, size: 11),
-              label: Text(l10n.removeAvailabilitySlot),
-              style: TextButton.styleFrom(foregroundColor: AppTheme.danger),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  AvailabilityRule _copyRule(AvailabilityRule r,
-          {int? dayOfWeek, String? startTime, String? endTime}) =>
-      AvailabilityRule(
-        dayOfWeek: dayOfWeek ?? r.dayOfWeek,
-        startTime: startTime ?? r.startTime,
-        endTime: endTime ?? r.endTime,
-      );
-
-  Widget _timeDropdown(BuildContext context,
-      {required String value, required ValueChanged<String> onChanged}) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return DropdownButton<String>(
-      value: value,
-      underline: const SizedBox.shrink(),
-      dropdownColor: isDark ? AppTheme.brandCard : Colors.white,
-      style: GoogleFonts.inter(
-        fontSize: 13,
-        color: isDark ? Colors.white : AppTheme.brandInk,
-      ),
-      items: _timeOptions
-          .map((t) => DropdownMenuItem(value: t, child: Text(t)))
-          .toList(),
-      onChanged: (v) {
-        if (v != null) onChanged(v);
-      },
-    );
-  }
-
-  String _dayName(AppLocalizations l10n, int day) {
-    switch (day) {
-      case 1:
-        return l10n.dayMonday;
-      case 2:
-        return l10n.dayTuesday;
-      case 3:
-        return l10n.dayWednesday;
-      case 4:
-        return l10n.dayThursday;
-      case 5:
-        return l10n.dayFriday;
-      case 6:
-        return l10n.daySaturday;
-      default:
-        return l10n.daySunday;
-    }
-  }
-
-  Widget _emptyAvailability(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.white,
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.07)
-              : AppTheme.brandLightOutline,
-        ),
-      ),
-      child: Row(
-        children: [
-          FaIcon(
-            FontAwesomeIcons.calendarPlus,
-            size: 15,
-            color: isDark
-                ? AppTheme.brandGold
-                : AppTheme.brandInk.withValues(alpha: 0.4),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              l10n.selectSlotHint,
-              style: GoogleFonts.inter(
-                fontSize: 12.5,
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.55)
-                    : AppTheme.brandInk.withValues(alpha: 0.55),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _payoutCard(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        color: isDark ? AppTheme.brandCard : AppTheme.brandLight,
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : AppTheme.brandLightOutline,
-        ),
-      ),
-      child: Column(
-        children: [
-          DropdownButtonFormField<String>(
-            initialValue: _payoutProvider,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            ),
-            dropdownColor: isDark ? AppTheme.brandCard : Colors.white,
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: isDark ? Colors.white : AppTheme.brandInk,
-            ),
-            items: const [
-              DropdownMenuItem(value: 'mobile_money', child: Text('Mobile money')),
-              DropdownMenuItem(value: 'bank_transfer', child: Text('Bank transfer')),
-              DropdownMenuItem(value: 'card', child: Text('Card')),
-            ],
-            onChanged: (v) => setState(() => _payoutProvider = v ?? 'mobile_money'),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _accountName,
-            style: GoogleFonts.inter(fontSize: 13),
-            decoration: InputDecoration(
-              hintText: 'Account name',
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _accountNumber,
-            keyboardType: TextInputType.phone,
-            style: GoogleFonts.inter(fontSize: 13),
-            decoration: InputDecoration(
-              hintText: 'Account / wallet number',
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _credentialsCard(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final uploaded = _credentialsUrl != null;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        color: uploaded
-            ? AppTheme.success.withValues(alpha: 0.08)
-            : (isDark ? AppTheme.brandCard : AppTheme.brandLight),
-        border: Border.all(
-          color: uploaded
-              ? AppTheme.success.withValues(alpha: 0.3)
-              : isDark
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : AppTheme.brandLightOutline,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.credentialsVerified,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: isDark ? Colors.white : AppTheme.brandInk,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l10n.credentialsUploadHint,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              height: 1.4,
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.6)
-                  : AppTheme.brandInk.withValues(alpha: 0.6),
-            ),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: _uploadingCredential ? null : _pickCredential,
-            icon: _uploadingCredential
-                ? const SizedBox(
-                    width: 14,
-                    height: 14,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : FaIcon(
-                    uploaded
-                        ? FontAwesomeIcons.solidCircleCheck
-                        : FontAwesomeIcons.upload,
-                    size: 13,
-                    color: uploaded ? AppTheme.success : AppTheme.brandAmber,
-                  ),
-            label: Text(
-              uploaded ? l10n.reuploadCredentials : l10n.uploadCredentials,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   String _initials(String name) {

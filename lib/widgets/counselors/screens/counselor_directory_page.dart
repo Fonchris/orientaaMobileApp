@@ -13,6 +13,7 @@ import '../services/counselor_service.dart';
 import 'admin_disputes_page.dart';
 import 'counselor_onboarding_page.dart';
 import 'counselor_profile_page.dart';
+import 'counselor_review_screen.dart';
 import 'counselor_setup_page.dart';
 
 /// Screen 1 — Counselor directory.
@@ -74,16 +75,21 @@ class _CounselorDirectoryPageState extends State<CounselorDirectoryPage> {
   }
 
   Future<void> _openCounselorEntry(String uid) async {
-    // New counselors (no profile yet) get the guided onboarding wizard;
-    // existing ones jump straight into the editor.
+    // No profile yet -> guided onboarding wizard. Approved -> the profile
+    // editor. Rejected -> back into the wizard (prefilled) to fix + resubmit.
+    // Pending -> the under-review screen, which auto-routes on approval.
     final profile = await _service.fetchProfile(uid);
     if (!mounted) return;
+    final Widget destination;
+    if (profile == null || profile.verificationStatus == 'rejected') {
+      destination = CounselorOnboardingPage(counselorUid: uid);
+    } else if (profile.verificationStatus == 'approved') {
+      destination = CounselorSetupPage(counselorUid: uid);
+    } else {
+      destination = CounselorReviewScreen(counselorUid: uid);
+    }
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => profile == null
-            ? CounselorOnboardingPage(counselorUid: uid)
-            : CounselorSetupPage(counselorUid: uid),
-      ),
+      MaterialPageRoute<void>(builder: (_) => destination),
     );
     if (mounted) await _loadFirstPage();
   }
@@ -345,9 +351,10 @@ class _CounselorDirectoryPageState extends State<CounselorDirectoryPage> {
         style: GoogleFonts.inter(fontSize: 14),
         decoration: InputDecoration(
           hintText: l10n.counselorSearchHint,
-          prefixIcon: FaIcon(
-            FontAwesomeIcons.magnifyingGlass,
-            size: 14,
+          // Material icon so it centers vertically with the placeholder text.
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            size: 19,
             color: isDark
                 ? Colors.white.withValues(alpha: 0.4)
                 : AppTheme.brandInk.withValues(alpha: 0.4),

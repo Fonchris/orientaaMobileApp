@@ -54,9 +54,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     if (!mounted) return;
 
+    // Students get the university-matching onboarding; counselors get the
+    // dedicated multi-step counselor wizard (identity/credentials,
+    // experience, rate, payout, submit) before their account is usable.
     final route = _selectedRole == UserRole.student
         ? '/student-onboarding'
-        : '/counsellor-dashboard';
+        : '/counselor-onboarding';
 
     Navigator.of(context).pushReplacementNamed(
       route,

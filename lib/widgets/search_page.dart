@@ -104,15 +104,35 @@ class _SearchPageState extends State<SearchPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
-              child: Text(
-                l10n.searchTitle,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? Colors.white : AppTheme.brandInk,
-                  letterSpacing: -0.4,
-                ),
+              padding: const EdgeInsets.fromLTRB(8, 8, 20, 4),
+              child: Row(
+                children: [
+                  // Search is now pushed from the Home header, so it needs a
+                  // way back when it's not a bottom tab.
+                  if (Navigator.canPop(context))
+                    IconButton(
+                      tooltip: l10n.back,
+                      onPressed: () => Navigator.pop(context),
+                      icon: FaIcon(
+                        FontAwesomeIcons.arrowLeft,
+                        size: 15,
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.75)
+                            : AppTheme.brandInk.withValues(alpha: 0.75),
+                      ),
+                    ),
+                  Expanded(
+                    child: Text(
+                      l10n.searchTitle,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? Colors.white : AppTheme.brandInk,
+                        letterSpacing: -0.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -125,9 +145,11 @@ class _SearchPageState extends State<SearchPage> {
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: l10n.searchHint,
-                  prefixIcon: const FaIcon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    size: 15,
+                  // Material icon (not FaIcon): it vertically centers inside
+                  // the prefix slot so it lines up with the placeholder text.
+                  prefixIcon: const Icon(
+                    Icons.search_rounded,
+                    size: 21,
                     color: AppTheme.brandBlue,
                   ),
                   suffixIcon: _controller.text.isNotEmpty
