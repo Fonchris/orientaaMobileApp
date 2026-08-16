@@ -53,10 +53,14 @@ service firebase.storage {
     }
 
     // Profile photos: profile_photos/<uid>.jpg — the owner writes, everyone
-    // signed in reads.
-    match /profile_photos/{uid}.jpg {
+    // signed in reads. The filename segment carries the uid (e.g. `abc123.jpg`),
+    // so the rule binds it with a whole-segment wildcard + prefix check
+    // (`{uid}.jpg` is not valid rules syntax).
+    match /profile_photos/{fileName} {
       allow read: if isSignedIn();
-      allow write: if isOwner(uid) && isSmallImage();
+      allow write: if isSignedIn()
+          && fileName.startsWith(request.auth.uid + '.jpg')
+          && isSmallImage();
     }
 
     // Post images: post_images/<uid>/<fileName> — owner writes, all

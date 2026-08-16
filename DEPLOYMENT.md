@@ -22,6 +22,16 @@ server. All payment logic runs in Cloud Functions; **no secrets live in the app*
 - [ ] Android `google-services.json` + iOS `GoogleService-Info.plist` present
       (both gitignored).
 
+> **First deploy gotchas** (hit on the 2026-08-16 deploy attempt):
+> - Cloud Functions + Secret Manager require the **Blaze** plan. On Spark,
+>   `firebase deploy --only functions` and every `functions:secrets:*` command
+>   fail with a plan error. Upgrade:
+>   https://console.firebase.google.com/project/orientaamobileapp/upgrade
+> - Storage must be provisioned once before `firebase deploy --only storage`
+>   works: Firebase console → **Build → Storage → Get Started**
+>   (https://console.firebase.google.com/project/orientaamobileapp/storage).
+>   Until then the deploy fails with “Firebase Storage has not been set up”.
+
 ---
 
 ## 2. Environment variables (Cloud Functions)
@@ -136,11 +146,26 @@ firebase functions:log
 
 `resolveDispute` only runs for users holding the custom claim `admin: true`.
 
-- Firebase console → **Authentication → Users** → select the user →
-  **Edit → Custom claims** → paste:
+Two ways to grant it (CLI is faster for a known account):
+
+- **CLI:**
+  ```bash
+  # Find the user's UID
+  firebase auth:list
+  # Grant the admin claim (JSON string exactly as shown)
+  firebase auth:set-claims <UID> '{"admin": true}'
+  ```
+- **Console:** Firebase console → **Authentication → Users** → select the
+  user → **Edit → Custom claims** → paste:
   ```json
   { "admin": true }
   ```
+
+> **Important**: custom claims reach the app only after the user's ID token
+> refreshes — the app gates admin UI on `getIdTokenResult()`. Have the admin
+> user sign out and back in (or wait ~1 hour) before expecting the admin
+> screens to appear.
+
 - The app shows the **Dispute review** entry (shield icon in the Counselors
   tab header) only to users with that claim. Students who raise issues land in
   the `adminDisputeQueue` collection; resolve them there to `paid_out`
@@ -171,7 +196,37 @@ flutter build ipa         # iOS (from macOS)
 
 ---
 
-## 9. Go-live smoke test
+## 9. Integration tests (emulators)
+
+The AI pre-screening flow has an emulator integration test that drives the
+real handler through real Firestore + Storage emulators with a faked Gemini
+model (no external AI calls):
+
+```bash
+cd functions
+npm run test:integration
+```
+
+Requires **Java** on PATH (the Firestore emulator is a JVM app). If Java isn't
+installed but Android Studio is, the bundled JBR works:
+
+```bash
+export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"
+export PATH="$JAVA_HOME/bin:$PATH"
+```
+
+First run downloads the emulator binaries (~180MB) and can take several
+minutes. `test:integration` uses a local demo project (`demo-orientaa`) and
+never touches the real project. The plain `npm test` run excludes these.
+
+> Scope note: the handler runs through the Admin SDK, which bypasses security
+> rules — this proves the screening logic end-to-end, not rule enforcement.
+> Rule access control (owner/admin-only reads, etc.) still needs the manual
+> two-account emulator check in §10.
+
+---
+
+## 10. Go-live smoke test
 
 - [ ] Student: browse directory → filters + sort → book a slot → pay via
       Flutterwave → webhook confirms → both parties notified.

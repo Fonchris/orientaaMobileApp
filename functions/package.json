@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:integration": "firebase emulators:exec --project demo-orientaa --only firestore,storage \"npx jest --config jest.integration.config.js\"",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "deploy": "firebase deploy --only functions",
@@ -37,7 +38,8 @@
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/lib/"
+      "/lib/",
+      "/test/integration/"
     ]
   }
 }

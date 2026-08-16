@@ -363,6 +363,10 @@ function screeningHash(inputs: Record<string, unknown>): string {
 }
 
 /**
+ * The screening logic itself. Exported so tests can drive it directly
+ * against the Firestore/Storage emulators; the trigger wrapper below only
+ * parses the Firestore change event and delegates here.
+ *
  * Fires whenever `counselorProfiles/{uid}` is written with
  * `verificationStatus == 'pending'` (first submission and re-submission after
  * a rejection). Reads the owner/admin-only private doc for the uploaded
@@ -370,22 +374,17 @@ function screeningHash(inputs: Record<string, unknown>): string {
  * private doc. A hash of the screened inputs makes re-runs with unchanged
  * inputs a no-op.
  */
-export const screenCounselorApplication = onDocumentWritten(
-  {
-    document: 'counselorProfiles/{uid}',
-    secrets: [geminiApiKey],
-    timeoutSeconds: 300,
-  },
-  async (event) => {
-    const uid = event.params.uid;
-    const after = event.data?.after?.data();
-    // Screen only on the authoritative submission write: `submitVerification`
-    // stamps `submittedAt` AFTER the documents are in place. Gating on it
-    // (instead of just `pending`) avoids the profile-create write racing the
-    // credentials upload and transiently flagging "Credentials missing".
-    if (!after || after.verificationStatus !== 'pending' || !after.submittedAt) return;
+export async function screenCounselorApplicationHandler(
+  uid: string,
+  after: Record<string, unknown> | undefined,
+): Promise<void> {
+  // Screen only on the authoritative submission write: `submitVerification`
+  // stamps `submittedAt` AFTER the documents are in place. Gating on it
+  // (instead of just `pending`) avoids the profile-create write racing the
+  // credentials upload and transiently flagging "Credentials missing".
+  if (!after || after.verificationStatus !== 'pending' || !after.submittedAt) return;
 
-    const privateRef = db.collection('counselorPrivate').doc(uid);
+  const privateRef = db.collection('counselorPrivate').doc(uid);
     const privateSnap = await privateRef.get();
     const privateData = privateSnap.exists ? (privateSnap.data() ?? {}) : {};
 
@@ -450,7 +449,24 @@ export const screenCounselorApplication = onDocumentWritten(
       },
       { merge: true },
     );
+}
+
+/**
+ * Firestore trigger: screens an application the moment it is submitted. The
+ * wrapper keeps the exported surface identical while the logic lives in
+ * [screenCounselorApplicationHandler].
+ */
+export const screenCounselorApplication = onDocumentWritten(
+  {
+    document: 'counselorProfiles/{uid}',
+    secrets: [geminiApiKey],
+    timeoutSeconds: 300,
   },
+  (event) =>
+    screenCounselorApplicationHandler(
+      event.params.uid,
+      event.data?.after?.data() as Record<string, unknown> | undefined,
+    ),
 );
 
 // ── Scheduled: flag overdue needs_attention applications ─────────────────
